@@ -297,6 +297,22 @@ export default function Home() {
                     </div>
                     <span className="font-mono text-base font-bold text-[var(--fg)]">{algo.name}</span>
                     <span className="text-[13px] text-[var(--fg-muted)] leading-snug mt-0.5">{algo.desc}</span>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <span className="font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-1 border border-[var(--border)] text-[var(--fg-muted)]">
+                        Avg {algo.complexity.average}
+                      </span>
+                      <span className="font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-1 border border-[var(--border)] text-[var(--fg-muted)]">
+                        Space {algo.complexity.space}
+                      </span>
+                      {typeof algo.inPlace === 'boolean' && (
+                        <span className="font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-1 border border-[var(--border)] text-[var(--fg-muted)]">
+                          {algo.inPlace ? 'In-place' : 'Extra memory'}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[12px] text-[var(--fg-muted)] leading-snug mt-2">
+                      {algo.useCase}
+                    </span>
                   </div>
                   <div className="flex items-start gap-2 shrink-0 mt-1">
                     <motion.button

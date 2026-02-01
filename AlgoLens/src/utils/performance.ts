@@ -8,7 +8,7 @@
  * @param args The arguments to pass to the function
  * @returns An object containing the result of the function and the execution time in milliseconds
  */
-export function measurePerformance<T, A extends any[]>(
+export function measurePerformance<T, A extends unknown[]>(
   fn: (...args: A) => T,
   ...args: A
 ): { result: T; timeMs: number } {
