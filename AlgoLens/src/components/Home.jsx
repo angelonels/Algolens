@@ -7,7 +7,8 @@ const algorithms = [
   { name: 'Insertion Sort', path: '/insertion-sort' },
   { name: 'Merge Sort', path: '/merge-sort' },
   { name: 'Euclidean GCD', path: '/gcd' },
-  { name: 'Matrix Traversal', path: '/matrix-traversal' }
+  { name: 'Matrix Traversal', path: '/matrix-traversal' },
+  { name: 'Quick Sort', path: '/quick-sort' }
 ]
 
 export default function Home() {

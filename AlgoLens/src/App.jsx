@@ -8,6 +8,7 @@ import InsertionSort from './visualizers/InsertionSort'
 import MergeSort from './visualizers/MergeSort'
 import EuclideanGCD from './visualizers/EuclideanGCD'
 import MatrixTraversal from './visualizers/MatrixTraversal'
+import QuickSort from './visualizers/QuickSort'
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/merge-sort" element={<MergeSort />} />
         <Route path="/gcd" element={<EuclideanGCD />} />
         <Route path="/matrix-traversal" element={<MatrixTraversal />} />
+        <Route path="/quick-sort" element={<QuickSort />} />
       </Routes>
     </>
   )
