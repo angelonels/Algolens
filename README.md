@@ -8,6 +8,7 @@ A visual playground for understanding algorithms. Pick an algorithm, watch it ru
 - Bubble Sort
 - Insertion Sort
 - Merge Sort
+- Quick Sort
 - Euclidean GCD
 - Matrix Traversal
 
@@ -32,6 +33,7 @@ src/
     BubbleSort.jsx
     InsertionSort.jsx
     MergeSort.jsx
+    QuickSort.jsx
     EuclideanGCD.jsx
     MatrixTraversal.jsx
   App.jsx
