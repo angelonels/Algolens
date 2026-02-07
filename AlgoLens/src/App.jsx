@@ -9,6 +9,7 @@ import MergeSort from './visualizers/MergeSort'
 import EuclideanGCD from './visualizers/EuclideanGCD'
 import MatrixTraversal from './visualizers/MatrixTraversal'
 import QuickSort from './visualizers/QuickSort'
+import DijkstraPath from './visualizers/DijkstraPath'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/gcd" element={<EuclideanGCD />} />
         <Route path="/matrix-traversal" element={<MatrixTraversal />} />
         <Route path="/quick-sort" element={<QuickSort />} />
+        <Route path="/dijkstra" element={<DijkstraPath />} />
       </Routes>
     </>
   )
