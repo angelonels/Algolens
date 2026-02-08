@@ -1,45 +1,49 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import {
+    SpeedControl,
+    StepCounter,
+    StatusMessage,
+    ControlButton,
+    Legend,
+    CodeBlock,
+    PageContainer,
+    ExplanationBox,
+    VisualizationContainer,
+    ControlsRow
+} from '../components/ui/AnimationComponents'
 
-const dijkstraPythonCode = `
-import heapq
+const dijkstraPythonCode = `import heapq
 
 def dijkstra(graph, start):
-    """
-    Find shortest paths from start to all vertices.
-    graph: dict of {node: [(neighbor, weight), ...]}
-    Returns: dict of {node: shortest_distance}
-    """
     distances = {node: float('inf') for node in graph}
     distances[start] = 0
-    pq = [(0, start)]  # (distance, node)
+    pq = [(0, start)]
     visited = set()
     
     while pq:
-        curr_dist, curr_node = heapq.heappop(pq)
-        
-        if curr_node in visited:
+        curr_dist, curr = heapq.heappop(pq)
+        if curr in visited:
             continue
-        visited.add(curr_node)
+        visited.add(curr)
         
-        for neighbor, weight in graph[curr_node]:
+        for neighbor, weight in graph[curr]:
             distance = curr_dist + weight
             if distance < distances[neighbor]:
                 distances[neighbor] = distance
                 heapq.heappush(pq, (distance, neighbor))
     
-    return distances
-`
+    return distances`
 
-// Initial graph structure with nodes and edges
 const initialGraph = {
     nodes: [
-        { id: 'A', x: 100, y: 150 },
-        { id: 'B', x: 250, y: 50 },
-        { id: 'C', x: 250, y: 250 },
-        { id: 'D', x: 400, y: 150 },
-        { id: 'E', x: 550, y: 50 },
-        { id: 'F', x: 550, y: 250 }
+        { id: 'A', x: 80, y: 140 },
+        { id: 'B', x: 220, y: 50 },
+        { id: 'C', x: 220, y: 230 },
+        { id: 'D', x: 380, y: 140 },
+        { id: 'E', x: 520, y: 50 },
+        { id: 'F', x: 520, y: 230 }
     ],
     edges: [
         { from: 'A', to: 'B', weight: 4 },
@@ -54,19 +58,17 @@ const initialGraph = {
     ]
 }
 
-// Build adjacency list from edges
 function buildAdjacencyList(edges) {
     const adj = {}
     edges.forEach(({ from, to, weight }) => {
         if (!adj[from]) adj[from] = []
         if (!adj[to]) adj[to] = []
         adj[from].push({ node: to, weight })
-        adj[to].push({ node: from, weight }) // Undirected graph
+        adj[to].push({ node: from, weight })
     })
     return adj
 }
 
-// Dijkstra algorithm that returns steps for visualization
 function dijkstraWithSteps(nodes, edges, startId) {
     const adj = buildAdjacencyList(edges)
     const nodeIds = nodes.map(n => n.id)
@@ -84,18 +86,17 @@ function dijkstraWithSteps(nodes, edges, startId) {
     const steps = []
     const pq = [{ node: startId, dist: 0 }]
 
-    // Initial step
     steps.push({
         type: 'init',
         distances: { ...distances },
         visited: new Set(visited),
         current: null,
-        processing: null,
-        message: `Initialized. Start node: ${startId} with distance 0. All others: ∞`
+        exploring: null,
+        edge: null,
+        message: `Starting from ${startId}. All distances set to ∞ except ${startId} = 0`
     })
 
     while (pq.length > 0) {
-        // Sort to get min distance node (simple priority queue)
         pq.sort((a, b) => a.dist - b.dist)
         const { node: current, dist: currDist } = pq.shift()
 
@@ -106,30 +107,31 @@ function dijkstraWithSteps(nodes, edges, startId) {
             distances: { ...distances },
             visited: new Set(visited),
             current,
-            processing: null,
-            message: `Visiting node ${current} with distance ${currDist}`
+            exploring: null,
+            edge: null,
+            message: `Visiting ${current} (distance: ${currDist})`
         })
 
         visited.add(current)
 
-        // Process neighbors
         const neighbors = adj[current] || []
         for (const { node: neighbor, weight } of neighbors) {
             if (visited.has(neighbor)) continue
 
             const newDist = currDist + weight
+            const improved = newDist < distances[neighbor]
 
             steps.push({
                 type: 'explore',
                 distances: { ...distances },
                 visited: new Set(visited),
                 current,
-                processing: neighbor,
+                exploring: neighbor,
                 edge: { from: current, to: neighbor },
-                message: `Exploring edge ${current} → ${neighbor} (weight: ${weight}). Current distance to ${neighbor}: ${distances[neighbor] === Infinity ? '∞' : distances[neighbor]}, New potential: ${newDist}`
+                message: `${current} → ${neighbor} (weight ${weight}): ${currDist} + ${weight} = ${newDist}${improved ? ' ✓ Better!' : ' ✗ No improvement'}`
             })
 
-            if (newDist < distances[neighbor]) {
+            if (improved) {
                 distances[neighbor] = newDist
                 previous[neighbor] = current
                 pq.push({ node: neighbor, dist: newDist })
@@ -139,9 +141,9 @@ function dijkstraWithSteps(nodes, edges, startId) {
                     distances: { ...distances },
                     visited: new Set(visited),
                     current,
-                    processing: neighbor,
+                    exploring: neighbor,
                     edge: { from: current, to: neighbor },
-                    message: `Updated distance to ${neighbor}: ${newDist} (via ${current})`
+                    message: `Updated distance to ${neighbor}: ${newDist}`
                 })
             }
         }
@@ -152,8 +154,9 @@ function dijkstraWithSteps(nodes, edges, startId) {
         distances: { ...distances },
         visited: new Set(visited),
         current: null,
-        processing: null,
-        message: 'Algorithm complete! All shortest paths found.'
+        exploring: null,
+        edge: null,
+        message: '🎉 All shortest paths found!'
     })
 
     return { steps, distances, previous }
@@ -165,7 +168,8 @@ export default function DijkstraVisualizer() {
     const [steps, setSteps] = useState([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [running, setRunning] = useState(false)
-    const [speed, setSpeed] = useState(1000)
+    const [speed, setSpeed] = useState(SPEED_PRESETS.normal)
+    const [isPaused, setIsPaused] = useState(false)
     const [finalDistances, setFinalDistances] = useState(null)
 
     const svgRef = useRef(null)
@@ -175,59 +179,54 @@ export default function DijkstraVisualizer() {
         setSteps(newSteps)
         setCurrentStep(0)
         setRunning(true)
+        setIsPaused(false)
         setFinalDistances(distances)
     }
 
-    const resetVisualization = () => {
+    const reset = () => {
         setSteps([])
         setCurrentStep(-1)
         setRunning(false)
         setFinalDistances(null)
+        setIsPaused(false)
     }
 
+    const togglePause = () => setIsPaused(!isPaused)
+
     useEffect(() => {
-        if (running && currentStep >= 0 && currentStep < steps.length - 1) {
-            const timer = setTimeout(() => {
-                setCurrentStep(prev => prev + 1)
-            }, speed)
+        if (running && !isPaused && currentStep >= 0 && currentStep < steps.length - 1) {
+            const timer = setTimeout(() => setCurrentStep(prev => prev + 1), speed)
             return () => clearTimeout(timer)
         } else if (currentStep >= steps.length - 1) {
             setRunning(false)
         }
-    }, [running, currentStep, steps.length, speed])
-
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(dijkstraPythonCode)
-        alert('Python code copied!')
-    }
+    }, [running, currentStep, steps.length, speed, isPaused])
 
     const currentState = steps[currentStep] || {
         distances: {},
         visited: new Set(),
         current: null,
-        processing: null,
-        edge: null
+        exploring: null,
+        edge: null,
+        message: ''
     }
 
-    // Get node color based on state
     const getNodeColor = (nodeId) => {
-        if (currentState.current === nodeId) return '#ff6b6b' // Current node being processed
-        if (currentState.processing === nodeId) return '#feca57' // Neighbor being explored
-        if (currentState.visited?.has(nodeId)) return '#48dbfb' // Already visited
-        return '#dfe6e9' // Unvisited
+        if (currentState.current === nodeId) return '#ef4444'
+        if (currentState.exploring === nodeId) return '#f59e0b'
+        if (currentState.visited?.has(nodeId)) return '#22c55e'
+        return '#e2e8f0'
     }
 
-    // Get edge color based on state
     const getEdgeColor = (edge) => {
         if (currentState.edge &&
             ((currentState.edge.from === edge.from && currentState.edge.to === edge.to) ||
                 (currentState.edge.from === edge.to && currentState.edge.to === edge.from))) {
-            return '#ff6b6b'
+            return currentState.type === 'update' ? '#22c55e' : '#f59e0b'
         }
-        return '#b2bec3'
+        return '#94a3b8'
     }
 
-    // Get edge stroke width
     const getEdgeWidth = (edge) => {
         if (currentState.edge &&
             ((currentState.edge.from === edge.from && currentState.edge.to === edge.to) ||
@@ -242,83 +241,53 @@ export default function DijkstraVisualizer() {
         return node ? { x: node.x, y: node.y } : { x: 0, y: 0 }
     }
 
-    const explanation = (
-        <div style={{
-            maxWidth: 800,
-            margin: '20px auto',
-            textAlign: 'left',
-            color: '#333',
-            fontSize: 16,
-            lineHeight: 1.6
-        }}>
-            <h3 style={{ marginBottom: 8 }}>What is Dijkstra's Algorithm?</h3>
-            <p>
-                Dijkstra's algorithm finds the <strong>shortest path</strong> from a source node to all other nodes
-                in a weighted graph with <strong>non-negative edge weights</strong>. It's widely used in
-                GPS navigation, network routing, and many other applications.
-            </p>
-            <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-            <ol style={{ paddingLeft: 20 }}>
-                <li>Initialize distances: source = 0, all others = ∞</li>
-                <li>Use a priority queue to always process the node with smallest known distance</li>
-                <li>For each neighbor, calculate potential new distance through current node</li>
-                <li>If new distance is shorter, update it and add to queue</li>
-                <li>Mark current node as visited (won't revisit)</li>
-                <li>Repeat until all nodes are visited</li>
-            </ol>
-            <h4 style={{ margin: '16px 0 8px' }}>Time Complexity</h4>
-            <p>
-                <strong>O((V + E) log V)</strong> with a binary heap, where V is number of vertices and E is number of edges.
-            </p>
-            <h4 style={{ margin: '16px 0 8px' }}>Legend</h4>
-            <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-                <span><span style={{ display: 'inline-block', width: 16, height: 16, background: '#dfe6e9', borderRadius: '50%', marginRight: 6 }}></span>Unvisited</span>
-                <span><span style={{ display: 'inline-block', width: 16, height: 16, background: '#ff6b6b', borderRadius: '50%', marginRight: 6 }}></span>Current</span>
-                <span><span style={{ display: 'inline-block', width: 16, height: 16, background: '#feca57', borderRadius: '50%', marginRight: 6 }}></span>Exploring</span>
-                <span><span style={{ display: 'inline-block', width: 16, height: 16, background: '#48dbfb', borderRadius: '50%', marginRight: 6 }}></span>Visited</span>
-            </div>
-        </div>
-    )
+    const legendItems = [
+        { color: '#ef4444', label: 'Current' },
+        { color: '#f59e0b', label: 'Exploring' },
+        { color: '#22c55e', label: 'Visited' },
+        { color: '#e2e8f0', label: 'Unvisited' }
+    ]
+
+    const isFinalStep = currentStep === steps.length - 1 && !running
 
     return (
-        <div style={{ textAlign: 'center', padding: 20 }}>
-            <h2>Dijkstra's Shortest Path Visualizer</h2>
-            {explanation}
+        <PageContainer title="🛤️ Dijkstra's Shortest Path">
+            <ExplanationBox>
+                <h3 style={{ marginBottom: 12, color: '#1e293b' }}>What is Dijkstra's Algorithm?</h3>
+                <p>
+                    Dijkstra's algorithm finds the <strong>shortest path</strong> from a source node to all other nodes
+                    in a weighted graph with non-negative edge weights.
+                </p>
+                <h4 style={{ margin: '16px 0 8px', color: '#475569' }}>How It Works</h4>
+                <ol style={{ paddingLeft: 20, margin: 0 }}>
+                    <li>Initialize: source = 0, all others = ∞</li>
+                    <li>Visit node with smallest known distance</li>
+                    <li>Update distances to unvisited neighbors</li>
+                    <li>Mark current node as visited</li>
+                    <li>Repeat until all nodes visited</li>
+                </ol>
+                <p style={{ marginTop: 12 }}>
+                    <strong>Time Complexity:</strong> O((V + E) log V) with priority queue
+                </p>
+            </ExplanationBox>
 
-            {/* Python Code Block */}
-            <div style={{
-                background: '#2d3436',
-                padding: 15,
-                borderRadius: 8,
-                fontFamily: 'monospace',
-                textAlign: 'left',
-                maxWidth: 800,
-                margin: '0 auto',
-                color: '#dfe6e9'
-            }}>
-                <pre style={{ margin: 0, overflowX: 'auto' }}>{dijkstraPythonCode}</pre>
-                <button
-                    onClick={copyToClipboard}
-                    style={{
-                        marginTop: 10,
-                        padding: '8px 12px',
-                        background: '#00b894',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: 4,
-                        cursor: 'pointer'
-                    }}
-                >Copy Code</button>
-            </div>
+            <CodeBlock code={dijkstraPythonCode} onCopy={() => { }} />
 
-            {/* Controls */}
-            <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center', gap: 15, flexWrap: 'wrap', alignItems: 'center' }}>
-                <div>
-                    <label style={{ marginRight: 8 }}>Start Node:</label>
+            <VisualizationContainer maxWidth={700}>
+                {/* Start Node Selector */}
+                <div style={{ marginBottom: 20 }}>
+                    <label style={{ marginRight: 12, fontWeight: 600, color: '#475569' }}>Start Node:</label>
                     <select
                         value={startNode}
-                        onChange={(e) => { setStartNode(e.target.value); resetVisualization() }}
-                        style={{ padding: '6px 12px', fontSize: 16, borderRadius: 4 }}
+                        onChange={(e) => { setStartNode(e.target.value); reset() }}
+                        disabled={running}
+                        style={{
+                            padding: '8px 16px',
+                            fontSize: 16,
+                            borderRadius: 8,
+                            border: '2px solid #e2e8f0',
+                            fontWeight: 600
+                        }}
                     >
                         {graph.nodes.map(n => (
                             <option key={n.id} value={n.id}>{n.id}</option>
@@ -326,214 +295,188 @@ export default function DijkstraVisualizer() {
                     </select>
                 </div>
 
-                <div>
-                    <label style={{ marginRight: 8 }}>Speed:</label>
-                    <select
-                        value={speed}
-                        onChange={(e) => setSpeed(Number(e.target.value))}
-                        style={{ padding: '6px 12px', fontSize: 16, borderRadius: 4 }}
-                    >
-                        <option value={2000}>Slow</option>
-                        <option value={1000}>Normal</option>
-                        <option value={500}>Fast</option>
-                    </select>
-                </div>
+                {/* Status Message */}
+                <AnimatePresence mode="wait">
+                    {currentStep >= 0 && currentState.message && (
+                        <StatusMessage
+                            key={currentStep}
+                            message={currentState.message}
+                            type={currentState.type === 'update' ? 'success' : currentState.type === 'complete' ? 'success' : 'info'}
+                        />
+                    )}
+                </AnimatePresence>
 
-                <button
-                    onClick={startAlgorithm}
-                    disabled={running}
-                    style={{
-                        padding: '10px 20px',
-                        background: running ? '#b2bec3' : '#00b894',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: 4,
-                        cursor: running ? 'not-allowed' : 'pointer',
-                        fontSize: 16
-                    }}
-                >
-                    {running ? 'Running...' : 'Start Algorithm'}
-                </button>
+                {/* Graph Visualization */}
+                <div style={{
+                    background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                    borderRadius: 16,
+                    padding: 20,
+                    marginTop: 20
+                }}>
+                    <svg ref={svgRef} width="100%" height={280} viewBox="0 0 600 280" style={{ overflow: 'visible' }}>
+                        {/* Edges */}
+                        {graph.edges.map((edge, i) => {
+                            const from = getNodePosition(edge.from)
+                            const to = getNodePosition(edge.to)
+                            const midX = (from.x + to.x) / 2
+                            const midY = (from.y + to.y) / 2
 
-                <button
-                    onClick={resetVisualization}
-                    style={{
-                        padding: '10px 20px',
-                        background: '#e17055',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: 4,
-                        cursor: 'pointer',
-                        fontSize: 16
-                    }}
-                >
-                    Reset
-                </button>
-            </div>
+                            return (
+                                <g key={i}>
+                                    <motion.line
+                                        x1={from.x}
+                                        y1={from.y}
+                                        x2={to.x}
+                                        y2={to.y}
+                                        stroke={getEdgeColor(edge)}
+                                        strokeWidth={getEdgeWidth(edge)}
+                                        animate={{
+                                            stroke: getEdgeColor(edge),
+                                            strokeWidth: getEdgeWidth(edge)
+                                        }}
+                                        transition={{ duration: 0.3 }}
+                                    />
+                                    <rect
+                                        x={midX - 14}
+                                        y={midY - 12}
+                                        width={28}
+                                        height={24}
+                                        fill="white"
+                                        rx={6}
+                                        style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+                                    />
+                                    <text
+                                        x={midX}
+                                        y={midY + 5}
+                                        textAnchor="middle"
+                                        fontSize={14}
+                                        fill="#475569"
+                                        fontWeight="bold"
+                                    >
+                                        {edge.weight}
+                                    </text>
+                                </g>
+                            )
+                        })}
 
-            {/* Status Message */}
-            {currentStep >= 0 && steps[currentStep] && (
-                <motion.div
-                    key={currentStep}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    style={{
-                        marginTop: 20,
-                        padding: '12px 20px',
-                        background: '#74b9ff',
-                        borderRadius: 8,
-                        maxWidth: 800,
-                        margin: '20px auto',
-                        color: '#2d3436',
-                        fontWeight: 500
-                    }}
-                >
-                    Step {currentStep + 1}/{steps.length}: {steps[currentStep].message}
-                </motion.div>
-            )}
-
-            {/* Graph Visualization */}
-            <div style={{
-                marginTop: 20,
-                display: 'flex',
-                justifyContent: 'center',
-                background: '#f8f9fa',
-                borderRadius: 12,
-                padding: 20,
-                maxWidth: 700,
-                margin: '20px auto'
-            }}>
-                <svg ref={svgRef} width={650} height={300} style={{ overflow: 'visible' }}>
-                    {/* Draw edges first */}
-                    {graph.edges.map((edge, i) => {
-                        const from = getNodePosition(edge.from)
-                        const to = getNodePosition(edge.to)
-                        const midX = (from.x + to.x) / 2
-                        const midY = (from.y + to.y) / 2
-
-                        return (
-                            <g key={i}>
-                                <motion.line
-                                    x1={from.x}
-                                    y1={from.y}
-                                    x2={to.x}
-                                    y2={to.y}
-                                    stroke={getEdgeColor(edge)}
-                                    strokeWidth={getEdgeWidth(edge)}
-                                    initial={false}
+                        {/* Nodes */}
+                        {graph.nodes.map(node => (
+                            <g key={node.id}>
+                                <motion.circle
+                                    cx={node.x}
+                                    cy={node.y}
+                                    r={32}
+                                    fill={getNodeColor(node.id)}
+                                    stroke={currentState.current === node.id ? '#dc2626' : '#475569'}
+                                    strokeWidth={currentState.current === node.id ? 4 : 2}
                                     animate={{
-                                        stroke: getEdgeColor(edge),
-                                        strokeWidth: getEdgeWidth(edge)
+                                        fill: getNodeColor(node.id),
+                                        scale: currentState.current === node.id ? 1.1 : 1
                                     }}
-                                    transition={{ duration: 0.3 }}
-                                />
-                                {/* Edge weight label */}
-                                <rect
-                                    x={midX - 12}
-                                    y={midY - 10}
-                                    width={24}
-                                    height={20}
-                                    fill="white"
-                                    rx={4}
+                                    transition={SPRING.bouncy}
+                                    style={{ filter: currentState.current === node.id ? 'drop-shadow(0 4px 8px rgba(239, 68, 68, 0.4))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
                                 />
                                 <text
-                                    x={midX}
-                                    y={midY + 5}
+                                    x={node.x}
+                                    y={node.y - 5}
                                     textAnchor="middle"
-                                    fontSize={14}
-                                    fill="#636e72"
+                                    fontSize={18}
                                     fontWeight="bold"
+                                    fill={currentState.visited?.has(node.id) ? 'white' : '#1e293b'}
                                 >
-                                    {edge.weight}
+                                    {node.id}
+                                </text>
+                                <text
+                                    x={node.x}
+                                    y={node.y + 12}
+                                    textAnchor="middle"
+                                    fontSize={12}
+                                    fill={currentState.visited?.has(node.id) ? 'rgba(255,255,255,0.9)' : '#64748b'}
+                                    fontWeight="600"
+                                >
+                                    {currentState.distances[node.id] === Infinity
+                                        ? '∞'
+                                        : currentState.distances[node.id] ?? '-'}
                                 </text>
                             </g>
-                        )
-                    })}
+                        ))}
+                    </svg>
+                </div>
 
-                    {/* Draw nodes */}
-                    {graph.nodes.map(node => (
-                        <g key={node.id}>
-                            <motion.circle
-                                cx={node.x}
-                                cy={node.y}
-                                r={28}
-                                fill={getNodeColor(node.id)}
-                                stroke="#2d3436"
-                                strokeWidth={2}
-                                initial={false}
-                                animate={{
-                                    fill: getNodeColor(node.id),
-                                    scale: currentState.current === node.id ? 1.1 : 1
-                                }}
-                                transition={{ duration: 0.3 }}
-                            />
-                            <text
-                                x={node.x}
-                                y={node.y - 5}
-                                textAnchor="middle"
-                                fontSize={18}
-                                fontWeight="bold"
-                                fill="#2d3436"
-                            >
-                                {node.id}
-                            </text>
-                            {/* Distance label */}
-                            <text
-                                x={node.x}
-                                y={node.y + 12}
-                                textAnchor="middle"
-                                fontSize={12}
-                                fill="#636e72"
-                            >
-                                {currentState.distances[node.id] === Infinity
-                                    ? '∞'
-                                    : currentState.distances[node.id] ?? '-'}
-                            </text>
-                        </g>
-                    ))}
-                </svg>
-            </div>
+                <Legend items={legendItems} />
 
-            {/* Final Results Table */}
-            {finalDistances && currentStep >= steps.length - 1 && (
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    style={{
-                        marginTop: 30,
-                        maxWidth: 600,
-                        margin: '30px auto'
-                    }}
-                >
-                    <h3>🎉 Shortest Distances from Node {startNode}</h3>
-                    <table style={{
-                        width: '100%',
-                        borderCollapse: 'collapse',
-                        marginTop: 15,
-                        background: 'white',
-                        borderRadius: 8,
-                        overflow: 'hidden',
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-                    }}>
-                        <thead>
-                            <tr style={{ background: '#00b894', color: 'white' }}>
-                                <th style={{ padding: 12 }}>Node</th>
-                                <th style={{ padding: 12 }}>Shortest Distance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {graph.nodes.map(node => (
-                                <tr key={node.id} style={{ borderBottom: '1px solid #eee' }}>
-                                    <td style={{ padding: 12, fontWeight: 'bold' }}>{node.id}</td>
-                                    <td style={{ padding: 12 }}>
-                                        {finalDistances[node.id] === Infinity ? '∞ (unreachable)' : finalDistances[node.id]}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </motion.div>
-            )}
-        </div>
+                {/* Controls */}
+                <ControlsRow>
+                    <SpeedControl speed={speed} onSpeedChange={setSpeed} disabled={false} />
+
+                    {running && (
+                        <StepCounter current={currentStep + 1} total={steps.length} />
+                    )}
+
+                    <ControlButton
+                        onClick={startAlgorithm}
+                        disabled={running && !isPaused}
+                        variant="primary"
+                    >
+                        {running ? '🛤️ Running...' : '▶️ Start'}
+                    </ControlButton>
+
+                    {running && (
+                        <ControlButton onClick={togglePause} variant="success">
+                            {isPaused ? '▶️ Resume' : '⏸️ Pause'}
+                        </ControlButton>
+                    )}
+
+                    <ControlButton onClick={reset} variant="danger">
+                        🔄 Reset
+                    </ControlButton>
+                </ControlsRow>
+
+                {/* Final Results Table */}
+                <AnimatePresence>
+                    {isFinalStep && finalDistances && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            style={{ marginTop: 24 }}
+                        >
+                            <h3 style={{ marginBottom: 16, color: '#1e293b' }}>
+                                🎉 Shortest Distances from {startNode}
+                            </h3>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                gap: 12,
+                                flexWrap: 'wrap'
+                            }}>
+                                {graph.nodes.map(node => (
+                                    <motion.div
+                                        key={node.id}
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ delay: graph.nodes.indexOf(node) * 0.1 }}
+                                        style={{
+                                            padding: '12px 20px',
+                                            background: node.id === startNode
+                                                ? 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)'
+                                                : 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                                            borderRadius: 12,
+                                            color: 'white',
+                                            textAlign: 'center',
+                                            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                                        }}
+                                    >
+                                        <div style={{ fontSize: 14, opacity: 0.9 }}>To {node.id}</div>
+                                        <div style={{ fontSize: 24, fontWeight: 700 }}>
+                                            {finalDistances[node.id]}
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </VisualizationContainer>
+        </PageContainer>
     )
 }

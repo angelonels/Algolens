@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import {
+  SpeedControl,
+  StepCounter,
+  StatusMessage,
+  ControlButton,
+  Legend,
+  CodeBlock,
+  PageContainer,
+  ExplanationBox,
+  VisualizationContainer,
+  ControlsRow
+} from '../components/ui/AnimationComponents'
 
-
-const mergeSortPythonCode = `
-def merge_sort(arr):
+const mergeSortPythonCode = `def merge_sort(arr):
     if len(arr) <= 1:
         return arr
     mid = len(arr) // 2
@@ -23,24 +34,33 @@ def merge(left, right):
             j += 1
     result.extend(left[i:])
     result.extend(right[j:])
-    return result
-`
+    return result`
 
 export default function MergeSortVisualizer() {
-
-  const init = [23,24,35,46,35,2,5,78,1,3,0,32,45]
+  const init = [38, 27, 43, 3, 9, 82, 10, 45]
   const [array] = useState(init)
   const [steps, setSteps] = useState([])
   const [currentStep, setCurrentStep] = useState(-1)
-  const [running, setRunning] = useState(false)
-
+  const [sorting, setSorting] = useState(false)
+  const [speed, setSpeed] = useState(SPEED_PRESETS.normal)
+  const [isPaused, setIsPaused] = useState(false)
 
   const computeSteps = () => {
     const arr = [...array]
     const s = []
-
     const aux = arr.slice()
-    const merge = (l, m, r) => {
+
+    const merge = (l, m, r, depth) => {
+      s.push({
+        snapshot: arr.slice(),
+        phase: 'merge-start',
+        range: [l, r],
+        leftRange: [l, m],
+        rightRange: [m + 1, r],
+        depth,
+        message: `Merging [${l}-${m}] and [${m + 1}-${r}]`
+      })
+
       let i = l, j = m + 1, k = l
       while (i <= m && j <= r) {
         if (aux[i] <= aux[j]) {
@@ -52,20 +72,48 @@ export default function MergeSortVisualizer() {
       while (i <= m) arr[k++] = aux[i++]
       while (j <= r) arr[k++] = aux[j++]
 
-      s.push({ snapshot: arr.slice(), range: [l, r] })
-
       for (let x = l; x <= r; x++) aux[x] = arr[x]
+
+      s.push({
+        snapshot: arr.slice(),
+        phase: 'merge-done',
+        range: [l, r],
+        leftRange: null,
+        rightRange: null,
+        depth,
+        message: `Merged: [${arr.slice(l, r + 1).join(', ')}]`
+      })
     }
 
-    const mergeSort = (l, r) => {
+    const mergeSort = (l, r, depth = 0) => {
       if (l >= r) return
+
       const m = Math.floor((l + r) / 2)
-      mergeSort(l, m)
-      mergeSort(m + 1, r)
-      merge(l, m, r)
+
+      s.push({
+        snapshot: arr.slice(),
+        phase: 'split',
+        range: [l, r],
+        splitPoint: m,
+        depth,
+        message: `Splitting [${l}-${r}] at mid=${m}`
+      })
+
+      mergeSort(l, m, depth + 1)
+      mergeSort(m + 1, r, depth + 1)
+      merge(l, m, r, depth)
     }
 
     mergeSort(0, arr.length - 1)
+
+    s.push({
+      snapshot: arr.slice(),
+      phase: 'done',
+      range: null,
+      depth: 0,
+      message: '🎉 Array is sorted!'
+    })
+
     return s
   }
 
@@ -73,145 +121,225 @@ export default function MergeSortVisualizer() {
     const s = computeSteps()
     setSteps(s)
     setCurrentStep(0)
-    setRunning(true)
+    setSorting(true)
+    setIsPaused(false)
   }
 
+  const reset = () => {
+    setSteps([])
+    setCurrentStep(-1)
+    setSorting(false)
+    setIsPaused(false)
+  }
+
+  const togglePause = () => setIsPaused(!isPaused)
 
   useEffect(() => {
-    if (running && currentStep >= 0) {
-      if (currentStep < steps.length - 1) {
-        const t = setTimeout(() => setCurrentStep(cs => cs + 1), 1000)
-        return () => clearTimeout(t)
-      } else {
-        setRunning(false)
-      }
+    if (sorting && !isPaused && currentStep >= 0 && currentStep < steps.length - 1) {
+      const t = setTimeout(() => setCurrentStep(cs => cs + 1), speed)
+      return () => clearTimeout(t)
+    } else if (sorting && currentStep === steps.length - 1) {
+      setSorting(false)
     }
-  }, [currentStep, running, steps])
+  }, [currentStep, sorting, steps, speed, isPaused])
 
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(mergeSortPythonCode)
-    alert('Python code copied!')
+  const step = steps[currentStep] || {
+    snapshot: array,
+    phase: 'idle',
+    range: null,
+    depth: 0,
+    message: ''
   }
 
+  const getElementState = (index) => {
+    if (step.phase === 'done') return 'sorted'
+    if (!step.range) return 'default'
 
-  const explanation = (
-    <div style={{
-      maxWidth: 800,
-      margin: '20px auto',
-      textAlign: 'left',
-      color: '#333',
-      fontSize: 16,
-      lineHeight: 1.6
-    }}>
-      <h3 style={{ marginBottom: 8 }}>What is Merge Sort?</h3>
-      <p>
-        Merge Sort is a classic divide-and-conquer sorting algorithm. It recursively splits the array into halves,
-        sorts each half, and then merges the sorted halves back together. Its time complexity is O(n log n).
-      </p>
-      <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-      <ol style={{ paddingLeft: 20 }}>
-        <li>Divide the array into two halves until each piece has one element.</li>
-        <li>Recursively sort the left and right halves.</li>
-        <li>Merge the two sorted halves into one sorted segment.</li>
-        <li>Repeat merges up the recursion tree until the full array is merged.</li>
-      </ol>
-      <h4 style={{ margin: '16px 0 8px' }}>Time Complexity & Space</h4>
-      <p>
-        Merge Sort runs in O(n log n) time in all cases and requires O(n) extra space for merging.
-      </p>
-    </div>
-  )
+    const [l, r] = step.range
+    if (index >= l && index <= r) {
+      if (step.phase === 'split') return 'splitting'
+      if (step.phase === 'merge-start') {
+        if (step.leftRange && index >= step.leftRange[0] && index <= step.leftRange[1]) return 'left'
+        if (step.rightRange && index >= step.rightRange[0] && index <= step.rightRange[1]) return 'right'
+      }
+      if (step.phase === 'merge-done') return 'merged'
+    }
+    return 'default'
+  }
 
-  const step = steps[currentStep] || { snapshot: array, range: [] }
+  const depthColors = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#22c55e']
+
+  const legendItems = [
+    { color: '#3b82f6', label: 'Left Half' },
+    { color: '#ec4899', label: 'Right Half' },
+    { color: COLORS.active, label: 'Merging' },
+    { color: COLORS.sorted, label: 'Sorted' }
+  ]
+
+  const isFinalStep = currentStep === steps.length - 1 && !sorting
 
   return (
-    <div style={{ textAlign: 'center', padding: 20 }}>
-      <h2>Merge Sort Visualizer</h2>
-      {explanation}
+    <PageContainer title="🔀 Merge Sort Visualizer">
+      <ExplanationBox>
+        <h3 style={{ marginBottom: 12, color: '#1e293b' }}>What is Merge Sort?</h3>
+        <p>
+          Merge Sort is a divide-and-conquer algorithm. It recursively splits the array into halves,
+          sorts each half, and then merges them back together. It guarantees O(n log n) time complexity.
+        </p>
+        <h4 style={{ margin: '16px 0 8px', color: '#475569' }}>How It Works</h4>
+        <ol style={{ paddingLeft: 20, margin: 0 }}>
+          <li>Divide array into two halves</li>
+          <li>Recursively sort each half</li>
+          <li>Merge the sorted halves together</li>
+          <li>Repeat until fully merged</li>
+        </ol>
+        <p style={{ marginTop: 12 }}>
+          <strong>Time Complexity:</strong> O(n log n) always | <strong>Space:</strong> O(n)
+        </p>
+      </ExplanationBox>
 
- 
-      <div style={{
-        background: '#f5f5f5',
-        padding: 15,
-        borderRadius: 5,
-        fontFamily: 'monospace',
-        textAlign: 'left',
-        maxWidth: 800,
-        margin: '0 auto'
-      }}>
-        <pre style={{ margin: 0 }}>{mergeSortPythonCode}</pre>
-        <button
-          onClick={copyToClipboard}
-          style={{
-            marginTop: 10,
-            padding: '8px 12px',
-            background: '#4CAF50',
+      <CodeBlock code={mergeSortPythonCode} onCopy={() => { }} />
+
+      <VisualizationContainer>
+        {/* Depth Indicator */}
+        {sorting && step.depth !== undefined && (
+          <div style={{
+            marginBottom: 16,
+            padding: '8px 16px',
+            background: depthColors[step.depth % depthColors.length],
+            borderRadius: 8,
             color: 'white',
-            border: 'none',
-            borderRadius: 4,
-            cursor: 'pointer'
-          }}
-        >
-          Copy Code
-        </button>
-      </div>
+            fontWeight: 600,
+            display: 'inline-block'
+          }}>
+            Recursion Depth: {step.depth}
+          </div>
+        )}
 
-    
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-        {step.snapshot.map((v, i) => {
-          const [l, r] = step.range
-          const inMerge = i >= l && i <= r
-          const isFinal = !running && steps.length && currentStep === steps.length - 1
+        {/* Status Message */}
+        <AnimatePresence mode="wait">
+          {currentStep >= 0 && step.message && (
+            <StatusMessage
+              key={currentStep}
+              message={step.message}
+              type={step.phase === 'merge-done' ? 'success' : 'info'}
+            />
+          )}
+        </AnimatePresence>
 
-          let bg = isFinal
-            ? '#8eed8e'
-            : inMerge
-            ? '#ffa500'
-            : '#d0e7ff'
+        {/* Array Visualization */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'flex-end',
+          gap: 6,
+          height: 280,
+          padding: '20px 0'
+        }}>
+          {step.snapshot.map((v, i) => {
+            const state = getElementState(i)
+            const maxVal = Math.max(...array)
+            const height = (v / maxVal) * 200 + 40
 
-          return (
+            const colors = {
+              default: '#e2e8f0',
+              splitting: COLORS.comparing,
+              left: '#3b82f6',
+              right: '#ec4899',
+              merged: COLORS.active,
+              sorted: COLORS.sorted
+            }
+
+            return (
+              <motion.div
+                key={i}
+                layout
+                animate={{
+                  height,
+                  backgroundColor: colors[state] || colors.default,
+                  scale: state === 'merged' ? 1.05 : 1,
+                  y: state === 'splitting' ? -10 : 0
+                }}
+                transition={{
+                  ...SPRING.bouncy,
+                  layout: { type: 'spring', stiffness: 300, damping: 30 }
+                }}
+                style={{
+                  width: 55,
+                  borderRadius: '10px 10px 4px 4px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  paddingBottom: 8,
+                  fontWeight: 700,
+                  fontSize: 16,
+                  color: state === 'left' || state === 'right' ? 'white' : '#1e293b',
+                  boxShadow: state !== 'default'
+                    ? '0 8px 25px rgba(0,0,0,0.2)'
+                    : '0 2px 8px rgba(0,0,0,0.1)'
+                }}
+              >
+                {v}
+              </motion.div>
+            )
+          })}
+        </div>
+
+        <Legend items={legendItems} />
+
+        {/* Controls */}
+        <ControlsRow>
+          <SpeedControl speed={speed} onSpeedChange={setSpeed} disabled={false} />
+
+          {sorting && (
+            <StepCounter current={currentStep + 1} total={steps.length} />
+          )}
+
+          <ControlButton
+            onClick={startSort}
+            disabled={sorting && !isPaused}
+            variant="primary"
+          >
+            {sorting ? '🔀 Sorting...' : '▶️ Start Sort'}
+          </ControlButton>
+
+          {sorting && (
+            <ControlButton onClick={togglePause} variant="success">
+              {isPaused ? '▶️ Resume' : '⏸️ Pause'}
+            </ControlButton>
+          )}
+
+          <ControlButton onClick={reset} variant="danger">
+            🔄 Reset
+          </ControlButton>
+        </ControlsRow>
+
+        {/* Final Result */}
+        <AnimatePresence>
+          {isFinalStep && (
             <motion.div
-              key={i}
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={SPRING.bouncy}
               style={{
-                width: 40,
-                height: 80,
-                margin: '0 4px',
-                background: bg,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 14,
-                borderRadius: 4,
-                color: '#000'
+                marginTop: 24,
+                padding: '16px 24px',
+                background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+                borderRadius: 12,
+                color: 'white',
+                fontWeight: 600,
+                fontSize: 18,
+                display: 'inline-block',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
               }}
-              animate={{ scale: inMerge || isFinal ? 1.2 : 1 }}
-              transition={{ duration: 0.3 }}
             >
-              {v}
+              🎉 Array sorted with Merge Sort!
             </motion.div>
-          )
-        })}
-      </div>
-
-    
-      <div style={{ marginTop: 20 }}>
-        <button
-          onClick={startSort}
-          disabled={running}
-          style={{
-            padding: '10px 20px',
-            background: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: 4,
-            cursor: running ? 'not-allowed' : 'pointer'
-          }}
-        >
-          {running ? 'Sorting…' : 'Start Sort'}
-        </button>
-      </div>
-    </div>
+          )}
+        </AnimatePresence>
+      </VisualizationContainer>
+    </PageContainer>
   )
 }
-
