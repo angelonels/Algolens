@@ -4,15 +4,23 @@ A visual playground for understanding algorithms. Pick an algorithm, watch it ru
 
 ## What's inside
 
-- Binary Search
-- Bubble Sort
-- Insertion Sort
-- Merge Sort
-- Quick Sort
-- Euclidean GCD
-- Matrix Traversal
+- **Binary Search** – Find elements with pointer indicators and range highlighting
+- **Bubble Sort** – Bar chart visualization with swap animations
+- **Insertion Sort** – Key extraction and shift visualization
+- **Merge Sort** – Split/merge phases with recursion depth tracking
+- **Quick Sort** – Pivot selection with partition range display
+- **Euclidean GCD** – Animated number boxes showing modulo operations
+- **Matrix Traversal** – Spiral traversal with layer coloring
+- **Dijkstra's Path** – Interactive graph with shortest path exploration
 
-Each one comes with animations, a Python snippet you can copy, and a short explanation.
+## Features
+
+- 🎛️ Speed controls (0.5x – 4x)
+- ⏸️ Pause/Resume animations
+- 📊 Step counter with progress
+- 📝 Python code snippets with copy button
+- 🎨 Color-coded state legends
+- ✨ Smooth Framer Motion animations
 
 ## Tech
 
@@ -28,6 +36,8 @@ src/
   components/
     Home.jsx
     Navbar.jsx
+    ui/
+      AnimationComponents.jsx
   visualizers/
     BinarySearch.jsx
     BubbleSort.jsx
@@ -36,6 +46,9 @@ src/
     QuickSort.jsx
     EuclideanGCD.jsx
     MatrixTraversal.jsx
+    DijkstraPath.jsx
+  utils/
+    animationConfig.js
   App.jsx
   main.jsx
   index.css
