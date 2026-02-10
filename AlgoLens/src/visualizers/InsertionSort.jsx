@@ -41,7 +41,6 @@ export default function InsertionSortVisualizer() {
       const key = arr[i]
       let j = i - 1
 
-      // Show key extraction
       s.push({
         snapshot: [...arr],
         keyIndex: i,
@@ -53,7 +52,6 @@ export default function InsertionSortVisualizer() {
         message: `Extracting key: ${key} from index ${i}`
       })
 
-      // Show comparisons and shifts
       while (j >= 0 && arr[j] > key) {
         s.push({
           snapshot: [...arr],
@@ -64,7 +62,7 @@ export default function InsertionSortVisualizer() {
           comparingIndex: j,
           shiftIndex: j + 1,
           sortedCount: i,
-          message: `${arr[j]} > ${key}, shifting ${arr[j]} right`
+          message: `${arr[j]} > ${key} → shifting ${arr[j]} right`
         })
 
         arr[j + 1] = arr[j]
@@ -78,11 +76,10 @@ export default function InsertionSortVisualizer() {
           insertedIndex: -1,
           comparingIndex: j,
           sortedCount: i,
-          message: `Shifted! Looking at position ${j >= 0 ? j : 'start'}`
+          message: `Shifted. Looking at position ${j >= 0 ? j : 'start'}`
         })
       }
 
-      // Insert key
       arr[j + 1] = key
       s.push({
         snapshot: [...arr],
@@ -104,7 +101,7 @@ export default function InsertionSortVisualizer() {
       insertedIndex: -1,
       comparingIndex: -1,
       sortedCount: arr.length,
-      message: '🎉 Array is sorted!'
+      message: '✓ Array is sorted'
     })
 
     return s
@@ -148,7 +145,6 @@ export default function InsertionSortVisualizer() {
   }
 
   const getElementState = (index) => {
-    const isSorted = index < step.sortedCount && step.phase === 'done'
     if (step.phase === 'done') return 'sorted'
     if (step.insertedIndex === index) return 'inserted'
     if (step.keyIndex === index) return 'key'
@@ -159,9 +155,9 @@ export default function InsertionSortVisualizer() {
   }
 
   const legendItems = [
-    { color: COLORS.active, label: 'Key (extracted)' },
+    { color: COLORS.active, label: 'Key' },
     { color: COLORS.comparing, label: 'Comparing' },
-    { color: '#a78bfa', label: 'Shifting' },
+    { color: COLORS.pivot, label: 'Shifting' },
     { color: COLORS.found, label: 'Inserted' },
     { color: COLORS.sorted, label: 'Sorted' }
   ]
@@ -169,14 +165,14 @@ export default function InsertionSortVisualizer() {
   const isFinalStep = currentStep === steps.length - 1 && !sorting
 
   return (
-    <PageContainer title="📥 Insertion Sort Visualizer">
+    <PageContainer title="Insertion Sort Visualizer">
       <ExplanationBox>
-        <h3 style={{ marginBottom: 12, color: '#1e293b' }}>What is Insertion Sort?</h3>
+        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Insertion Sort?</h3>
         <p>
           Insertion Sort builds a sorted array one element at a time. At each pass, it takes the next
           element (key) and inserts it into its correct position among the previously sorted elements.
         </p>
-        <h4 style={{ margin: '16px 0 8px', color: '#475569' }}>How It Works</h4>
+        <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
         <ol style={{ paddingLeft: 20, margin: 0 }}>
           <li>"Extract" the element at current position as key</li>
           <li>Compare key with sorted elements from right to left</li>
@@ -196,22 +192,24 @@ export default function InsertionSortVisualizer() {
         <AnimatePresence>
           {step.keyValue !== null && step.phase !== 'done' && (
             <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
               style={{
-                marginBottom: 20,
-                padding: '12px 24px',
-                background: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)',
-                borderRadius: 12,
-                color: 'white',
+                marginBottom: 16,
+                padding: '8px 16px',
+                background: COLORS.surface,
+                border: `1px solid ${COLORS.active}`,
+                borderLeft: `3px solid ${COLORS.active}`,
+                borderRadius: '0px',
+                fontFamily: "'JetBrains Mono', monospace",
                 fontWeight: 700,
-                fontSize: 18,
-                display: 'inline-block',
-                boxShadow: '0 4px 15px rgba(245, 158, 11, 0.4)'
+                fontSize: 14,
+                color: COLORS.fg,
+                display: 'inline-block'
               }}
             >
-              🔑 Key: {step.keyValue}
+              Key: {step.keyValue}
             </motion.div>
           )}
         </AnimatePresence>
@@ -227,12 +225,12 @@ export default function InsertionSortVisualizer() {
           )}
         </AnimatePresence>
 
-        {/* Array Visualization */}
+        {/* Array Bar Chart */}
         <div style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'flex-end',
-          gap: 8,
+          gap: 6,
           height: 280,
           padding: '20px 0'
         }}>
@@ -242,10 +240,10 @@ export default function InsertionSortVisualizer() {
             const height = (v / maxVal) * 200 + 40
 
             const colors = {
-              default: '#e2e8f0',
+              default: COLORS.default,
               key: COLORS.active,
               comparing: COLORS.comparing,
-              shifting: '#a78bfa',
+              shifting: COLORS.pivot,
               inserted: COLORS.found,
               sorted: COLORS.sorted,
               'sorted-partial': '#86efac'
@@ -258,31 +256,30 @@ export default function InsertionSortVisualizer() {
                 animate={{
                   height,
                   backgroundColor: colors[state] || colors.default,
-                  scale: state === 'key' || state === 'inserted' ? 1.1 : 1,
-                  y: state === 'key' ? -30 : state === 'shifting' ? -10 : 0
+                  scale: state === 'key' || state === 'inserted' ? 1.06 : 1,
+                  y: state === 'key' ? -24 : state === 'shifting' ? -8 : 0
                 }}
                 transition={{
                   ...SPRING.bouncy,
-                  layout: { type: 'spring', stiffness: 300, damping: 30 }
+                  layout: { type: 'spring', stiffness: 500, damping: 30 }
                 }}
                 style={{
-                  width: 60,
-                  borderRadius: '10px 10px 4px 4px',
+                  width: 56,
+                  borderRadius: '2px 2px 0 0',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'flex-end',
                   paddingBottom: 8,
+                  fontFamily: "'JetBrains Mono', monospace",
                   fontWeight: 700,
-                  fontSize: 18,
-                  color: '#1e293b',
-                  boxShadow: state === 'key' || state === 'inserted'
-                    ? '0 8px 25px rgba(0,0,0,0.25)'
-                    : '0 2px 8px rgba(0,0,0,0.1)'
+                  fontSize: 16,
+                  color: (state === 'key' || state === 'comparing' || state === 'shifting') ? '#fff' : COLORS.fg,
+                  border: '1px solid rgba(0,0,0,0.08)'
                 }}
               >
                 {v}
-                <span style={{ fontSize: 10, opacity: 0.6, marginTop: 2 }}>{i}</span>
+                <span style={{ fontSize: 9, opacity: 0.5, marginTop: 2, fontFamily: "'JetBrains Mono', monospace" }}>{i}</span>
               </motion.div>
             )
           })}
@@ -303,17 +300,17 @@ export default function InsertionSortVisualizer() {
             disabled={sorting && !isPaused}
             variant="primary"
           >
-            {sorting ? '📥 Sorting...' : '▶️ Start Sort'}
+            {sorting ? 'Sorting…' : 'Start Sort'}
           </ControlButton>
 
           {sorting && (
             <ControlButton onClick={togglePause} variant="success">
-              {isPaused ? '▶️ Resume' : '⏸️ Pause'}
+              {isPaused ? 'Resume' : 'Pause'}
             </ControlButton>
           )}
 
           <ControlButton onClick={reset} variant="danger">
-            🔄 Reset
+            Reset
           </ControlButton>
         </ControlsRow>
 
@@ -321,23 +318,25 @@ export default function InsertionSortVisualizer() {
         <AnimatePresence>
           {isFinalStep && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              transition={SPRING.bouncy}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 marginTop: 24,
-                padding: '16px 24px',
-                background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-                borderRadius: 12,
-                color: 'white',
+                padding: '12px 20px',
+                background: COLORS.surface,
+                border: `1px solid ${COLORS.sorted}`,
+                borderLeft: `3px solid ${COLORS.sorted}`,
+                borderRadius: '0px',
+                fontFamily: "'JetBrains Mono', monospace",
                 fontWeight: 600,
-                fontSize: 18,
-                display: 'inline-block',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                fontSize: 15,
+                color: COLORS.fg,
+                display: 'inline-block'
               }}
             >
-              🎉 Array sorted successfully!
+              ✓ Array sorted successfully
             </motion.div>
           )}
         </AnimatePresence>

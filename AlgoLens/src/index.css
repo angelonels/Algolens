@@ -1,23 +1,195 @@
-body {
+/* ═══════════════════════════════════════════
+   ALGOLENS — Design System
+   Swiss-Style / Neobrutalist Hybrid
+   ═══════════════════════════════════════════ */
+
+:root {
+  /* ── Color Palette ── */
+  --bg:        #f5f0e8;
+  --bg-alt:    #eee9df;
+  --surface:   #ffffff;
+  --fg:        #0a0a0a;
+  --fg-muted:  #6b6b60;
+  --accent:    #e63312;
+  --accent-hover: #c72a0e;
+  --border:    #d4d0c8;
+  --border-strong: #0a0a0a;
+
+  /* ── Semantic State Colors ── */
+  --color-comparing:  #2563eb;
+  --color-swapping:   #e63312;
+  --color-sorted:     #16a34a;
+  --color-found:      #16a34a;
+  --color-active:     #d97706;
+  --color-current:    #2563eb;
+  --color-pivot:      #7c3aed;
+  --color-visited:    #0891b2;
+  --color-exploring:  #ea580c;
+  --color-default-el: #e8e4dc;
+  --color-eliminated: #b0ada5;
+
+  /* ── Typography ── */
+  --font-body:   'Inter', -apple-system, sans-serif;
+  --font-mono:   'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ── Spacing ── */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+  --space-2xl: 64px;
+
+  /* ── Borders & Radii ── */
+  --radius:    2px;
+  --radius-0:  0px;
+  --border-w:  1px;
+
+  /* ── Motion ── */
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --duration:  150ms;
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f8fafc;
-  color: #1e293b;
+  padding: 0;
 }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  background-color: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+}
+
+/* ── Typography Hierarchy ── */
+h1, h2, h3, h4 {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: clamp(2rem, 4vw, 3.2rem); }
+h2 { font-size: clamp(1.4rem, 2.5vw, 1.8rem); }
+h3 { font-size: 1.15rem; }
+h4 { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg-muted); }
+
+p {
+  max-width: 65ch;
+  color: var(--fg);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--bg-alt);
+  padding: 2px 6px;
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+}
+
+pre {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+/* ── Links ── */
 a {
+  color: var(--fg);
   text-decoration: none;
+  transition: color var(--duration) var(--ease-out);
 }
+a:hover {
+  color: var(--accent);
+}
+
+/* ── Buttons (Global Reset) ── */
 button {
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 20px;
+  background-color: var(--fg);
+  color: var(--bg);
+  border: var(--border-w) solid var(--fg);
+  border-radius: var(--radius-0);
   cursor: pointer;
+  transition: all var(--duration) var(--ease-out);
+}
+button:hover:not(:disabled) {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+button:active:not(:disabled) {
+  transform: translateY(0px);
 }
 button:disabled {
-  background-color: #94a3b8;
+  background-color: var(--border);
+  border-color: var(--border);
+  color: var(--fg-muted);
   cursor: not-allowed;
 }
 
+/* ── Inputs & Selects ── */
+input, select {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  background: var(--surface);
+  color: var(--fg);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-0);
+  outline: none;
+  transition: border-color var(--duration) var(--ease-out);
+}
+input:focus, select:focus {
+  border-color: var(--fg);
+}
+
+/* ── Selection ── */
+::selection {
+  background-color: var(--accent);
+  color: var(--surface);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-muted);
+}
+
+/* ── Utility: Mono label ── */
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* ── Utility: Accent text ── */
+.accent {
+  color: var(--accent);
+}

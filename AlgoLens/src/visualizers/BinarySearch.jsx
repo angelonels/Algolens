@@ -48,16 +48,16 @@ export default function BinarySearchVisualizer() {
         high,
         found,
         message: found
-          ? `🎯 Found ${target} at index ${mid}!`
+          ? `Found ${target} at index ${mid}`
           : array[mid] < target
-            ? `${array[mid]} < ${target}, searching right half (${mid + 1} to ${high})`
-            : `${array[mid]} > ${target}, searching left half (${low} to ${mid - 1})`
+            ? `${array[mid]} < ${target} → search right (${mid + 1}..${high})`
+            : `${array[mid]} > ${target} → search left (${low}..${mid - 1})`
       })
       if (found) break
       array[mid] < target ? (low = mid + 1) : (high = mid - 1)
     }
     if (s.length === 0 || !s[s.length - 1].found) {
-      s.push({ low: -1, mid: -1, high: -1, found: false, message: `❌ ${target} not found in array` })
+      s.push({ low: -1, mid: -1, high: -1, found: false, message: `${target} not found in array` })
     }
     return s
   }
@@ -112,23 +112,23 @@ export default function BinarySearchVisualizer() {
   const legendItems = [
     { color: COLORS.current, label: 'Mid' },
     { color: COLORS.active, label: 'Search Range' },
-    { color: '#94a3b8', label: 'Eliminated' },
+    { color: COLORS.eliminated, label: 'Eliminated' },
     { color: COLORS.found, label: 'Found' }
   ]
 
   return (
-    <PageContainer title="🔍 Binary Search Visualizer">
+    <PageContainer title="Binary Search Visualizer">
       <ExplanationBox>
-        <h3 style={{ marginBottom: 12, color: '#1e293b' }}>What is Binary Search?</h3>
+        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Binary Search?</h3>
         <p>
           Binary Search efficiently locates a target value within a <strong>sorted array</strong>.
           By comparing the target to the middle element, it halves the search space on each step,
           achieving a time complexity of <strong>O(log n)</strong>.
         </p>
-        <h4 style={{ margin: '16px 0 8px', color: '#475569' }}>How It Works</h4>
+        <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
         <ol style={{ paddingLeft: 20, margin: 0 }}>
-          <li>Compute <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: 4 }}>mid = (low + high) / 2</code></li>
-          <li>If <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: 4 }}>arr[mid] === target</code>, we're done</li>
+          <li>Compute <code>mid = (low + high) / 2</code></li>
+          <li>If <code>arr[mid] === target</code>, done</li>
           <li>If target is larger, search right half</li>
           <li>If target is smaller, search left half</li>
           <li>Repeat until found or range is empty</li>
@@ -140,7 +140,15 @@ export default function BinarySearchVisualizer() {
       <VisualizationContainer>
         {/* Target Input */}
         <div style={{ marginBottom: 20 }}>
-          <label style={{ marginRight: 12, fontSize: 16, fontWeight: 500 }}>Target:</label>
+          <label style={{
+            marginRight: 12,
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '12px',
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            color: COLORS.fgMuted
+          }}>Target</label>
           <input
             type="number"
             value={target}
@@ -150,12 +158,14 @@ export default function BinarySearchVisualizer() {
             disabled={searching}
             style={{
               width: 80,
-              padding: '10px 14px',
-              fontSize: 16,
-              borderRadius: 8,
-              border: '2px solid #e2e8f0',
+              padding: '8px 12px',
+              fontSize: 14,
+              fontFamily: "'JetBrains Mono', monospace",
               fontWeight: 600,
-              textAlign: 'center'
+              textAlign: 'center',
+              border: `1px solid ${COLORS.border}`,
+              borderRadius: '0px',
+              background: COLORS.surface
             }}
           />
         </div>
@@ -175,8 +185,8 @@ export default function BinarySearchVisualizer() {
         <div style={{
           display: 'flex',
           justifyContent: 'center',
-          marginBottom: 8,
-          height: 30
+          marginBottom: 4,
+          height: 24
         }}>
           {array.map((_, i) => {
             const isLow = step.low === i && step.low >= 0
@@ -187,12 +197,15 @@ export default function BinarySearchVisualizer() {
               <div
                 key={i}
                 style={{
-                  width: 50,
-                  margin: '0 3px',
+                  width: 48,
+                  margin: '0 2px',
                   textAlign: 'center',
-                  fontSize: 11,
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 10,
                   fontWeight: 700,
-                  color: isMid ? COLORS.current : '#64748b'
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  color: isMid ? COLORS.current : COLORS.fgMuted
                 }}
               >
                 {isMid && '▼ mid'}
@@ -204,14 +217,14 @@ export default function BinarySearchVisualizer() {
         </div>
 
         {/* Array Visualization */}
-        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 6 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 4 }}>
           {array.map((v, i) => {
             const state = getElementState(i)
             const colors = {
               found: COLORS.found,
               current: COLORS.current,
-              active: COLORS.comparing,
-              eliminated: '#94a3b8'
+              active: COLORS.active,
+              eliminated: COLORS.eliminated
             }
 
             return (
@@ -219,29 +232,33 @@ export default function BinarySearchVisualizer() {
                 key={i}
                 layout
                 animate={{
-                  scale: state === 'current' ? 1.15 : state === 'found' ? 1.2 : 1,
+                  scale: state === 'current' ? 1.08 : state === 'found' ? 1.1 : 1,
                   backgroundColor: colors[state],
-                  opacity: state === 'eliminated' ? 0.4 : 1
+                  opacity: state === 'eliminated' ? 0.35 : 1
                 }}
-                transition={SPRING.bouncy}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 style={{
-                  width: 50,
-                  height: 50,
+                  width: 48,
+                  height: 48,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: 10,
+                  borderRadius: '2px',
+                  fontFamily: "'JetBrains Mono', monospace",
                   fontWeight: 700,
-                  fontSize: 18,
-                  color: state === 'eliminated' ? '#fff' : '#1e293b',
-                  boxShadow: state === 'current' || state === 'found'
-                    ? '0 8px 20px rgba(0,0,0,0.2)'
-                    : '0 2px 4px rgba(0,0,0,0.1)'
+                  fontSize: 16,
+                  color: (state === 'eliminated' || state === 'current' || state === 'found')
+                    ? '#fff' : COLORS.fg,
+                  border: `1px solid rgba(0,0,0,0.1)`
                 }}
               >
                 {v}
-                <span style={{ fontSize: 10, opacity: 0.7 }}>{i}</span>
+                <span style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 9,
+                  opacity: 0.6
+                }}>{i}</span>
               </motion.div>
             )
           })}
@@ -262,17 +279,17 @@ export default function BinarySearchVisualizer() {
             disabled={searching && !isPaused}
             variant="primary"
           >
-            {searching ? '🔍 Searching...' : '▶️ Start Search'}
+            {searching ? 'Searching…' : 'Start Search'}
           </ControlButton>
 
           {searching && (
             <ControlButton onClick={togglePause} variant="success">
-              {isPaused ? '▶️ Resume' : '⏸️ Pause'}
+              {isPaused ? 'Resume' : 'Pause'}
             </ControlButton>
           )}
 
           <ControlButton onClick={reset} variant="danger">
-            🔄 Reset
+            Reset
           </ControlButton>
         </ControlsRow>
 
@@ -280,27 +297,27 @@ export default function BinarySearchVisualizer() {
         <AnimatePresence>
           {result !== null && !searching && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              transition={SPRING.bouncy}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 marginTop: 24,
-                padding: '16px 24px',
-                background: result >= 0
-                  ? 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)'
-                  : 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)',
-                borderRadius: 12,
-                color: 'white',
+                padding: '12px 20px',
+                background: COLORS.surface,
+                border: `1px solid ${result >= 0 ? COLORS.sorted : COLORS.accent}`,
+                borderLeft: `3px solid ${result >= 0 ? COLORS.sorted : COLORS.accent}`,
+                borderRadius: '0px',
+                fontFamily: "'JetBrains Mono', monospace",
                 fontWeight: 600,
-                fontSize: 18,
-                display: 'inline-block',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                fontSize: 15,
+                color: COLORS.fg,
+                display: 'inline-block'
               }}
             >
               {result >= 0
-                ? `🎉 Target ${target} found at index ${result}!`
-                : `❌ Target ${target} not found in array`}
+                ? `✓ Target ${target} found at index ${result}`
+                : `✗ Target ${target} not found in array`}
             </motion.div>
           )}
         </AnimatePresence>

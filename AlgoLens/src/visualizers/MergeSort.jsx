@@ -58,7 +58,7 @@ export default function MergeSortVisualizer() {
         leftRange: [l, m],
         rightRange: [m + 1, r],
         depth,
-        message: `Merging [${l}-${m}] and [${m + 1}-${r}]`
+        message: `Merging [${l}–${m}] and [${m + 1}–${r}]`
       })
 
       let i = l, j = m + 1, k = l
@@ -96,7 +96,7 @@ export default function MergeSortVisualizer() {
         range: [l, r],
         splitPoint: m,
         depth,
-        message: `Splitting [${l}-${r}] at mid=${m}`
+        message: `Splitting [${l}–${r}] at mid=${m}`
       })
 
       mergeSort(l, m, depth + 1)
@@ -111,7 +111,7 @@ export default function MergeSortVisualizer() {
       phase: 'done',
       range: null,
       depth: 0,
-      message: '🎉 Array is sorted!'
+      message: '✓ Array is sorted'
     })
 
     return s
@@ -167,10 +167,10 @@ export default function MergeSortVisualizer() {
     return 'default'
   }
 
-  const depthColors = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#22c55e']
+  const depthColors = [COLORS.comparing, COLORS.pivot, '#ec4899', COLORS.exploring, COLORS.sorted]
 
   const legendItems = [
-    { color: '#3b82f6', label: 'Left Half' },
+    { color: COLORS.comparing, label: 'Left Half' },
     { color: '#ec4899', label: 'Right Half' },
     { color: COLORS.active, label: 'Merging' },
     { color: COLORS.sorted, label: 'Sorted' }
@@ -179,14 +179,14 @@ export default function MergeSortVisualizer() {
   const isFinalStep = currentStep === steps.length - 1 && !sorting
 
   return (
-    <PageContainer title="🔀 Merge Sort Visualizer">
+    <PageContainer title="Merge Sort Visualizer">
       <ExplanationBox>
-        <h3 style={{ marginBottom: 12, color: '#1e293b' }}>What is Merge Sort?</h3>
+        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Merge Sort?</h3>
         <p>
           Merge Sort is a divide-and-conquer algorithm. It recursively splits the array into halves,
           sorts each half, and then merges them back together. It guarantees O(n log n) time complexity.
         </p>
-        <h4 style={{ margin: '16px 0 8px', color: '#475569' }}>How It Works</h4>
+        <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
         <ol style={{ paddingLeft: 20, margin: 0 }}>
           <li>Divide array into two halves</li>
           <li>Recursively sort each half</li>
@@ -204,15 +204,21 @@ export default function MergeSortVisualizer() {
         {/* Depth Indicator */}
         {sorting && step.depth !== undefined && (
           <div style={{
-            marginBottom: 16,
-            padding: '8px 16px',
-            background: depthColors[step.depth % depthColors.length],
-            borderRadius: 8,
-            color: 'white',
+            marginBottom: 12,
+            padding: '6px 12px',
+            background: COLORS.surface,
+            border: `1px solid ${depthColors[step.depth % depthColors.length]}`,
+            borderLeft: `3px solid ${depthColors[step.depth % depthColors.length]}`,
+            borderRadius: '0px',
+            fontFamily: "'JetBrains Mono', monospace",
             fontWeight: 600,
+            fontSize: '12px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.04em',
+            color: COLORS.fg,
             display: 'inline-block'
           }}>
-            Recursion Depth: {step.depth}
+            Depth: {step.depth}
           </div>
         )}
 
@@ -227,12 +233,12 @@ export default function MergeSortVisualizer() {
           )}
         </AnimatePresence>
 
-        {/* Array Visualization */}
+        {/* Array Bar Chart */}
         <div style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'flex-end',
-          gap: 6,
+          gap: 4,
           height: 280,
           padding: '20px 0'
         }}>
@@ -242,9 +248,9 @@ export default function MergeSortVisualizer() {
             const height = (v / maxVal) * 200 + 40
 
             const colors = {
-              default: '#e2e8f0',
+              default: COLORS.default,
               splitting: COLORS.comparing,
-              left: '#3b82f6',
+              left: COLORS.comparing,
               right: '#ec4899',
               merged: COLORS.active,
               sorted: COLORS.sorted
@@ -257,27 +263,27 @@ export default function MergeSortVisualizer() {
                 animate={{
                   height,
                   backgroundColor: colors[state] || colors.default,
-                  scale: state === 'merged' ? 1.05 : 1,
-                  y: state === 'splitting' ? -10 : 0
+                  scale: state === 'merged' ? 1.04 : 1,
+                  y: state === 'splitting' ? -8 : 0
                 }}
                 transition={{
                   ...SPRING.bouncy,
-                  layout: { type: 'spring', stiffness: 300, damping: 30 }
+                  layout: { type: 'spring', stiffness: 500, damping: 30 }
                 }}
                 style={{
-                  width: 55,
-                  borderRadius: '10px 10px 4px 4px',
+                  width: 52,
+                  borderRadius: '2px 2px 0 0',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'flex-end',
                   paddingBottom: 8,
+                  fontFamily: "'JetBrains Mono', monospace",
                   fontWeight: 700,
-                  fontSize: 16,
-                  color: state === 'left' || state === 'right' ? 'white' : '#1e293b',
-                  boxShadow: state !== 'default'
-                    ? '0 8px 25px rgba(0,0,0,0.2)'
-                    : '0 2px 8px rgba(0,0,0,0.1)'
+                  fontSize: 15,
+                  color: (state === 'left' || state === 'right' || state === 'comparing')
+                    ? '#fff' : COLORS.fg,
+                  border: '1px solid rgba(0,0,0,0.08)'
                 }}
               >
                 {v}
@@ -301,17 +307,17 @@ export default function MergeSortVisualizer() {
             disabled={sorting && !isPaused}
             variant="primary"
           >
-            {sorting ? '🔀 Sorting...' : '▶️ Start Sort'}
+            {sorting ? 'Sorting…' : 'Start Sort'}
           </ControlButton>
 
           {sorting && (
             <ControlButton onClick={togglePause} variant="success">
-              {isPaused ? '▶️ Resume' : '⏸️ Pause'}
+              {isPaused ? 'Resume' : 'Pause'}
             </ControlButton>
           )}
 
           <ControlButton onClick={reset} variant="danger">
-            🔄 Reset
+            Reset
           </ControlButton>
         </ControlsRow>
 
@@ -319,23 +325,25 @@ export default function MergeSortVisualizer() {
         <AnimatePresence>
           {isFinalStep && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              transition={SPRING.bouncy}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 marginTop: 24,
-                padding: '16px 24px',
-                background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-                borderRadius: 12,
-                color: 'white',
+                padding: '12px 20px',
+                background: COLORS.surface,
+                border: `1px solid ${COLORS.sorted}`,
+                borderLeft: `3px solid ${COLORS.sorted}`,
+                borderRadius: '0px',
+                fontFamily: "'JetBrains Mono', monospace",
                 fontWeight: 600,
-                fontSize: 18,
-                display: 'inline-block',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                fontSize: 15,
+                color: COLORS.fg,
+                display: 'inline-block'
               }}
             >
-              🎉 Array sorted with Merge Sort!
+              ✓ Array sorted with Merge Sort
             </motion.div>
           )}
         </AnimatePresence>

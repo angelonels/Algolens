@@ -2,12 +2,19 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { SPEED_PRESETS, COLORS, STYLES } from '../../utils/animationConfig'
 
-// Speed Control Component
+// ── Speed Control ──
 export function SpeedControl({ speed, onSpeedChange, disabled = false }) {
     return (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <label style={{ fontSize: '14px', fontWeight: '500', color: COLORS.textSecondary }}>
-                Speed:
+            <label style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '12px',
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: COLORS.fgMuted
+            }}>
+                Speed
             </label>
             <select
                 value={speed}
@@ -15,19 +22,19 @@ export function SpeedControl({ speed, onSpeedChange, disabled = false }) {
                 disabled={disabled}
                 style={{
                     ...STYLES.speedSelect,
-                    opacity: disabled ? 0.6 : 1
+                    opacity: disabled ? 0.5 : 1
                 }}
             >
-                <option value={SPEED_PRESETS.slow}>0.5x</option>
-                <option value={SPEED_PRESETS.normal}>1x</option>
-                <option value={SPEED_PRESETS.fast}>2x</option>
-                <option value={SPEED_PRESETS.turbo}>4x</option>
+                <option value={SPEED_PRESETS.slow}>0.5×</option>
+                <option value={SPEED_PRESETS.normal}>1×</option>
+                <option value={SPEED_PRESETS.fast}>2×</option>
+                <option value={SPEED_PRESETS.turbo}>4×</option>
             </select>
         </div>
     )
 }
 
-// Step Counter Component
+// ── Step Counter ──
 export function StepCounter({ current, total }) {
     const progress = total > 0 ? (current / total) * 100 : 0
 
@@ -36,66 +43,69 @@ export function StepCounter({ current, total }) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '8px',
-            minWidth: '150px'
+            gap: '4px',
+            minWidth: '140px'
         }}>
             <span style={{
-                fontSize: '14px',
-                fontWeight: '600',
-                color: COLORS.textPrimary
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '12px',
+                fontWeight: 600,
+                color: COLORS.fg,
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em'
             }}>
                 Step {current} / {total}
             </span>
             <div style={{
                 width: '100%',
-                height: '6px',
-                background: '#e2e8f0',
-                borderRadius: '3px',
+                height: '3px',
+                background: COLORS.border,
                 overflow: 'hidden'
             }}>
                 <motion.div
                     style={{
                         height: '100%',
-                        background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
-                        borderRadius: '3px'
+                        background: COLORS.accent
                     }}
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
                 />
             </div>
         </div>
     )
 }
 
-// Status Message Component
+// ── Status Message ──
 export function StatusMessage({ message, type = 'info' }) {
     if (!message) return null
 
-    const bgColors = {
-        info: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-        success: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-        warning: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-        compare: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-        swap: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)'
+    const borderColors = {
+        info: COLORS.current,
+        success: COLORS.sorted,
+        warning: COLORS.accent,
+        compare: COLORS.comparing,
+        swap: COLORS.swapping
     }
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
             style={{
                 display: 'inline-block',
-                padding: '12px 24px',
-                background: bgColors[type] || bgColors.info,
-                borderRadius: '12px',
-                color: type === 'compare' ? '#333' : 'white',
-                fontWeight: '600',
-                fontSize: '14px',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
-                marginBottom: '20px'
+                padding: '8px 16px',
+                background: COLORS.surface,
+                border: `1px solid ${borderColors[type] || COLORS.border}`,
+                borderLeft: `3px solid ${borderColors[type] || COLORS.border}`,
+                borderRadius: '0px',
+                color: COLORS.fg,
+                fontFamily: "'JetBrains Mono', monospace",
+                fontWeight: 500,
+                fontSize: '13px',
+                marginBottom: '16px'
             }}
         >
             {message}
@@ -103,43 +113,69 @@ export function StatusMessage({ message, type = 'info' }) {
     )
 }
 
-// Control Button Component
+// ── Control Button ──
 export function ControlButton({ onClick, disabled, children, variant = 'primary', ...props }) {
     const variants = {
         primary: {
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            hoverBg: 'linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)'
+            background: COLORS.fg,
+            color: COLORS.fgLight,
+            borderColor: COLORS.fg,
+            hoverBg: COLORS.accent,
+            hoverBorder: COLORS.accent
         },
         success: {
-            background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-            hoverBg: 'linear-gradient(135deg, #0f8b7e 0%, #2fd36f 100%)'
+            background: COLORS.sorted,
+            color: '#ffffff',
+            borderColor: COLORS.sorted,
+            hoverBg: '#15803d',
+            hoverBorder: '#15803d'
         },
         danger: {
-            background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)',
-            hoverBg: 'linear-gradient(135deg, #e55555 0%, #d94d1a 100%)'
+            background: 'transparent',
+            color: COLORS.fg,
+            borderColor: COLORS.border,
+            hoverBg: COLORS.accent,
+            hoverBorder: COLORS.accent
         }
     }
 
-    const style = variants[variant]
+    const v = variants[variant]
 
     return (
         <motion.button
             onClick={onClick}
             disabled={disabled}
-            whileHover={!disabled ? { scale: 1.02, y: -2 } : {}}
+            whileHover={!disabled ? { y: -1 } : {}}
             whileTap={!disabled ? { scale: 0.98 } : {}}
+            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
             style={{
-                padding: '14px 28px',
-                background: disabled ? '#94a3b8' : style.background,
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                fontSize: '16px',
-                fontWeight: '600',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontWeight: 600,
+                fontSize: '13px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                padding: '10px 20px',
+                background: disabled ? COLORS.border : v.background,
+                color: disabled ? COLORS.fgMuted : v.color,
+                border: `1px solid ${disabled ? COLORS.border : v.borderColor}`,
+                borderRadius: '0px',
                 cursor: disabled ? 'not-allowed' : 'pointer',
-                boxShadow: disabled ? 'none' : '0 4px 15px rgba(102, 126, 234, 0.4)',
-                transition: 'all 0.2s ease',
+                transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)',
                 ...props.style
+            }}
+            onMouseEnter={(e) => {
+                if (!disabled) {
+                    e.currentTarget.style.background = v.hoverBg
+                    e.currentTarget.style.borderColor = v.hoverBorder
+                    e.currentTarget.style.color = '#ffffff'
+                }
+            }}
+            onMouseLeave={(e) => {
+                if (!disabled) {
+                    e.currentTarget.style.background = v.background
+                    e.currentTarget.style.borderColor = v.borderColor
+                    e.currentTarget.style.color = v.color
+                }
             }}
             {...props}
         >
@@ -148,36 +184,36 @@ export function ControlButton({ onClick, disabled, children, variant = 'primary'
     )
 }
 
-// Legend Component
+// ── Legend ──
 export function Legend({ items }) {
     return (
         <div style={{
             display: 'flex',
-            justifyContent: 'center',
             flexWrap: 'wrap',
             gap: '16px',
             marginTop: '16px',
-            padding: '12px 20px',
-            background: '#f1f5f9',
-            borderRadius: '10px'
+            padding: '12px 16px',
+            background: COLORS.bgAlt,
+            border: `1px solid ${COLORS.border}`,
+            borderRadius: '0px'
         }}>
             {items.map((item, index) => (
                 <div key={index} style={STYLES.legendItem}>
                     <div style={{
-                        width: '16px',
-                        height: '16px',
-                        borderRadius: '4px',
+                        width: '10px',
+                        height: '10px',
+                        borderRadius: '0px',
                         background: item.color,
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.15)'
+                        border: '1px solid rgba(0,0,0,0.1)'
                     }} />
-                    <span style={{ fontWeight: '500' }}>{item.label}</span>
+                    <span>{item.label}</span>
                 </div>
             ))}
         </div>
     )
 }
 
-// Code Block Component with Syntax Highlighting Feel
+// ── Code Block ──
 export function CodeBlock({ code, onCopy }) {
     const handleCopy = () => {
         navigator.clipboard.writeText(code)
@@ -192,30 +228,41 @@ export function CodeBlock({ code, onCopy }) {
             <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{code}</pre>
             <motion.button
                 onClick={handleCopy}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ y: -1 }}
+                whileTap={{ scale: 0.97 }}
                 style={{
                     position: 'absolute',
                     top: '12px',
                     right: '12px',
-                    padding: '8px 16px',
-                    background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontSize: '13px',
-                    fontWeight: '600',
+                    padding: '6px 14px',
+                    background: 'transparent',
+                    color: COLORS.fgLight,
+                    border: `1px solid rgba(255,255,255,0.2)`,
+                    borderRadius: '0px',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
                     cursor: 'pointer',
-                    boxShadow: '0 2px 8px rgba(17, 153, 142, 0.4)'
+                    transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)'
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)'
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.08)'
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'
+                    e.currentTarget.style.background = 'transparent'
                 }}
             >
-                📋 Copy
+                Copy
             </motion.button>
         </div>
     )
 }
 
-// Array Element Component for Sorting Visualizers
+// ── Array Element ──
 export function ArrayElement({
     value,
     state = 'default',
@@ -235,18 +282,18 @@ export function ArrayElement({
 
     const stateScales = {
         default: 1,
-        comparing: 1.1,
-        swapping: 1.15,
+        comparing: 1.06,
+        swapping: 1.08,
         sorted: 1,
-        pivot: 1.1,
-        current: 1.15,
-        active: 1.1
+        pivot: 1.06,
+        current: 1.08,
+        active: 1.04
     }
 
     return (
         <motion.div
             layout
-            initial={{ scale: 0.8, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{
                 scale: stateScales[state] || 1,
                 opacity: 1,
@@ -254,9 +301,9 @@ export function ArrayElement({
             }}
             transition={{
                 type: 'spring',
-                stiffness: 300,
-                damping: 25,
-                layout: { duration: 0.3 }
+                stiffness: 500,
+                damping: 30,
+                layout: { duration: 0.2 }
             }}
             style={{
                 width,
@@ -264,14 +311,15 @@ export function ArrayElement({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                borderRadius: '10px',
-                fontWeight: '700',
-                fontSize: '18px',
-                color: state === 'swapping' ? 'white' : COLORS.textPrimary,
-                boxShadow: state === 'default'
-                    ? '0 2px 4px rgba(0,0,0,0.1)'
-                    : '0 4px 12px rgba(0,0,0,0.2)',
-                border: state === 'pivot' ? '3px solid #7c3aed' : 'none'
+                borderRadius: '2px',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontWeight: 700,
+                fontSize: '16px',
+                color: (state === 'swapping' || state === 'comparing' || state === 'current')
+                    ? '#ffffff' : COLORS.fg,
+                border: state === 'pivot'
+                    ? `2px solid ${COLORS.pivot}`
+                    : `1px solid rgba(0,0,0,0.1)`
             }}
         >
             {showValue && value}
@@ -279,13 +327,13 @@ export function ArrayElement({
     )
 }
 
-// Visualization Container
-export function VisualizationContainer({ children, maxWidth = 900 }) {
+// ── Visualization Container ──
+export function VisualizationContainer({ children, maxWidth = 960 }) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             style={{
                 ...STYLES.visualizationArea,
                 maxWidth
@@ -296,13 +344,14 @@ export function VisualizationContainer({ children, maxWidth = 900 }) {
     )
 }
 
-// Page Container
+// ── Page Container ──
 export function PageContainer({ title, children }) {
     return (
         <div style={STYLES.container}>
             <motion.h1
-                initial={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 style={STYLES.title}
             >
                 {title}
@@ -312,13 +361,13 @@ export function PageContainer({ title, children }) {
     )
 }
 
-// Explanation Box
+// ── Explanation Box ──
 export function ExplanationBox({ children }) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.1, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             style={STYLES.explanationBox}
         >
             {children}
@@ -326,7 +375,7 @@ export function ExplanationBox({ children }) {
     )
 }
 
-// Controls Row
+// ── Controls Row ──
 export function ControlsRow({ children }) {
     return (
         <div style={STYLES.controlsRow}>

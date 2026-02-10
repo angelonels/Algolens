@@ -1,7 +1,9 @@
-// Shared animation configuration for AlgoLens visualizers
-// Provides consistent timing, easing, and color theming
+// ═══════════════════════════════════════════
+// ALGOLENS — Animation & Design Tokens
+// Swiss-Style / Neobrutalist System
+// ═══════════════════════════════════════════
 
-// Animation speed presets (milliseconds between steps)
+// Animation speed presets (ms between steps)
 export const SPEED_PRESETS = {
     slow: 1500,
     normal: 800,
@@ -9,148 +11,181 @@ export const SPEED_PRESETS = {
     turbo: 150
 }
 
-// Framer Motion spring configurations
+// Framer Motion spring configs — snappy, not floaty
 export const SPRING = {
-    gentle: { type: 'spring', stiffness: 120, damping: 14 },
-    bouncy: { type: 'spring', stiffness: 300, damping: 20 },
-    snappy: { type: 'spring', stiffness: 400, damping: 25 },
-    smooth: { type: 'spring', stiffness: 100, damping: 20 }
+    gentle: { type: 'spring', stiffness: 200, damping: 22 },
+    bouncy: { type: 'spring', stiffness: 500, damping: 28 },
+    snappy: { type: 'spring', stiffness: 600, damping: 35 },
+    smooth: { type: 'spring', stiffness: 300, damping: 30 }
 }
 
-// Easing presets
+// Easing — expo-out for crisp, intentional motion
 export const EASING = {
-    smooth: [0.4, 0, 0.2, 1],
-    sharp: [0.4, 0, 0.6, 1],
-    bounce: [0.68, -0.55, 0.265, 1.55]
+    smooth: [0.16, 1, 0.3, 1],
+    sharp: [0.33, 1, 0.68, 1],
+    bounce: [0.34, 1.56, 0.64, 1]
 }
 
-// Modern color palette
+// Color palette — no gradients, flat and deliberate
 export const COLORS = {
-    // Primary states
-    default: '#e2e8f0',      // Slate 200
-    active: '#f59e0b',       // Amber 500
-    comparing: '#fbbf24',    // Amber 400
-    swapping: '#ef4444',     // Red 500
-    sorted: '#22c55e',       // Green 500
-    found: '#10b981',        // Emerald 500
+    // Element states
+    default: '#e8e4dc',
+    active: '#d97706',
+    comparing: '#2563eb',
+    swapping: '#e63312',
+    sorted: '#16a34a',
+    found: '#16a34a',
 
-    // Accent colors
-    pivot: '#8b5cf6',        // Violet 500
-    current: '#3b82f6',      // Blue 500
-    visited: '#06b6d4',      // Cyan 500
-    exploring: '#f97316',    // Orange 500
+    // Accent states
+    pivot: '#7c3aed',
+    current: '#2563eb',
+    visited: '#0891b2',
+    exploring: '#ea580c',
+    eliminated: '#b0ada5',
 
-    // Backgrounds
-    cardBg: '#1e293b',       // Slate 800
-    codeBg: '#0f172a',       // Slate 900
-    surfaceBg: '#f8fafc',    // Slate 50
+    // Surfaces
+    bg: '#f5f0e8',
+    bgAlt: '#eee9df',
+    surface: '#ffffff',
+    codeBg: '#0a0a0a',
 
     // Text
-    textPrimary: '#1e293b',
-    textSecondary: '#64748b',
-    textLight: '#f8fafc'
+    fg: '#0a0a0a',
+    fgMuted: '#6b6b60',
+    fgLight: '#f5f0e8',
+
+    // Borders
+    border: '#d4d0c8',
+    borderStrong: '#0a0a0a',
+
+    // Accent
+    accent: '#e63312',
+    accentHover: '#c72a0e'
 }
 
-// Gradient definitions
-export const GRADIENTS = {
-    primary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    success: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-    warning: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    info: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
-}
-
-// Common animation variants for Framer Motion
+// Shared animation variants
 export const VARIANTS = {
-    // Fade in from bottom
     fadeInUp: {
-        initial: { opacity: 0, y: 20 },
+        initial: { opacity: 0, y: 12 },
         animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -10 }
+        exit: { opacity: 0, y: -6 }
     },
-
-    // Scale pop
     pop: {
-        initial: { scale: 0.8, opacity: 0 },
+        initial: { scale: 0.92, opacity: 0 },
         animate: { scale: 1, opacity: 1 },
-        exit: { scale: 0.8, opacity: 0 }
+        exit: { scale: 0.92, opacity: 0 }
     },
-
-    // Pulse effect
     pulse: {
         animate: {
-            scale: [1, 1.05, 1],
-            transition: { duration: 0.5, repeat: Infinity }
-        }
-    },
-
-    // Glow effect (for SVG)
-    glow: {
-        animate: {
-            filter: ['drop-shadow(0 0 2px rgba(59, 130, 246, 0.5))',
-                'drop-shadow(0 0 8px rgba(59, 130, 246, 0.8))',
-                'drop-shadow(0 0 2px rgba(59, 130, 246, 0.5))'],
-            transition: { duration: 1, repeat: Infinity }
+            scale: [1, 1.03, 1],
+            transition: { duration: 0.6, repeat: Infinity }
         }
     }
 }
 
-// Shared styles
+// Shared style objects — sharp, bordered, no shadows
 export const STYLES = {
-    codeBlock: {
-        background: COLORS.codeBg,
-        padding: '20px',
-        borderRadius: '12px',
-        fontFamily: "'Fira Code', 'Monaco', monospace",
-        fontSize: '14px',
-        lineHeight: '1.6',
-        color: '#e2e8f0',
+    container: {
+        padding: '80px 40px 60px',
+        minHeight: '100vh',
+        background: '#f5f0e8',
+        maxWidth: '1100px',
+        margin: '0 auto'
+    },
+
+    title: {
+        fontFamily: "'JetBrains Mono', monospace",
+        fontWeight: 700,
+        fontSize: 'clamp(1.6rem, 3vw, 2.4rem)',
+        letterSpacing: '-0.02em',
+        color: '#0a0a0a',
+        marginBottom: '8px',
+        textAlign: 'left'
+    },
+
+    explanationBox: {
+        maxWidth: '760px',
+        margin: '20px 0',
         textAlign: 'left',
-        maxWidth: '800px',
-        margin: '0 auto',
-        overflowX: 'auto',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+        background: '#ffffff',
+        padding: '24px 28px',
+        border: '1px solid #d4d0c8',
+        borderRadius: '2px',
+        color: '#0a0a0a',
+        fontSize: '15px',
+        lineHeight: '1.7'
+    },
+
+    visualizationArea: {
+        background: '#ffffff',
+        border: '1px solid #d4d0c8',
+        borderRadius: '2px',
+        padding: '32px',
+        margin: '24px 0',
+        maxWidth: '960px'
+    },
+
+    codeBlock: {
+        background: '#0a0a0a',
+        padding: '24px 28px',
+        borderRadius: '0px',
+        border: '1px solid #0a0a0a',
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: '13px',
+        lineHeight: '1.65',
+        color: '#e8e4dc',
+        textAlign: 'left',
+        maxWidth: '760px',
+        margin: '16px 0',
+        overflowX: 'auto'
     },
 
     controlButton: {
-        padding: '12px 24px',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
-        border: 'none',
-        borderRadius: '8px',
-        fontSize: '16px',
-        fontWeight: '600',
+        fontFamily: "'JetBrains Mono', monospace",
+        fontWeight: 600,
+        fontSize: '13px',
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        padding: '10px 20px',
+        background: '#0a0a0a',
+        color: '#f5f0e8',
+        border: '1px solid #0a0a0a',
+        borderRadius: '0px',
         cursor: 'pointer',
-        transition: 'all 0.2s ease',
-        boxShadow: '0 4px 6px -1px rgba(102, 126, 234, 0.4)'
+        transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)'
     },
 
     controlButtonDisabled: {
-        background: '#94a3b8',
-        cursor: 'not-allowed',
-        boxShadow: 'none'
+        background: '#d4d0c8',
+        borderColor: '#d4d0c8',
+        color: '#6b6b60',
+        cursor: 'not-allowed'
     },
 
     speedSelect: {
-        padding: '8px 16px',
-        fontSize: '14px',
-        borderRadius: '8px',
-        border: '2px solid #e2e8f0',
-        background: 'white',
+        fontFamily: "'JetBrains Mono', monospace",
+        fontWeight: 500,
+        fontSize: '13px',
+        padding: '8px 12px',
+        border: '1px solid #d4d0c8',
+        borderRadius: '0px',
+        background: '#ffffff',
         cursor: 'pointer',
-        fontWeight: '500'
+        color: '#0a0a0a'
     },
 
     statusBadge: {
         display: 'inline-flex',
         alignItems: 'center',
         gap: '8px',
-        padding: '12px 20px',
-        background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-        borderRadius: '12px',
-        color: 'white',
-        fontWeight: '600',
-        fontSize: '14px',
-        boxShadow: '0 4px 6px -1px rgba(79, 172, 254, 0.4)'
+        padding: '8px 16px',
+        background: '#ffffff',
+        border: '1px solid #d4d0c8',
+        borderRadius: '2px',
+        color: '#0a0a0a',
+        fontFamily: "'JetBrains Mono', monospace",
+        fontWeight: 600,
+        fontSize: '13px'
     },
 
     legendItem: {
@@ -158,71 +193,38 @@ export const STYLES = {
         alignItems: 'center',
         gap: '6px',
         marginRight: '16px',
-        fontSize: '13px',
-        color: COLORS.textSecondary
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: '12px',
+        color: '#6b6b60',
+        textTransform: 'uppercase',
+        letterSpacing: '0.04em'
     },
 
     legendDot: (color) => ({
-        width: '14px',
-        height: '14px',
-        borderRadius: '4px',
-        background: color
+        width: '12px',
+        height: '12px',
+        borderRadius: '0px',
+        background: color,
+        border: '1px solid rgba(0,0,0,0.1)'
     }),
 
     arrayElement: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: '8px',
-        fontWeight: '600',
+        borderRadius: '2px',
+        fontFamily: "'JetBrains Mono', monospace",
+        fontWeight: 600,
         fontSize: '16px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        transition: 'all 0.3s ease'
-    },
-
-    container: {
-        textAlign: 'center',
-        padding: '30px 20px',
-        minHeight: '100vh',
-        background: '#f8fafc'
-    },
-
-    title: {
-        fontSize: '2rem',
-        fontWeight: '700',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        marginBottom: '10px'
-    },
-
-    explanationBox: {
-        maxWidth: '800px',
-        margin: '20px auto',
-        textAlign: 'left',
-        background: 'white',
-        padding: '24px',
-        borderRadius: '16px',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-        color: COLORS.textPrimary,
-        fontSize: '15px',
-        lineHeight: '1.7'
-    },
-
-    visualizationArea: {
-        background: 'white',
-        borderRadius: '16px',
-        padding: '30px',
-        margin: '20px auto',
-        maxWidth: '900px',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+        border: '1px solid rgba(0,0,0,0.12)',
+        transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)'
     },
 
     controlsRow: {
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        gap: '16px',
+        gap: '12px',
         flexWrap: 'wrap',
         marginTop: '24px'
     }
