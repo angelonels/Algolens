@@ -8,7 +8,8 @@ const algorithms = [
   { name: 'Quick Sort', path: '/quick-sort', tag: 'Sort' },
   { name: 'Euclidean GCD', path: '/gcd', tag: 'Math' },
   { name: 'Matrix Traversal', path: '/matrix-traversal', tag: 'Matrix' },
-  { name: "Dijkstra's Path", path: '/dijkstra', tag: 'Graph' }
+  { name: "Dijkstra's Path", path: '/dijkstra', tag: 'Graph' },
+  { name: 'BFS Grid Search', path: '/bfs', tag: 'Graph' }
 ]
 
 export default function Navbar() {

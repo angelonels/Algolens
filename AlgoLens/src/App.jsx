@@ -10,6 +10,7 @@ import EuclideanGCD from './visualizers/EuclideanGCD'
 import MatrixTraversal from './visualizers/MatrixTraversal'
 import QuickSort from './visualizers/QuickSort'
 import DijkstraPath from './visualizers/DijkstraPath'
+import BFSGrid from './visualizers/BFSGrid'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/matrix-traversal" element={<MatrixTraversal />} />
         <Route path="/quick-sort" element={<QuickSort />} />
         <Route path="/dijkstra" element={<DijkstraPath />} />
+        <Route path="/bfs" element={<BFSGrid />} />
       </Routes>
     </>
   )

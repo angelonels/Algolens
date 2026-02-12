@@ -23,6 +23,7 @@ AlgoLens uses a custom-built design system that prioritizes clarity and intentio
 - **Euclidean GCD** – Animated value cards showing modulo operations
 - **Matrix Traversal** – Spiral traversal with layer coloring
 - **Dijkstra's Path** – Interactive SVG graph with shortest path exploration
+- **BFS Grid Search** – Interactive grid pathfinding with wall drawing and layer-by-layer exploration
 
 ## Features
 
