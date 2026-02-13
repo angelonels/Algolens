@@ -60,6 +60,7 @@ src/
     EuclideanGCD.jsx
     MatrixTraversal.jsx
     DijkstraPath.jsx
+    BFSGrid.jsx
   utils/
     animationConfig.js  # Design tokens: colors, springs, styles
   App.jsx
