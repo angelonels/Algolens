@@ -137,19 +137,41 @@ export default function BubbleSortVisualizer() {
       <ExplanationBox>
         <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Bubble Sort?</h3>
         <p>
-          Bubble Sort is a simple comparison-based sorting algorithm. It repeatedly steps through the list,
-          compares adjacent pairs, and swaps them if they are in the wrong order. Each pass "bubbles" the
-          largest unsorted element to its correct position.
+          Bubble Sort is one of the simplest comparison-based sorting algorithms. It works by repeatedly
+          stepping through the list, comparing each pair of adjacent elements, and swapping them if they
+          are in the wrong order. The algorithm gets its name because smaller elements gradually "bubble"
+          to the top (beginning) of the list, while larger elements sink to the bottom (end) — much like
+          air bubbles rising through water.
+        </p>
+        <p style={{ marginTop: 8 }}>
+          Although not efficient for large datasets, Bubble Sort is often the first sorting algorithm
+          taught in computer science courses due to its straightforward logic and easy implementation.
+          It serves as an excellent introduction to the concepts of iteration, comparison, and swapping.
         </p>
         <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
         <ol style={{ paddingLeft: 20, margin: 0 }}>
-          <li>Compare each pair of adjacent elements</li>
-          <li>If left &gt; right, swap them</li>
-          <li>Continue to the end — largest element bubbles up</li>
-          <li>Repeat for remaining unsorted elements</li>
+          <li>Start at the beginning of the array</li>
+          <li>Compare each pair of adjacent elements (arr[j] and arr[j+1])</li>
+          <li>If the left element is greater than the right, swap them</li>
+          <li>Continue comparing pairs until the end of the unsorted portion — the largest element "bubbles up" to its final position</li>
+          <li>Repeat the process for the remaining unsorted elements, each pass placing one more element in its correct position</li>
+          <li>The algorithm terminates when a full pass completes with no swaps, meaning the array is sorted</li>
         </ol>
+        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
+        <ul style={{ paddingLeft: 20, margin: 0 }}>
+          <li><strong>Stable:</strong> Equal elements maintain their relative order after sorting</li>
+          <li><strong>In-place:</strong> Requires only O(1) extra memory — no auxiliary arrays needed</li>
+          <li><strong>Adaptive:</strong> Can detect an already-sorted list in O(n) time with an early termination flag</li>
+        </ul>
         <p style={{ marginTop: 12 }}>
-          <strong>Time Complexity:</strong> O(n²) average/worst, O(n) best case
+          <strong>Time Complexity:</strong> O(n²) average and worst case | O(n) best case (already sorted)
+        </p>
+        <p style={{ marginTop: 4 }}>
+          <strong>Space Complexity:</strong> O(1) — only a constant amount of extra space is used
+        </p>
+        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+          <strong>When to use:</strong> Best suited for small datasets, educational purposes, or when the data is nearly sorted.
+          For production use on larger datasets, prefer algorithms like Merge Sort or Quick Sort.
         </p>
       </ExplanationBox>
 

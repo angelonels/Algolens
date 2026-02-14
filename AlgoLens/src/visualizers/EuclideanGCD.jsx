@@ -129,18 +129,51 @@ export default function GCDVisualizer() {
       <ExplanationBox>
         <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is the Euclidean Algorithm?</h3>
         <p>
-          The Euclidean algorithm finds the <strong>Greatest Common Divisor (GCD)</strong> of two integers.
-          It repeatedly replaces (a, b) with (b, a % b) until b becomes zero — then a is the GCD.
+          The Euclidean algorithm is one of the oldest known algorithms, dating back to around 300 BC
+          in Euclid's <em>Elements</em>. It efficiently computes the <strong>Greatest Common Divisor (GCD)</strong> of
+          two integers — the largest number that divides both without a remainder. Despite its ancient
+          origins, it remains one of the fastest methods for computing GCD and is foundational to modern
+          number theory and cryptography.
+        </p>
+        <p style={{ marginTop: 8 }}>
+          The algorithm is based on a simple but powerful mathematical property: <strong>gcd(a, b) = gcd(b, a % b)</strong>.
+          This means repeatedly replacing the larger number with the remainder of dividing the two numbers
+          will eventually produce the GCD when the remainder becomes zero. The number of steps is
+          proportional to the number of digits — making it extremely fast even for very large numbers.
         </p>
         <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
         <ol style={{ paddingLeft: 20, margin: 0 }}>
-          <li>Compute r = a % b</li>
-          <li>Set a ← b, b ← r</li>
-          <li>Repeat until b = 0</li>
-          <li>When b = 0, a is the GCD</li>
+          <li>Start with two numbers <code>a</code> and <code>b</code> (where a ≥ b)</li>
+          <li>Compute the remainder: <code>r = a % b</code></li>
+          <li>Replace: set <code>a ← b</code> and <code>b ← r</code></li>
+          <li>Repeat steps 2–3 until <code>b = 0</code></li>
+          <li>When <code>b = 0</code>, the value of <code>a</code> is the GCD</li>
         </ol>
+        <h4 style={{ margin: '16px 0 8px' }}>Why It Works</h4>
+        <p>
+          If <code>d</code> divides both <code>a</code> and <code>b</code>, then <code>d</code> also
+          divides <code>a % b</code> (since <code>a % b = a - k·b</code> for some integer k). This means
+          every common divisor of <code>(a, b)</code> is also a common divisor of <code>(b, a % b)</code>,
+          preserving the GCD at each step. The process terminates because <code>b</code> strictly decreases
+          toward zero.
+        </p>
+        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
+        <ul style={{ paddingLeft: 20, margin: 0 }}>
+          <li><strong>Extremely efficient:</strong> Number of steps is at most ~5× the number of digits in the smaller number</li>
+          <li><strong>Works for any positive integers:</strong> No restrictions on the size or relationship between inputs</li>
+          <li><strong>Extended version:</strong> The Extended Euclidean Algorithm also finds integers x, y such that ax + by = gcd(a, b) — essential for modular inverse computation</li>
+          <li><strong>Basis for RSA:</strong> The extended form is critical in RSA encryption for computing private keys</li>
+        </ul>
         <p style={{ marginTop: 12 }}>
-          <strong>Time Complexity:</strong> O(log min(a, b))
+          <strong>Time Complexity:</strong> O(log min(a, b)) — logarithmic in the smaller input
+        </p>
+        <p style={{ marginTop: 4 }}>
+          <strong>Space Complexity:</strong> O(1) iterative | O(log min(a, b)) recursive
+        </p>
+        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+          <strong>Real-world uses:</strong> Simplifying fractions, cryptographic key generation (RSA),
+          computing least common multiples (LCM = a·b / gcd(a,b)), Bézout's identity, and modular
+          arithmetic in competitive programming.
         </p>
       </ExplanationBox>
 

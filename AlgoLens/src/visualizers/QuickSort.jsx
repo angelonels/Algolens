@@ -209,18 +209,49 @@ export default function QuickSortVisualizer() {
             <ExplanationBox>
                 <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Quick Sort?</h3>
                 <p>
-                    Quick Sort is an efficient divide-and-conquer algorithm. It selects a "pivot" element,
-                    partitions the array so smaller elements are left and larger are right, then recursively sorts.
+                    Quick Sort is one of the most efficient and widely used sorting algorithms. Like Merge Sort,
+                    it follows the divide-and-conquer paradigm, but instead of splitting at the midpoint, it
+                    partitions the array around a chosen "pivot" element. All elements smaller than the pivot
+                    are moved to its left, and all elements larger are moved to its right — placing the pivot
+                    in its final sorted position.
+                </p>
+                <p style={{ marginTop: 8 }}>
+                    Developed by Tony Hoare in 1959, Quick Sort is often faster in practice than other O(n log n)
+                    algorithms because of its excellent cache performance and low overhead. It sorts in-place
+                    (unlike Merge Sort), though its worst-case O(n²) can occur when the pivot selection is poor
+                    (e.g., always picking the smallest or largest element in an already sorted array).
                 </p>
                 <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
                 <ol style={{ paddingLeft: 20, margin: 0 }}>
-                    <li>Choose a pivot (typically last element)</li>
-                    <li>Partition: elements ≤ pivot go left</li>
-                    <li>Place pivot in its final sorted position</li>
-                    <li>Recursively sort left and right partitions</li>
+                    <li><strong>Choose a pivot:</strong> Select an element as the pivot (here, the last element is used)</li>
+                    <li><strong>Partition:</strong> Rearrange the array so elements ≤ pivot go to the left and elements &gt; pivot go to the right</li>
+                    <li><strong>Place pivot:</strong> Swap the pivot into its correct final position between the two groups</li>
+                    <li><strong>Recurse:</strong> Recursively apply the same process to the left and right sub-arrays</li>
+                    <li><strong>Base case:</strong> Sub-arrays of size 0 or 1 are already sorted</li>
                 </ol>
+                <h4 style={{ margin: '16px 0 8px' }}>Pivot Selection Strategies</h4>
+                <ul style={{ paddingLeft: 20, margin: 0 }}>
+                    <li><strong>Last element:</strong> Simple but can degrade to O(n²) on sorted input</li>
+                    <li><strong>Random element:</strong> Avoids worst-case on any specific input pattern</li>
+                    <li><strong>Median-of-three:</strong> Picks the median of first, middle, and last elements — good practical choice</li>
+                </ul>
+                <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
+                <ul style={{ paddingLeft: 20, margin: 0 }}>
+                    <li><strong>Not stable:</strong> Equal elements may change their relative order during partitioning</li>
+                    <li><strong>In-place:</strong> Requires only O(log n) stack space for recursion — no auxiliary arrays needed</li>
+                    <li><strong>Cache-friendly:</strong> Sequential memory access patterns make it very fast in practice</li>
+                    <li><strong>Comparison to Merge Sort:</strong> Faster in practice due to lower constant factors, but lacks stability and has worse worst-case</li>
+                </ul>
                 <p style={{ marginTop: 12 }}>
-                    <strong>Time Complexity:</strong> O(n log n) average, O(n²) worst case
+                    <strong>Time Complexity:</strong> O(n log n) average | O(n²) worst case (rare with good pivot selection)
+                </p>
+                <p style={{ marginTop: 4 }}>
+                    <strong>Space Complexity:</strong> O(log n) average (recursion stack) | O(n) worst case
+                </p>
+                <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+                    <strong>When to use:</strong> The go-to general-purpose sorting algorithm when stability isn't required.
+                    Used as the default sort in C's <code>qsort()</code>, and many implementations of <code>Array.prototype.sort()</code>
+                    in JavaScript engines use Quick Sort or its variants (like Introsort).
                 </p>
             </ExplanationBox>
 

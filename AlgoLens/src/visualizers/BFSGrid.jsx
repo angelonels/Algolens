@@ -212,19 +212,49 @@ export default function BFSGridVisualizer() {
             <ExplanationBox>
                 <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Breadth-First Search?</h3>
                 <p>
-                    BFS explores a graph level by level, visiting all neighbors at the current depth
-                    before moving deeper. On an unweighted grid, this guarantees finding the <strong>shortest path</strong> between
-                    two points.
+                    Breadth-First Search (BFS) is a fundamental graph traversal algorithm that explores
+                    nodes level by level, visiting <strong>all neighbors</strong> at the current depth before
+                    moving to nodes at the next depth level. It uses a <strong>queue (FIFO)</strong> data
+                    structure to track which node to visit next.
+                </p>
+                <p style={{ marginTop: 8 }}>
+                    On an unweighted grid or graph, BFS guarantees finding the <strong>shortest path</strong> between
+                    two points because it explores all paths of length k before any path of length k+1. This
+                    property makes it invaluable for pathfinding problems, network broadcasting, and level-order
+                    traversals of trees.
                 </p>
                 <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
                 <ol style={{ paddingLeft: 20, margin: 0 }}>
-                    <li>Start from the source, add it to a queue</li>
-                    <li>Dequeue the front node, explore its unvisited neighbors</li>
-                    <li>Add each neighbor to the queue (FIFO order)</li>
-                    <li>Repeat until the target is found or queue is empty</li>
+                    <li>Start from the source node, mark it as visited, and add it to a queue</li>
+                    <li>Dequeue the front node from the queue</li>
+                    <li>Explore all unvisited neighbors of the dequeued node</li>
+                    <li>Mark each neighbor as visited and add it to the back of the queue (FIFO order)</li>
+                    <li>Repeat steps 2–4 until the target is found or the queue is empty</li>
+                    <li>If the target is found, reconstruct the path by tracing parent pointers back to the source</li>
                 </ol>
+                <h4 style={{ margin: '16px 0 8px' }}>BFS vs DFS</h4>
+                <ul style={{ paddingLeft: 20, margin: 0 }}>
+                    <li><strong>BFS</strong> uses a queue, explores level by level, and finds shortest paths in unweighted graphs</li>
+                    <li><strong>DFS</strong> uses a stack (or recursion), explores as deep as possible first, and uses less memory on wide graphs</li>
+                    <li>For shortest path on unweighted graphs, <strong>BFS is always preferred</strong></li>
+                </ul>
+                <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
+                <ul style={{ paddingLeft: 20, margin: 0 }}>
+                    <li><strong>Complete:</strong> Will always find a solution if one exists (given finite graph)</li>
+                    <li><strong>Optimal:</strong> Guarantees shortest path on unweighted graphs</li>
+                    <li><strong>Memory-intensive:</strong> Stores all nodes at the current frontier in memory</li>
+                    <li><strong>Works on:</strong> Both directed and undirected graphs, trees, grids</li>
+                </ul>
                 <p style={{ marginTop: 12 }}>
-                    <strong>Time Complexity:</strong> O(V + E) where V = cells, E = edges
+                    <strong>Time Complexity:</strong> O(V + E) where V = vertices (cells) and E = edges (connections)
+                </p>
+                <p style={{ marginTop: 4 }}>
+                    <strong>Space Complexity:</strong> O(V) — the queue and visited set can hold up to all vertices
+                </p>
+                <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+                    <strong>Real-world uses:</strong> GPS navigation (shortest route), social network friend suggestions
+                    (people within k connections), web crawlers, network broadcasting, and puzzle solving (like
+                    finding the fewest moves in a maze).
                 </p>
             </ExplanationBox>
 

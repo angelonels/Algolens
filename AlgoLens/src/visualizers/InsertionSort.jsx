@@ -169,19 +169,42 @@ export default function InsertionSortVisualizer() {
       <ExplanationBox>
         <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Insertion Sort?</h3>
         <p>
-          Insertion Sort builds a sorted array one element at a time. At each pass, it takes the next
-          element (key) and inserts it into its correct position among the previously sorted elements.
+          Insertion Sort is an intuitive sorting algorithm that builds the final sorted array one element
+          at a time. It works the same way you might sort playing cards in your hand — you pick up each
+          new card and slide it into the correct position among the cards you've already sorted.
+        </p>
+        <p style={{ marginTop: 8 }}>
+          At each iteration, the algorithm takes the next unsorted element (called the "key"), compares
+          it with the sorted portion from right to left, shifts all larger elements one position to the
+          right, and inserts the key into its correct position. Despite its O(n²) worst-case complexity,
+          Insertion Sort is remarkably efficient for small or nearly sorted datasets.
         </p>
         <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
         <ol style={{ paddingLeft: 20, margin: 0 }}>
-          <li>"Extract" the element at current position as key</li>
-          <li>Compare key with sorted elements from right to left</li>
-          <li>Shift larger elements right to make room</li>
-          <li>Insert key into correct position</li>
-          <li>Repeat for all elements</li>
+          <li>Start from the second element (index 1) — the first element is trivially "sorted"</li>
+          <li>"Extract" the current element as the <strong>key</strong></li>
+          <li>Compare the key with each element in the sorted portion, moving right to left</li>
+          <li>Shift each element that is larger than the key one position to the right to make room</li>
+          <li>Insert the key into the gap — this is now its correct sorted position</li>
+          <li>Repeat for all remaining elements until the entire array is sorted</li>
         </ol>
+        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
+        <ul style={{ paddingLeft: 20, margin: 0 }}>
+          <li><strong>Stable:</strong> Equal elements preserve their original relative order</li>
+          <li><strong>In-place:</strong> Requires only O(1) additional memory</li>
+          <li><strong>Adaptive:</strong> Runs in O(n) time on nearly sorted input — very efficient when data arrives in order</li>
+          <li><strong>Online:</strong> Can sort a list as it receives new elements, making it suitable for streaming data</li>
+        </ul>
         <p style={{ marginTop: 12 }}>
-          <strong>Time Complexity:</strong> O(n²) worst/average, O(n) best case (already sorted)
+          <strong>Time Complexity:</strong> O(n²) worst and average case | O(n) best case (already sorted)
+        </p>
+        <p style={{ marginTop: 4 }}>
+          <strong>Space Complexity:</strong> O(1) — sorts in place with constant extra memory
+        </p>
+        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+          <strong>When to use:</strong> Excellent for small arrays (typically n &lt; 20–50), nearly sorted data,
+          or as the base case inside more complex algorithms. Python's Timsort and Java's Arrays.sort()
+          both use Insertion Sort for small sub-arrays during their divide-and-conquer phases.
         </p>
       </ExplanationBox>
 

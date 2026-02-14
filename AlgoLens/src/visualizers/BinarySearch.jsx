@@ -121,18 +121,44 @@ export default function BinarySearchVisualizer() {
       <ExplanationBox>
         <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Binary Search?</h3>
         <p>
-          Binary Search efficiently locates a target value within a <strong>sorted array</strong>.
-          By comparing the target to the middle element, it halves the search space on each step,
-          achieving a time complexity of <strong>O(log n)</strong>.
+          Binary Search is a highly efficient search algorithm that finds the position of a target value
+          within a <strong>sorted array</strong>. Rather than checking every element one by one (as in linear search),
+          it repeatedly divides the search space in half — comparing the target to the middle element and
+          eliminating the half where the target cannot exist.
+        </p>
+        <p style={{ marginTop: 8 }}>
+          Think of it like looking up a word in a dictionary: you open to the middle, decide if your word
+          comes before or after, and then repeat the process on the relevant half. Each step cuts the
+          remaining possibilities in half, achieving a time complexity of <strong>O(log n)</strong> — meaning
+          even an array of 1 billion elements can be searched in at most ~30 comparisons.
         </p>
         <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
         <ol style={{ paddingLeft: 20, margin: 0 }}>
-          <li>Compute <code>mid = (low + high) / 2</code></li>
-          <li>If <code>arr[mid] === target</code>, done</li>
-          <li>If target is larger, search right half</li>
-          <li>If target is smaller, search left half</li>
-          <li>Repeat until found or range is empty</li>
+          <li>Initialize two pointers: <code>low = 0</code> and <code>high = length - 1</code></li>
+          <li>Compute the middle index: <code>mid = (low + high) / 2</code></li>
+          <li>If <code>arr[mid] === target</code>, the element is found — return the index</li>
+          <li>If the target is greater than <code>arr[mid]</code>, discard the left half by setting <code>low = mid + 1</code></li>
+          <li>If the target is smaller than <code>arr[mid]</code>, discard the right half by setting <code>high = mid - 1</code></li>
+          <li>Repeat until the element is found or the search range becomes empty (<code>low &gt; high</code>)</li>
         </ol>
+        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
+        <ul style={{ paddingLeft: 20, margin: 0 }}>
+          <li><strong>Prerequisite:</strong> The array must be sorted beforehand</li>
+          <li><strong>Divide and conquer:</strong> Halves the search space at each step</li>
+          <li><strong>Iterative or recursive:</strong> Can be implemented either way with equivalent performance</li>
+          <li><strong>Variants:</strong> Lower bound, upper bound, and finding the first/last occurrence of a value</li>
+        </ul>
+        <p style={{ marginTop: 12 }}>
+          <strong>Time Complexity:</strong> O(log n) — logarithmic in all cases
+        </p>
+        <p style={{ marginTop: 4 }}>
+          <strong>Space Complexity:</strong> O(1) iterative | O(log n) recursive (due to call stack)
+        </p>
+        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+          <strong>When to use:</strong> Ideal for searching in sorted arrays, databases, and any scenario where data
+          is ordered. Commonly used in standard library functions like Python's <code>bisect</code> module
+          and C++'s <code>std::lower_bound</code>.
+        </p>
       </ExplanationBox>
 
       <CodeBlock code={binarySearchPythonCode} onCopy={() => { }} />

@@ -155,16 +155,44 @@ export default function DijkstraVisualizer() {
         <PageContainer title="Dijkstra's Shortest Path">
             <ExplanationBox>
                 <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Dijkstra's Algorithm?</h3>
-                <p>Dijkstra's algorithm finds the <strong>shortest path</strong> from a source node to all other nodes in a weighted graph with non-negative edge weights.</p>
+                <p>
+                    Dijkstra's algorithm, conceived by computer scientist Edsger Dijkstra in 1956, is a
+                    greedy algorithm that finds the <strong>shortest path</strong> from a single source node to all
+                    other nodes in a weighted graph. It is one of the most important algorithms in computer
+                    science and is widely used in networking, mapping, and routing applications.
+                </p>
+                <p style={{ marginTop: 8 }}>
+                    The algorithm maintains a set of nodes whose shortest distance from the source is already
+                    known. At each step, it selects the unvisited node with the smallest known distance,
+                    marks it as visited, and updates the distances to all of its neighbors. This greedy
+                    approach — always expanding the closest node — guarantees optimal results as long as all
+                    edge weights are <strong>non-negative</strong>.
+                </p>
                 <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
                 <ol style={{ paddingLeft: 20, margin: 0 }}>
-                    <li>Initialize: source = 0, all others = ∞</li>
-                    <li>Visit node with smallest known distance</li>
-                    <li>Update distances to unvisited neighbors</li>
-                    <li>Mark current node as visited</li>
-                    <li>Repeat until all nodes visited</li>
+                    <li>Initialize the source node's distance to 0 and all other nodes to ∞ (infinity)</li>
+                    <li>Add all nodes to a priority queue (min-heap) based on their current distance</li>
+                    <li>Extract the node with the smallest distance from the priority queue</li>
+                    <li>For each unvisited neighbor, calculate the tentative distance through the current node</li>
+                    <li>If the new distance is shorter, update the neighbor's distance (this is called "relaxation")</li>
+                    <li>Mark the current node as visited and repeat from step 3</li>
+                    <li>Continue until all reachable nodes have been visited</li>
                 </ol>
-                <p style={{ marginTop: 12 }}><strong>Time Complexity:</strong> O((V + E) log V)</p>
+                <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
+                <ul style={{ paddingLeft: 20, margin: 0 }}>
+                    <li><strong>Greedy:</strong> Always selects the closest unvisited node — once a node is visited, its shortest distance is finalized</li>
+                    <li><strong>Non-negative weights only:</strong> Negative edge weights can cause incorrect results — use Bellman-Ford instead</li>
+                    <li><strong>Priority queue-based:</strong> Efficient implementations use a min-heap for O((V + E) log V) performance</li>
+                    <li><strong>Single-source:</strong> Computes shortest paths from one source to all other nodes in the graph</li>
+                </ul>
+                <p style={{ marginTop: 12 }}><strong>Time Complexity:</strong> O((V + E) log V) with a binary heap priority queue</p>
+                <p style={{ marginTop: 4 }}><strong>Space Complexity:</strong> O(V) for the distance array and priority queue</p>
+                <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+                    <strong>Real-world uses:</strong> Google Maps routing, network packet routing (OSPF protocol),
+                    flight booking systems (cheapest route), robot path planning, and any scenario involving
+                    weighted shortest paths. For graphs with negative edges, Bellman-Ford is used instead;
+                    for all-pairs shortest paths, Floyd-Warshall is preferred.
+                </p>
             </ExplanationBox>
 
             <CodeBlock code={dijkstraPythonCode} onCopy={() => { }} />

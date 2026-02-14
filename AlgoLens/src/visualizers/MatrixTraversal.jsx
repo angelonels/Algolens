@@ -115,16 +115,39 @@ export default function SpiralMatrixVisualizer() {
     <PageContainer title="Spiral Matrix Traversal">
       <ExplanationBox>
         <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Spiral Matrix Traversal?</h3>
-        <p>Spiral traversal visits all elements of an N×N matrix in clockwise order, layer by layer, starting from the outer edge and moving inward.</p>
+        <p>
+          Spiral Matrix Traversal is a popular matrix manipulation problem that visits all elements of
+          an N×N (or M×N) matrix in a clockwise spiral order — starting from the top-left corner, moving
+          along the outer edge, and spiraling inward layer by layer until every element has been visited.
+        </p>
+        <p style={{ marginTop: 8 }}>
+          This pattern appears frequently in coding interviews and has practical applications in image
+          processing (scanning pixels in a spiral), data serialization, and rendering patterns. The key
+          insight is using four boundary pointers (<code>top</code>, <code>bottom</code>, <code>left</code>,
+          <code>right</code>) that shrink inward after each directional pass.
+        </p>
         <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
         <ol style={{ paddingLeft: 20, margin: 0 }}>
-          <li>Traverse top row left → right</li>
-          <li>Traverse right column top → bottom</li>
-          <li>Traverse bottom row right → left</li>
-          <li>Traverse left column bottom → top</li>
-          <li>Move inward and repeat</li>
+          <li><strong>→ Right:</strong> Traverse the top row from left boundary to right boundary, then increment <code>top</code></li>
+          <li><strong>↓ Down:</strong> Traverse the right column from top boundary to bottom boundary, then decrement <code>right</code></li>
+          <li><strong>← Left:</strong> Traverse the bottom row from right boundary to left boundary (if top ≤ bottom), then decrement <code>bottom</code></li>
+          <li><strong>↑ Up:</strong> Traverse the left column from bottom boundary to top boundary (if left ≤ right), then increment <code>left</code></li>
+          <li>Repeat the four-direction cycle until all boundaries cross — this means every element has been visited</li>
         </ol>
-        <p style={{ marginTop: 12 }}><strong>Time Complexity:</strong> O(N²)</p>
+        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
+        <ul style={{ paddingLeft: 20, margin: 0 }}>
+          <li><strong>Layer-based:</strong> Each complete cycle of four directions processes one "ring" or layer of the matrix</li>
+          <li><strong>Boundary conditions:</strong> Must check <code>top ≤ bottom</code> and <code>left ≤ right</code> before the 3rd and 4th directional passes to avoid revisiting elements</li>
+          <li><strong>Works on non-square matrices:</strong> The same logic applies to M×N matrices with different row and column counts</li>
+          <li><strong>No extra space:</strong> Only the output array and four boundary variables are needed</li>
+        </ul>
+        <p style={{ marginTop: 12 }}><strong>Time Complexity:</strong> O(N²) — every element is visited exactly once</p>
+        <p style={{ marginTop: 4 }}><strong>Space Complexity:</strong> O(1) extra space (excluding the output array)</p>
+        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+          <strong>Common variations:</strong> Counter-clockwise spiral, printing a matrix in anti-spiral order,
+          generating a spiral matrix from 1 to N², and spiral order for non-square matrices. Frequently
+          asked in technical interviews at companies like Google, Amazon, and Meta.
+        </p>
       </ExplanationBox>
 
       <CodeBlock code={spiralPythonCode} onCopy={() => { }} />
