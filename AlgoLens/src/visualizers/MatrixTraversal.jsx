@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
 import {
   SpeedControl, StepCounter, StatusMessage, ControlButton, Legend,
-  CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow
+  CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
+  SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/AnimationComponents'
 
 const spiralPythonCode = `def spiral_traverse(matrix):
@@ -113,115 +114,120 @@ export default function SpiralMatrixVisualizer() {
 
   return (
     <PageContainer title="Spiral Matrix Traversal">
-      <ExplanationBox>
-        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Spiral Matrix Traversal?</h3>
-        <p>
-          Spiral Matrix Traversal is a popular matrix manipulation problem that visits all elements of
-          an N×N (or M×N) matrix in a clockwise spiral order — starting from the top-left corner, moving
-          along the outer edge, and spiraling inward layer by layer until every element has been visited.
-        </p>
-        <p style={{ marginTop: 8 }}>
-          This pattern appears frequently in coding interviews and has practical applications in image
-          processing (scanning pixels in a spiral), data serialization, and rendering patterns. The key
-          insight is using four boundary pointers (<code>top</code>, <code>bottom</code>, <code>left</code>,
-          <code>right</code>) that shrink inward after each directional pass.
-        </p>
-        <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-        <ol style={{ paddingLeft: 20, margin: 0 }}>
-          <li><strong>→ Right:</strong> Traverse the top row from left boundary to right boundary, then increment <code>top</code></li>
-          <li><strong>↓ Down:</strong> Traverse the right column from top boundary to bottom boundary, then decrement <code>right</code></li>
-          <li><strong>← Left:</strong> Traverse the bottom row from right boundary to left boundary (if top ≤ bottom), then decrement <code>bottom</code></li>
-          <li><strong>↑ Up:</strong> Traverse the left column from bottom boundary to top boundary (if left ≤ right), then increment <code>left</code></li>
-          <li>Repeat the four-direction cycle until all boundaries cross — this means every element has been visited</li>
-        </ol>
-        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-        <ul style={{ paddingLeft: 20, margin: 0 }}>
-          <li><strong>Layer-based:</strong> Each complete cycle of four directions processes one "ring" or layer of the matrix</li>
-          <li><strong>Boundary conditions:</strong> Must check <code>top ≤ bottom</code> and <code>left ≤ right</code> before the 3rd and 4th directional passes to avoid revisiting elements</li>
-          <li><strong>Works on non-square matrices:</strong> The same logic applies to M×N matrices with different row and column counts</li>
-          <li><strong>No extra space:</strong> Only the output array and four boundary variables are needed</li>
-        </ul>
-        <p style={{ marginTop: 12 }}><strong>Time Complexity:</strong> O(N²) — every element is visited exactly once</p>
-        <p style={{ marginTop: 4 }}><strong>Space Complexity:</strong> O(1) extra space (excluding the output array)</p>
-        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
-          <strong>Common variations:</strong> Counter-clockwise spiral, printing a matrix in anti-spiral order,
-          generating a spiral matrix from 1 to N², and spiral order for non-square matrices. Frequently
-          asked in technical interviews at companies like Google, Amazon, and Meta.
-        </p>
-      </ExplanationBox>
+      <SplitLayout>
+        <SplitLeft>
+          <ExplanationBox>
+            <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Spiral Matrix Traversal?</h3>
+            <p>
+              Spiral Matrix Traversal is a popular matrix manipulation problem that visits all elements of
+              an N×N (or M×N) matrix in a clockwise spiral order — starting from the top-left corner, moving
+              along the outer edge, and spiraling inward layer by layer until every element has been visited.
+            </p>
+            <p style={{ marginTop: 8 }}>
+              This pattern appears frequently in coding interviews and has practical applications in image
+              processing (scanning pixels in a spiral), data serialization, and rendering patterns. The key
+              insight is using four boundary pointers (<code>top</code>, <code>bottom</code>, <code>left</code>,
+              <code>right</code>) that shrink inward after each directional pass.
+            </p>
+            <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
+            <ol style={{ paddingLeft: 20, margin: 0 }}>
+              <li><strong>→ Right:</strong> Traverse the top row from left boundary to right boundary, then increment <code>top</code></li>
+              <li><strong>↓ Down:</strong> Traverse the right column from top boundary to bottom boundary, then decrement <code>right</code></li>
+              <li><strong>← Left:</strong> Traverse the bottom row from right boundary to left boundary (if top ≤ bottom), then decrement <code>bottom</code></li>
+              <li><strong>↑ Up:</strong> Traverse the left column from bottom boundary to top boundary (if left ≤ right), then increment <code>left</code></li>
+              <li>Repeat the four-direction cycle until all boundaries cross — this means every element has been visited</li>
+            </ol>
+            <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
+            <ul style={{ paddingLeft: 20, margin: 0 }}>
+              <li><strong>Layer-based:</strong> Each complete cycle of four directions processes one "ring" or layer of the matrix</li>
+              <li><strong>Boundary conditions:</strong> Must check <code>top ≤ bottom</code> and <code>left ≤ right</code> before the 3rd and 4th directional passes to avoid revisiting elements</li>
+              <li><strong>Works on non-square matrices:</strong> The same logic applies to M×N matrices with different row and column counts</li>
+              <li><strong>No extra space:</strong> Only the output array and four boundary variables are needed</li>
+            </ul>
+            <p style={{ marginTop: 12 }}><strong>Time Complexity:</strong> O(N²) — every element is visited exactly once</p>
+            <p style={{ marginTop: 4 }}><strong>Space Complexity:</strong> O(1) extra space (excluding the output array)</p>
+            <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+              <strong>Common variations:</strong> Counter-clockwise spiral, printing a matrix in anti-spiral order,
+              generating a spiral matrix from 1 to N², and spiral order for non-square matrices. Frequently
+              asked in technical interviews at companies like Google, Amazon, and Meta.
+            </p>
+          </ExplanationBox>
 
-      <CodeBlock code={spiralPythonCode} onCopy={() => { }} />
-
-      <VisualizationContainer>
-        <div style={{ marginBottom: 20 }}>
-          <label style={{ ...labelStyle, marginRight: 12 }}>Matrix Size</label>
-          <input type="number" min="2" max="8" value={N}
-            onChange={e => setN(Math.max(2, Math.min(8, +e.target.value)))}
-            disabled={running}
-            style={{ width: 60, padding: '8px 12px', fontSize: 14, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, textAlign: 'center', border: `1px solid ${COLORS.border}`, borderRadius: '0px', background: COLORS.surface }} />
-        </div>
-
-        <AnimatePresence mode="wait">
-          {step && (
-            <motion.div key={currentStep} initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-              style={{ marginBottom: 12, padding: '6px 14px', background: COLORS.surface, border: `1px solid ${layerColors[step.layer % layerColors.length]}`, borderLeft: `3px solid ${layerColors[step.layer % layerColors.length]}`, borderRadius: '0px', ...labelStyle, display: 'inline-block', color: COLORS.fg }}>
-              {step.direction} · Layer {step.layer + 1}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${N}, 50px)`, gap: 3, justifyContent: 'center', marginTop: 16 }}>
-          {matrix.map((row, i) => row.map((val, j) => {
-            const isCurrent = step && step.row === i && step.col === j
-            const isVisited = visitedCells.has(`${i}-${j}`)
-            return (
-              <motion.div key={`${i}-${j}`}
-                animate={{ scale: isCurrent ? 1.1 : 1, backgroundColor: isCurrent ? COLORS.active : isVisited ? COLORS.sorted : COLORS.surface }}
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                style={{ width: 50, height: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '2px', fontFamily: "'JetBrains Mono', monospace", fontSize: 14, fontWeight: 700, color: (isCurrent || isVisited) ? '#fff' : COLORS.fg, border: `1px solid ${isCurrent ? COLORS.active : COLORS.border}` }}>
-                {val}
-              </motion.div>
-            )
-          }))}
-        </div>
-
-        <Legend items={legendItems} />
-
-        {result.length > 0 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            style={{ marginTop: 24, padding: '14px 20px', background: COLORS.surface, border: `1px solid ${COLORS.border}`, borderRadius: '0px', maxWidth: 600 }}>
-            <div style={{ ...labelStyle, marginBottom: 8, fontSize: '11px', letterSpacing: '0.06em' }}>Traversal Order</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-              {result.map((val, i) => (
-                <motion.span key={i} initial={{ scale: 0 }} animate={{ scale: 1 }}
-                  style={{ padding: '3px 8px', background: i === result.length - 1 ? COLORS.active : COLORS.sorted, borderRadius: '0px', color: '#fff', fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: 12 }}>
-                  {val}
-                </motion.span>
-              ))}
+          <CodeBlock code={spiralPythonCode} onCopy={() => { }} />
+        </SplitLeft>
+        <SplitRight>
+          <VisualizationContainer>
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ ...labelStyle, marginRight: 12 }}>Matrix Size</label>
+              <input type="number" min="2" max="8" value={N}
+                onChange={e => setN(Math.max(2, Math.min(8, +e.target.value)))}
+                disabled={running}
+                style={{ width: 60, padding: '8px 12px', fontSize: 14, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, textAlign: 'center', border: `1px solid ${COLORS.border}`, borderRadius: '0px', background: COLORS.surface }} />
             </div>
-          </motion.div>
-        )}
 
-        <ControlsRow>
-          <SpeedControl speed={speed} onSpeedChange={setSpeed} disabled={false} />
-          {running && <StepCounter current={currentStep + 1} total={steps.length} />}
-          <ControlButton onClick={startTraversal} disabled={running && !isPaused} variant="primary">
-            {running ? 'Traversing…' : 'Start'}
-          </ControlButton>
-          {running && <ControlButton onClick={togglePause} variant="success">{isPaused ? 'Resume' : 'Pause'}</ControlButton>}
-          <ControlButton onClick={reset} variant="danger">Reset</ControlButton>
-        </ControlsRow>
+            <AnimatePresence mode="wait">
+              {step && (
+                <motion.div key={currentStep} initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                  style={{ marginBottom: 12, padding: '6px 14px', background: COLORS.surface, border: `1px solid ${layerColors[step.layer % layerColors.length]}`, borderLeft: `3px solid ${layerColors[step.layer % layerColors.length]}`, borderRadius: '0px', ...labelStyle, display: 'inline-block', color: COLORS.fg }}>
+                  {step.direction} · Layer {step.layer + 1}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-        <AnimatePresence>
-          {isFinalStep && (
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              style={{ marginTop: 24, padding: '12px 20px', background: COLORS.surface, border: `1px solid ${COLORS.sorted}`, borderLeft: `3px solid ${COLORS.sorted}`, borderRadius: '0px', fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: 15, color: COLORS.fg, display: 'inline-block' }}>
-              ✓ Traversal complete — {N * N} elements visited
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </VisualizationContainer>
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${N}, 50px)`, gap: 3, justifyContent: 'center', marginTop: 16 }}>
+              {matrix.map((row, i) => row.map((val, j) => {
+                const isCurrent = step && step.row === i && step.col === j
+                const isVisited = visitedCells.has(`${i}-${j}`)
+                return (
+                  <motion.div key={`${i}-${j}`}
+                    animate={{ scale: isCurrent ? 1.1 : 1, backgroundColor: isCurrent ? COLORS.active : isVisited ? COLORS.sorted : COLORS.surface }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                    style={{ width: 50, height: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '2px', fontFamily: "'JetBrains Mono', monospace", fontSize: 14, fontWeight: 700, color: (isCurrent || isVisited) ? '#fff' : COLORS.fg, border: `1px solid ${isCurrent ? COLORS.active : COLORS.border}` }}>
+                    {val}
+                  </motion.div>
+                )
+              }))}
+            </div>
+
+            <Legend items={legendItems} />
+
+            {result.length > 0 && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                style={{ marginTop: 24, padding: '14px 20px', background: COLORS.surface, border: `1px solid ${COLORS.border}`, borderRadius: '0px', maxWidth: 600 }}>
+                <div style={{ ...labelStyle, marginBottom: 8, fontSize: '11px', letterSpacing: '0.06em' }}>Traversal Order</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                  {result.map((val, i) => (
+                    <motion.span key={i} initial={{ scale: 0 }} animate={{ scale: 1 }}
+                      style={{ padding: '3px 8px', background: i === result.length - 1 ? COLORS.active : COLORS.sorted, borderRadius: '0px', color: '#fff', fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: 12 }}>
+                      {val}
+                    </motion.span>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            <ControlsRow>
+              <SpeedControl speed={speed} onSpeedChange={setSpeed} disabled={false} />
+              {running && <StepCounter current={currentStep + 1} total={steps.length} />}
+              <ControlButton onClick={startTraversal} disabled={running && !isPaused} variant="primary">
+                {running ? 'Traversing…' : 'Start'}
+              </ControlButton>
+              {running && <ControlButton onClick={togglePause} variant="success">{isPaused ? 'Resume' : 'Pause'}</ControlButton>}
+              <ControlButton onClick={reset} variant="danger">Reset</ControlButton>
+            </ControlsRow>
+
+            <AnimatePresence>
+              {isFinalStep && (
+                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ marginTop: 24, padding: '12px 20px', background: COLORS.surface, border: `1px solid ${COLORS.sorted}`, borderLeft: `3px solid ${COLORS.sorted}`, borderRadius: '0px', fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: 15, color: COLORS.fg, display: 'inline-block' }}>
+                  ✓ Traversal complete — {N * N} elements visited
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </VisualizationContainer>
+        </SplitRight>
+      </SplitLayout>
     </PageContainer>
   )
 }

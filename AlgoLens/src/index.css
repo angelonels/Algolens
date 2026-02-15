@@ -5,53 +5,55 @@
 
 :root {
   /* ── Color Palette ── */
-  --bg:        #f5f0e8;
-  --bg-alt:    #eee9df;
-  --surface:   #ffffff;
-  --fg:        #0a0a0a;
-  --fg-muted:  #6b6b60;
-  --accent:    #e63312;
+  --bg: #f5f0e8;
+  --bg-alt: #eee9df;
+  --surface: #ffffff;
+  --fg: #0a0a0a;
+  --fg-muted: #6b6b60;
+  --accent: #e63312;
   --accent-hover: #c72a0e;
-  --border:    #d4d0c8;
+  --border: #d4d0c8;
   --border-strong: #0a0a0a;
 
   /* ── Semantic State Colors ── */
-  --color-comparing:  #2563eb;
-  --color-swapping:   #e63312;
-  --color-sorted:     #16a34a;
-  --color-found:      #16a34a;
-  --color-active:     #d97706;
-  --color-current:    #2563eb;
-  --color-pivot:      #7c3aed;
-  --color-visited:    #0891b2;
-  --color-exploring:  #ea580c;
+  --color-comparing: #2563eb;
+  --color-swapping: #e63312;
+  --color-sorted: #16a34a;
+  --color-found: #16a34a;
+  --color-active: #d97706;
+  --color-current: #2563eb;
+  --color-pivot: #7c3aed;
+  --color-visited: #0891b2;
+  --color-exploring: #ea580c;
   --color-default-el: #e8e4dc;
   --color-eliminated: #b0ada5;
 
   /* ── Typography ── */
-  --font-body:   'Inter', -apple-system, sans-serif;
-  --font-mono:   'JetBrains Mono', 'Fira Code', monospace;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* ── Spacing ── */
-  --space-xs:  4px;
-  --space-sm:  8px;
-  --space-md:  16px;
-  --space-lg:  24px;
-  --space-xl:  40px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
   --space-2xl: 64px;
 
   /* ── Borders & Radii ── */
-  --radius:    2px;
-  --radius-0:  0px;
-  --border-w:  1px;
+  --radius: 2px;
+  --radius-0: 0px;
+  --border-w: 1px;
 
   /* ── Motion ── */
-  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
-  --duration:  150ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration: 150ms;
 }
 
 /* ── Reset ── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -73,17 +75,34 @@ body {
 }
 
 /* ── Typography Hierarchy ── */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: var(--font-mono);
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.02em;
 }
 
-h1 { font-size: clamp(2rem, 4vw, 3.2rem); }
-h2 { font-size: clamp(1.4rem, 2.5vw, 1.8rem); }
-h3 { font-size: 1.15rem; }
-h4 { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg-muted); }
+h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+h2 {
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+}
+
+h3 {
+  font-size: 1.15rem;
+}
+
+h4 {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-muted);
+}
 
 p {
   max-width: 65ch;
@@ -111,6 +130,7 @@ a {
   text-decoration: none;
   transition: color var(--duration) var(--ease-out);
 }
+
 a:hover {
   color: var(--accent);
 }
@@ -130,14 +150,17 @@ button {
   cursor: pointer;
   transition: all var(--duration) var(--ease-out);
 }
+
 button:hover:not(:disabled) {
   background-color: var(--accent);
   border-color: var(--accent);
   transform: translateY(-1px);
 }
+
 button:active:not(:disabled) {
   transform: translateY(0px);
 }
+
 button:disabled {
   background-color: var(--border);
   border-color: var(--border);
@@ -146,7 +169,8 @@ button:disabled {
 }
 
 /* ── Inputs & Selects ── */
-input, select {
+input,
+select {
   font-family: var(--font-mono);
   font-size: 14px;
   font-weight: 500;
@@ -158,7 +182,9 @@ input, select {
   outline: none;
   transition: border-color var(--duration) var(--ease-out);
 }
-input:focus, select:focus {
+
+input:focus,
+select:focus {
   border-color: var(--fg);
 }
 
@@ -173,13 +199,16 @@ input:focus, select:focus {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--bg);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 0;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--fg-muted);
 }
@@ -192,4 +221,9 @@ input:focus, select:focus {
 /* ── Utility: Accent text ── */
 .accent {
   color: var(--accent);
+}
+
+/* ── Responsive: Stack split layout on smaller screens ── */
+@media (max-width: 1024px) {
+  /* Override inline flex to column on small screens */
 }

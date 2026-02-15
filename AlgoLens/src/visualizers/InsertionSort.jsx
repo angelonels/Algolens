@@ -11,7 +11,10 @@ import {
   PageContainer,
   ExplanationBox,
   VisualizationContainer,
-  ControlsRow
+  ControlsRow,
+  SplitLayout,
+  SplitLeft,
+  SplitRight
 } from '../components/ui/AnimationComponents'
 
 const insertionSortPythonCode = `def insertion_sort(arr):
@@ -166,204 +169,209 @@ export default function InsertionSortVisualizer() {
 
   return (
     <PageContainer title="Insertion Sort Visualizer">
-      <ExplanationBox>
-        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Insertion Sort?</h3>
-        <p>
-          Insertion Sort is an intuitive sorting algorithm that builds the final sorted array one element
-          at a time. It works the same way you might sort playing cards in your hand — you pick up each
-          new card and slide it into the correct position among the cards you've already sorted.
-        </p>
-        <p style={{ marginTop: 8 }}>
-          At each iteration, the algorithm takes the next unsorted element (called the "key"), compares
-          it with the sorted portion from right to left, shifts all larger elements one position to the
-          right, and inserts the key into its correct position. Despite its O(n²) worst-case complexity,
-          Insertion Sort is remarkably efficient for small or nearly sorted datasets.
-        </p>
-        <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-        <ol style={{ paddingLeft: 20, margin: 0 }}>
-          <li>Start from the second element (index 1) — the first element is trivially "sorted"</li>
-          <li>"Extract" the current element as the <strong>key</strong></li>
-          <li>Compare the key with each element in the sorted portion, moving right to left</li>
-          <li>Shift each element that is larger than the key one position to the right to make room</li>
-          <li>Insert the key into the gap — this is now its correct sorted position</li>
-          <li>Repeat for all remaining elements until the entire array is sorted</li>
-        </ol>
-        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-        <ul style={{ paddingLeft: 20, margin: 0 }}>
-          <li><strong>Stable:</strong> Equal elements preserve their original relative order</li>
-          <li><strong>In-place:</strong> Requires only O(1) additional memory</li>
-          <li><strong>Adaptive:</strong> Runs in O(n) time on nearly sorted input — very efficient when data arrives in order</li>
-          <li><strong>Online:</strong> Can sort a list as it receives new elements, making it suitable for streaming data</li>
-        </ul>
-        <p style={{ marginTop: 12 }}>
-          <strong>Time Complexity:</strong> O(n²) worst and average case | O(n) best case (already sorted)
-        </p>
-        <p style={{ marginTop: 4 }}>
-          <strong>Space Complexity:</strong> O(1) — sorts in place with constant extra memory
-        </p>
-        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
-          <strong>When to use:</strong> Excellent for small arrays (typically n &lt; 20–50), nearly sorted data,
-          or as the base case inside more complex algorithms. Python's Timsort and Java's Arrays.sort()
-          both use Insertion Sort for small sub-arrays during their divide-and-conquer phases.
-        </p>
-      </ExplanationBox>
+      <SplitLayout>
+        <SplitLeft>
+          <ExplanationBox>
+            <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Insertion Sort?</h3>
+            <p>
+              Insertion Sort is an intuitive sorting algorithm that builds the final sorted array one element
+              at a time. It works the same way you might sort playing cards in your hand — you pick up each
+              new card and slide it into the correct position among the cards you've already sorted.
+            </p>
+            <p style={{ marginTop: 8 }}>
+              At each iteration, the algorithm takes the next unsorted element (called the "key"), compares
+              it with the sorted portion from right to left, shifts all larger elements one position to the
+              right, and inserts the key into its correct position. Despite its O(n²) worst-case complexity,
+              Insertion Sort is remarkably efficient for small or nearly sorted datasets.
+            </p>
+            <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
+            <ol style={{ paddingLeft: 20, margin: 0 }}>
+              <li>Start from the second element (index 1) — the first element is trivially "sorted"</li>
+              <li>"Extract" the current element as the <strong>key</strong></li>
+              <li>Compare the key with each element in the sorted portion, moving right to left</li>
+              <li>Shift each element that is larger than the key one position to the right to make room</li>
+              <li>Insert the key into the gap — this is now its correct sorted position</li>
+              <li>Repeat for all remaining elements until the entire array is sorted</li>
+            </ol>
+            <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
+            <ul style={{ paddingLeft: 20, margin: 0 }}>
+              <li><strong>Stable:</strong> Equal elements preserve their original relative order</li>
+              <li><strong>In-place:</strong> Requires only O(1) additional memory</li>
+              <li><strong>Adaptive:</strong> Runs in O(n) time on nearly sorted input — very efficient when data arrives in order</li>
+              <li><strong>Online:</strong> Can sort a list as it receives new elements, making it suitable for streaming data</li>
+            </ul>
+            <p style={{ marginTop: 12 }}>
+              <strong>Time Complexity:</strong> O(n²) worst and average case | O(n) best case (already sorted)
+            </p>
+            <p style={{ marginTop: 4 }}>
+              <strong>Space Complexity:</strong> O(1) — sorts in place with constant extra memory
+            </p>
+            <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+              <strong>When to use:</strong> Excellent for small arrays (typically n &lt; 20–50), nearly sorted data,
+              or as the base case inside more complex algorithms. Python's Timsort and Java's Arrays.sort()
+              both use Insertion Sort for small sub-arrays during their divide-and-conquer phases.
+            </p>
+          </ExplanationBox>
 
-      <CodeBlock code={insertionSortPythonCode} onCopy={() => { }} />
+          <CodeBlock code={insertionSortPythonCode} onCopy={() => { }} />
+        </SplitLeft>
+        <SplitRight>
+          <VisualizationContainer>
+            {/* Key Display */}
+            <AnimatePresence>
+              {step.keyValue !== null && step.phase !== 'done' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  style={{
+                    marginBottom: 16,
+                    padding: '8px 16px',
+                    background: COLORS.surface,
+                    border: `1px solid ${COLORS.active}`,
+                    borderLeft: `3px solid ${COLORS.active}`,
+                    borderRadius: '0px',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    color: COLORS.fg,
+                    display: 'inline-block'
+                  }}
+                >
+                  Key: {step.keyValue}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-      <VisualizationContainer>
-        {/* Key Display */}
-        <AnimatePresence>
-          {step.keyValue !== null && step.phase !== 'done' && (
-            <motion.div
-              initial={{ opacity: 0, y: -12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              style={{
-                marginBottom: 16,
-                padding: '8px 16px',
-                background: COLORS.surface,
-                border: `1px solid ${COLORS.active}`,
-                borderLeft: `3px solid ${COLORS.active}`,
-                borderRadius: '0px',
-                fontFamily: "'JetBrains Mono', monospace",
-                fontWeight: 700,
-                fontSize: 14,
-                color: COLORS.fg,
-                display: 'inline-block'
-              }}
-            >
-              Key: {step.keyValue}
-            </motion.div>
-          )}
-        </AnimatePresence>
+            {/* Status Message */}
+            <AnimatePresence mode="wait">
+              {currentStep >= 0 && step.message && (
+                <StatusMessage
+                  key={currentStep}
+                  message={step.message}
+                  type={step.phase === 'insert' ? 'success' : step.phase === 'shift' ? 'warning' : 'info'}
+                />
+              )}
+            </AnimatePresence>
 
-        {/* Status Message */}
-        <AnimatePresence mode="wait">
-          {currentStep >= 0 && step.message && (
-            <StatusMessage
-              key={currentStep}
-              message={step.message}
-              type={step.phase === 'insert' ? 'success' : step.phase === 'shift' ? 'warning' : 'info'}
-            />
-          )}
-        </AnimatePresence>
+            {/* Array Bar Chart */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+              gap: 6,
+              height: 280,
+              padding: '20px 0'
+            }}>
+              {step.snapshot.map((v, i) => {
+                const state = getElementState(i)
+                const maxVal = Math.max(...array)
+                const height = (v / maxVal) * 200 + 40
 
-        {/* Array Bar Chart */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'flex-end',
-          gap: 6,
-          height: 280,
-          padding: '20px 0'
-        }}>
-          {step.snapshot.map((v, i) => {
-            const state = getElementState(i)
-            const maxVal = Math.max(...array)
-            const height = (v / maxVal) * 200 + 40
+                const colors = {
+                  default: COLORS.default,
+                  key: COLORS.active,
+                  comparing: COLORS.comparing,
+                  shifting: COLORS.pivot,
+                  inserted: COLORS.found,
+                  sorted: COLORS.sorted,
+                  'sorted-partial': '#86efac'
+                }
 
-            const colors = {
-              default: COLORS.default,
-              key: COLORS.active,
-              comparing: COLORS.comparing,
-              shifting: COLORS.pivot,
-              inserted: COLORS.found,
-              sorted: COLORS.sorted,
-              'sorted-partial': '#86efac'
-            }
+                return (
+                  <motion.div
+                    key={i}
+                    layout
+                    animate={{
+                      height,
+                      backgroundColor: colors[state] || colors.default,
+                      scale: state === 'key' || state === 'inserted' ? 1.06 : 1,
+                      y: state === 'key' ? -24 : state === 'shifting' ? -8 : 0
+                    }}
+                    transition={{
+                      ...SPRING.bouncy,
+                      layout: { type: 'spring', stiffness: 500, damping: 30 }
+                    }}
+                    style={{
+                      width: 56,
+                      borderRadius: '2px 2px 0 0',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
+                      paddingBottom: 8,
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontWeight: 700,
+                      fontSize: 16,
+                      color: (state === 'key' || state === 'comparing' || state === 'shifting') ? '#fff' : COLORS.fg,
+                      border: '1px solid rgba(0,0,0,0.08)'
+                    }}
+                  >
+                    {v}
+                    <span style={{ fontSize: 9, opacity: 0.5, marginTop: 2, fontFamily: "'JetBrains Mono', monospace" }}>{i}</span>
+                  </motion.div>
+                )
+              })}
+            </div>
 
-            return (
-              <motion.div
-                key={i}
-                layout
-                animate={{
-                  height,
-                  backgroundColor: colors[state] || colors.default,
-                  scale: state === 'key' || state === 'inserted' ? 1.06 : 1,
-                  y: state === 'key' ? -24 : state === 'shifting' ? -8 : 0
-                }}
-                transition={{
-                  ...SPRING.bouncy,
-                  layout: { type: 'spring', stiffness: 500, damping: 30 }
-                }}
-                style={{
-                  width: 56,
-                  borderRadius: '2px 2px 0 0',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                  paddingBottom: 8,
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontWeight: 700,
-                  fontSize: 16,
-                  color: (state === 'key' || state === 'comparing' || state === 'shifting') ? '#fff' : COLORS.fg,
-                  border: '1px solid rgba(0,0,0,0.08)'
-                }}
+            <Legend items={legendItems} />
+
+            {/* Controls */}
+            <ControlsRow>
+              <SpeedControl speed={speed} onSpeedChange={setSpeed} disabled={false} />
+
+              {sorting && (
+                <StepCounter current={currentStep + 1} total={steps.length} />
+              )}
+
+              <ControlButton
+                onClick={startSort}
+                disabled={sorting && !isPaused}
+                variant="primary"
               >
-                {v}
-                <span style={{ fontSize: 9, opacity: 0.5, marginTop: 2, fontFamily: "'JetBrains Mono', monospace" }}>{i}</span>
-              </motion.div>
-            )
-          })}
-        </div>
+                {sorting ? 'Sorting…' : 'Start Sort'}
+              </ControlButton>
 
-        <Legend items={legendItems} />
+              {sorting && (
+                <ControlButton onClick={togglePause} variant="success">
+                  {isPaused ? 'Resume' : 'Pause'}
+                </ControlButton>
+              )}
 
-        {/* Controls */}
-        <ControlsRow>
-          <SpeedControl speed={speed} onSpeedChange={setSpeed} disabled={false} />
+              <ControlButton onClick={reset} variant="danger">
+                Reset
+              </ControlButton>
+            </ControlsRow>
 
-          {sorting && (
-            <StepCounter current={currentStep + 1} total={steps.length} />
-          )}
-
-          <ControlButton
-            onClick={startSort}
-            disabled={sorting && !isPaused}
-            variant="primary"
-          >
-            {sorting ? 'Sorting…' : 'Start Sort'}
-          </ControlButton>
-
-          {sorting && (
-            <ControlButton onClick={togglePause} variant="success">
-              {isPaused ? 'Resume' : 'Pause'}
-            </ControlButton>
-          )}
-
-          <ControlButton onClick={reset} variant="danger">
-            Reset
-          </ControlButton>
-        </ControlsRow>
-
-        {/* Final Result */}
-        <AnimatePresence>
-          {isFinalStep && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                marginTop: 24,
-                padding: '12px 20px',
-                background: COLORS.surface,
-                border: `1px solid ${COLORS.sorted}`,
-                borderLeft: `3px solid ${COLORS.sorted}`,
-                borderRadius: '0px',
-                fontFamily: "'JetBrains Mono', monospace",
-                fontWeight: 600,
-                fontSize: 15,
-                color: COLORS.fg,
-                display: 'inline-block'
-              }}
-            >
-              ✓ Array sorted successfully
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </VisualizationContainer>
+            {/* Final Result */}
+            <AnimatePresence>
+              {isFinalStep && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    marginTop: 24,
+                    padding: '12px 20px',
+                    background: COLORS.surface,
+                    border: `1px solid ${COLORS.sorted}`,
+                    borderLeft: `3px solid ${COLORS.sorted}`,
+                    borderRadius: '0px',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 600,
+                    fontSize: 15,
+                    color: COLORS.fg,
+                    display: 'inline-block'
+                  }}
+                >
+                  ✓ Array sorted successfully
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </VisualizationContainer>
+        </SplitRight>
+      </SplitLayout>
     </PageContainer>
   )
 }

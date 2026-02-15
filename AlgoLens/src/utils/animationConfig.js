@@ -89,7 +89,7 @@ export const STYLES = {
         padding: '80px 40px 60px',
         minHeight: '100vh',
         background: '#f5f0e8',
-        maxWidth: '1100px',
+        maxWidth: '1440px',
         margin: '0 auto'
     },
 
@@ -103,16 +103,39 @@ export const STYLES = {
         textAlign: 'left'
     },
 
+    // ── Split Layout ──
+    splitLayout: {
+        display: 'flex',
+        gap: '32px',
+        alignItems: 'flex-start',
+        marginTop: '20px'
+    },
+
+    splitLeft: {
+        flex: '0 0 420px',
+        minWidth: 0,
+        maxHeight: 'calc(100vh - 120px)',
+        overflowY: 'auto',
+        paddingRight: '8px'
+    },
+
+    splitRight: {
+        flex: 1,
+        minWidth: 0,
+        position: 'sticky',
+        top: '80px',
+        alignSelf: 'flex-start'
+    },
+
     explanationBox: {
-        maxWidth: '760px',
-        margin: '20px 0',
+        margin: '0 0 16px 0',
         textAlign: 'left',
         background: '#ffffff',
         padding: '24px 28px',
         border: '1px solid #d4d0c8',
         borderRadius: '2px',
         color: '#0a0a0a',
-        fontSize: '15px',
+        fontSize: '14px',
         lineHeight: '1.7'
     },
 
@@ -121,22 +144,20 @@ export const STYLES = {
         border: '1px solid #d4d0c8',
         borderRadius: '2px',
         padding: '32px',
-        margin: '24px 0',
-        maxWidth: '960px'
+        margin: '0'
     },
 
     codeBlock: {
         background: '#0a0a0a',
-        padding: '24px 28px',
+        padding: '20px 24px',
         borderRadius: '0px',
         border: '1px solid #0a0a0a',
         fontFamily: "'JetBrains Mono', monospace",
-        fontSize: '13px',
+        fontSize: '12px',
         lineHeight: '1.65',
         color: '#e8e4dc',
         textAlign: 'left',
-        maxWidth: '760px',
-        margin: '16px 0',
+        margin: '0 0 16px 0',
         overflowX: 'auto'
     },
 

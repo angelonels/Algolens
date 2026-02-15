@@ -328,16 +328,13 @@ export function ArrayElement({
 }
 
 // ── Visualization Container ──
-export function VisualizationContainer({ children, maxWidth = 960 }) {
+export function VisualizationContainer({ children }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-                ...STYLES.visualizationArea,
-                maxWidth
-            }}
+            style={STYLES.visualizationArea}
         >
             {children}
         </motion.div>
@@ -358,6 +355,41 @@ export function PageContainer({ title, children }) {
             </motion.h1>
             {children}
         </div>
+    )
+}
+
+// ── Split Layout Wrappers ──
+export function SplitLayout({ children }) {
+    return (
+        <div style={STYLES.splitLayout}>
+            {children}
+        </div>
+    )
+}
+
+export function SplitLeft({ children }) {
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            style={STYLES.splitLeft}
+        >
+            {children}
+        </motion.div>
+    )
+}
+
+export function SplitRight({ children }) {
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: 12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            style={STYLES.splitRight}
+        >
+            {children}
+        </motion.div>
     )
 }
 

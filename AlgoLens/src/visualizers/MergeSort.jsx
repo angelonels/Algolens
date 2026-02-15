@@ -11,7 +11,10 @@ import {
   PageContainer,
   ExplanationBox,
   VisualizationContainer,
-  ControlsRow
+  ControlsRow,
+  SplitLayout,
+  SplitLeft,
+  SplitRight
 } from '../components/ui/AnimationComponents'
 
 const mergeSortPythonCode = `def merge_sort(arr):
@@ -180,198 +183,203 @@ export default function MergeSortVisualizer() {
 
   return (
     <PageContainer title="Merge Sort Visualizer">
-      <ExplanationBox>
-        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Merge Sort?</h3>
-        <p>
-          Merge Sort is a classic divide-and-conquer sorting algorithm invented by John von Neumann in 1945.
-          It works by recursively splitting the array into two halves, sorting each half independently,
-          and then merging the two sorted halves back together into a single sorted array. Unlike simpler
-          algorithms like Bubble Sort, Merge Sort guarantees <strong>O(n log n)</strong> performance in all cases —
-          best, average, and worst.
-        </p>
-        <p style={{ marginTop: 8 }}>
-          The key insight is that merging two already-sorted arrays is a linear O(n) operation. By
-          recursively breaking the problem down until each sub-array has just one element (which is trivially
-          sorted), the algorithm builds up the final sorted array through a series of efficient merge steps.
-        </p>
-        <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-        <ol style={{ paddingLeft: 20, margin: 0 }}>
-          <li><strong>Divide:</strong> Split the array into two halves at the midpoint</li>
-          <li><strong>Conquer:</strong> Recursively sort the left half and the right half</li>
-          <li><strong>Merge:</strong> Combine the two sorted halves by comparing elements one by one, always picking the smaller element first</li>
-          <li>Continue merging until all elements are back in a single sorted array</li>
-          <li>Base case: a sub-array of size 0 or 1 is already sorted</li>
-        </ol>
-        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-        <ul style={{ paddingLeft: 20, margin: 0 }}>
-          <li><strong>Stable:</strong> Equal elements preserve their original relative order</li>
-          <li><strong>Not in-place:</strong> Requires O(n) additional memory for the temporary merge arrays</li>
-          <li><strong>Predictable:</strong> Always O(n log n) regardless of input — no worst-case degradation</li>
-          <li><strong>Parallelizable:</strong> The independent sub-problems make it well-suited for parallel or distributed processing</li>
-        </ul>
-        <p style={{ marginTop: 12 }}>
-          <strong>Time Complexity:</strong> O(n log n) in all cases (best, average, worst)
-        </p>
-        <p style={{ marginTop: 4 }}>
-          <strong>Space Complexity:</strong> O(n) — requires auxiliary space proportional to the input size
-        </p>
-        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
-          <strong>When to use:</strong> Preferred when stable sorting is required or when predictable performance
-          matters (e.g., sorting linked lists, external sorting of large files). It's the default sorting algorithm
-          in many languages — Python's <code>sorted()</code> uses Timsort, which is a hybrid of Merge Sort and Insertion Sort.
-        </p>
-      </ExplanationBox>
+      <SplitLayout>
+        <SplitLeft>
+          <ExplanationBox>
+            <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Merge Sort?</h3>
+            <p>
+              Merge Sort is a classic divide-and-conquer sorting algorithm invented by John von Neumann in 1945.
+              It works by recursively splitting the array into two halves, sorting each half independently,
+              and then merging the two sorted halves back together into a single sorted array. Unlike simpler
+              algorithms like Bubble Sort, Merge Sort guarantees <strong>O(n log n)</strong> performance in all cases —
+              best, average, and worst.
+            </p>
+            <p style={{ marginTop: 8 }}>
+              The key insight is that merging two already-sorted arrays is a linear O(n) operation. By
+              recursively breaking the problem down until each sub-array has just one element (which is trivially
+              sorted), the algorithm builds up the final sorted array through a series of efficient merge steps.
+            </p>
+            <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
+            <ol style={{ paddingLeft: 20, margin: 0 }}>
+              <li><strong>Divide:</strong> Split the array into two halves at the midpoint</li>
+              <li><strong>Conquer:</strong> Recursively sort the left half and the right half</li>
+              <li><strong>Merge:</strong> Combine the two sorted halves by comparing elements one by one, always picking the smaller element first</li>
+              <li>Continue merging until all elements are back in a single sorted array</li>
+              <li>Base case: a sub-array of size 0 or 1 is already sorted</li>
+            </ol>
+            <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
+            <ul style={{ paddingLeft: 20, margin: 0 }}>
+              <li><strong>Stable:</strong> Equal elements preserve their original relative order</li>
+              <li><strong>Not in-place:</strong> Requires O(n) additional memory for the temporary merge arrays</li>
+              <li><strong>Predictable:</strong> Always O(n log n) regardless of input — no worst-case degradation</li>
+              <li><strong>Parallelizable:</strong> The independent sub-problems make it well-suited for parallel or distributed processing</li>
+            </ul>
+            <p style={{ marginTop: 12 }}>
+              <strong>Time Complexity:</strong> O(n log n) in all cases (best, average, worst)
+            </p>
+            <p style={{ marginTop: 4 }}>
+              <strong>Space Complexity:</strong> O(n) — requires auxiliary space proportional to the input size
+            </p>
+            <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+              <strong>When to use:</strong> Preferred when stable sorting is required or when predictable performance
+              matters (e.g., sorting linked lists, external sorting of large files). It's the default sorting algorithm
+              in many languages — Python's <code>sorted()</code> uses Timsort, which is a hybrid of Merge Sort and Insertion Sort.
+            </p>
+          </ExplanationBox>
 
-      <CodeBlock code={mergeSortPythonCode} onCopy={() => { }} />
-
-      <VisualizationContainer>
-        {/* Depth Indicator */}
-        {sorting && step.depth !== undefined && (
-          <div style={{
-            marginBottom: 12,
-            padding: '6px 12px',
-            background: COLORS.surface,
-            border: `1px solid ${depthColors[step.depth % depthColors.length]}`,
-            borderLeft: `3px solid ${depthColors[step.depth % depthColors.length]}`,
-            borderRadius: '0px',
-            fontFamily: "'JetBrains Mono', monospace",
-            fontWeight: 600,
-            fontSize: '12px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.04em',
-            color: COLORS.fg,
-            display: 'inline-block'
-          }}>
-            Depth: {step.depth}
-          </div>
-        )}
-
-        {/* Status Message */}
-        <AnimatePresence mode="wait">
-          {currentStep >= 0 && step.message && (
-            <StatusMessage
-              key={currentStep}
-              message={step.message}
-              type={step.phase === 'merge-done' ? 'success' : 'info'}
-            />
-          )}
-        </AnimatePresence>
-
-        {/* Array Bar Chart */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'flex-end',
-          gap: 4,
-          height: 280,
-          padding: '20px 0'
-        }}>
-          {step.snapshot.map((v, i) => {
-            const state = getElementState(i)
-            const maxVal = Math.max(...array)
-            const height = (v / maxVal) * 200 + 40
-
-            const colors = {
-              default: COLORS.default,
-              splitting: COLORS.comparing,
-              left: COLORS.comparing,
-              right: '#ec4899',
-              merged: COLORS.active,
-              sorted: COLORS.sorted
-            }
-
-            return (
-              <motion.div
-                key={i}
-                layout
-                animate={{
-                  height,
-                  backgroundColor: colors[state] || colors.default,
-                  scale: state === 'merged' ? 1.04 : 1,
-                  y: state === 'splitting' ? -8 : 0
-                }}
-                transition={{
-                  ...SPRING.bouncy,
-                  layout: { type: 'spring', stiffness: 500, damping: 30 }
-                }}
-                style={{
-                  width: 52,
-                  borderRadius: '2px 2px 0 0',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                  paddingBottom: 8,
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontWeight: 700,
-                  fontSize: 15,
-                  color: (state === 'left' || state === 'right' || state === 'comparing')
-                    ? '#fff' : COLORS.fg,
-                  border: '1px solid rgba(0,0,0,0.08)'
-                }}
-              >
-                {v}
-              </motion.div>
-            )
-          })}
-        </div>
-
-        <Legend items={legendItems} />
-
-        {/* Controls */}
-        <ControlsRow>
-          <SpeedControl speed={speed} onSpeedChange={setSpeed} disabled={false} />
-
-          {sorting && (
-            <StepCounter current={currentStep + 1} total={steps.length} />
-          )}
-
-          <ControlButton
-            onClick={startSort}
-            disabled={sorting && !isPaused}
-            variant="primary"
-          >
-            {sorting ? 'Sorting…' : 'Start Sort'}
-          </ControlButton>
-
-          {sorting && (
-            <ControlButton onClick={togglePause} variant="success">
-              {isPaused ? 'Resume' : 'Pause'}
-            </ControlButton>
-          )}
-
-          <ControlButton onClick={reset} variant="danger">
-            Reset
-          </ControlButton>
-        </ControlsRow>
-
-        {/* Final Result */}
-        <AnimatePresence>
-          {isFinalStep && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                marginTop: 24,
-                padding: '12px 20px',
+          <CodeBlock code={mergeSortPythonCode} onCopy={() => { }} />
+        </SplitLeft>
+        <SplitRight>
+          <VisualizationContainer>
+            {/* Depth Indicator */}
+            {sorting && step.depth !== undefined && (
+              <div style={{
+                marginBottom: 12,
+                padding: '6px 12px',
                 background: COLORS.surface,
-                border: `1px solid ${COLORS.sorted}`,
-                borderLeft: `3px solid ${COLORS.sorted}`,
+                border: `1px solid ${depthColors[step.depth % depthColors.length]}`,
+                borderLeft: `3px solid ${depthColors[step.depth % depthColors.length]}`,
                 borderRadius: '0px',
                 fontFamily: "'JetBrains Mono', monospace",
                 fontWeight: 600,
-                fontSize: 15,
+                fontSize: '12px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
                 color: COLORS.fg,
                 display: 'inline-block'
-              }}
-            >
-              ✓ Array sorted with Merge Sort
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </VisualizationContainer>
+              }}>
+                Depth: {step.depth}
+              </div>
+            )}
+
+            {/* Status Message */}
+            <AnimatePresence mode="wait">
+              {currentStep >= 0 && step.message && (
+                <StatusMessage
+                  key={currentStep}
+                  message={step.message}
+                  type={step.phase === 'merge-done' ? 'success' : 'info'}
+                />
+              )}
+            </AnimatePresence>
+
+            {/* Array Bar Chart */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+              gap: 4,
+              height: 280,
+              padding: '20px 0'
+            }}>
+              {step.snapshot.map((v, i) => {
+                const state = getElementState(i)
+                const maxVal = Math.max(...array)
+                const height = (v / maxVal) * 200 + 40
+
+                const colors = {
+                  default: COLORS.default,
+                  splitting: COLORS.comparing,
+                  left: COLORS.comparing,
+                  right: '#ec4899',
+                  merged: COLORS.active,
+                  sorted: COLORS.sorted
+                }
+
+                return (
+                  <motion.div
+                    key={i}
+                    layout
+                    animate={{
+                      height,
+                      backgroundColor: colors[state] || colors.default,
+                      scale: state === 'merged' ? 1.04 : 1,
+                      y: state === 'splitting' ? -8 : 0
+                    }}
+                    transition={{
+                      ...SPRING.bouncy,
+                      layout: { type: 'spring', stiffness: 500, damping: 30 }
+                    }}
+                    style={{
+                      width: 52,
+                      borderRadius: '2px 2px 0 0',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
+                      paddingBottom: 8,
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontWeight: 700,
+                      fontSize: 15,
+                      color: (state === 'left' || state === 'right' || state === 'comparing')
+                        ? '#fff' : COLORS.fg,
+                      border: '1px solid rgba(0,0,0,0.08)'
+                    }}
+                  >
+                    {v}
+                  </motion.div>
+                )
+              })}
+            </div>
+
+            <Legend items={legendItems} />
+
+            {/* Controls */}
+            <ControlsRow>
+              <SpeedControl speed={speed} onSpeedChange={setSpeed} disabled={false} />
+
+              {sorting && (
+                <StepCounter current={currentStep + 1} total={steps.length} />
+              )}
+
+              <ControlButton
+                onClick={startSort}
+                disabled={sorting && !isPaused}
+                variant="primary"
+              >
+                {sorting ? 'Sorting…' : 'Start Sort'}
+              </ControlButton>
+
+              {sorting && (
+                <ControlButton onClick={togglePause} variant="success">
+                  {isPaused ? 'Resume' : 'Pause'}
+                </ControlButton>
+              )}
+
+              <ControlButton onClick={reset} variant="danger">
+                Reset
+              </ControlButton>
+            </ControlsRow>
+
+            {/* Final Result */}
+            <AnimatePresence>
+              {isFinalStep && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    marginTop: 24,
+                    padding: '12px 20px',
+                    background: COLORS.surface,
+                    border: `1px solid ${COLORS.sorted}`,
+                    borderLeft: `3px solid ${COLORS.sorted}`,
+                    borderRadius: '0px',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 600,
+                    fontSize: 15,
+                    color: COLORS.fg,
+                    display: 'inline-block'
+                  }}
+                >
+                  ✓ Array sorted with Merge Sort
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </VisualizationContainer>
+        </SplitRight>
+      </SplitLayout>
     </PageContainer>
   )
 }
