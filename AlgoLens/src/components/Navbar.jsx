@@ -12,7 +12,10 @@ const algorithms = [
   { name: 'BFS Grid Search', path: '/bfs', tag: 'Graph' },
   { name: 'DFS Grid Search', path: '/dfs', tag: 'Graph' },
   { name: 'K-Means Clustering', path: '/kmeans', tag: 'ML' },
-  { name: 'Edit Distance (DP)', path: '/edit-distance', tag: 'DP' }
+  { name: 'Edit Distance (DP)', path: '/edit-distance', tag: 'DP' },
+  { name: 'Linear Regression', path: '/linear-regression', tag: 'ML' },
+  { name: 'Logistic Regression', path: '/logistic-regression', tag: 'ML' },
+  { name: 'Decision Tree', path: '/decision-tree', tag: 'ML' }
 ]
 
 export default function Navbar() {

@@ -14,6 +14,9 @@ import BFSGrid from './visualizers/BFSGrid'
 import DFSGrid from './visualizers/DFSGrid'
 import KMeans from './visualizers/KMeans'
 import EditDistance from './visualizers/EditDistance'
+import LinearRegression from './visualizers/LinearRegression'
+import LogisticRegression from './visualizers/LogisticRegression'
+import DecisionTree from './visualizers/DecisionTree'
 
 export default function App() {
   return (
@@ -33,6 +36,9 @@ export default function App() {
         <Route path="/dfs" element={<DFSGrid />} />
         <Route path="/kmeans" element={<KMeans />} />
         <Route path="/edit-distance" element={<EditDistance />} />
+        <Route path="/linear-regression" element={<LinearRegression />} />
+        <Route path="/logistic-regression" element={<LogisticRegression />} />
+        <Route path="/decision-tree" element={<DecisionTree />} />
       </Routes>
     </>
   )

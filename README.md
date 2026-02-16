@@ -27,6 +27,9 @@ AlgoLens uses a custom-built design system that prioritizes clarity and intentio
 - **DFS Grid Search** – Stack-based depth-first exploration with backtracking visualization
 - **K-Means Clustering** – Animated 2D scatter plot with centroid movement and cluster assignment
 - **Edit Distance (DP)** – 2D DP table visualization for string transformation (LeetCode #72)
+- **Linear Regression** – Gradient descent fitting with animated regression line, residuals, and cost curve
+- **Logistic Regression** – Sigmoid decision boundary with gradient-shaded classification regions
+- **Decision Tree** – Recursive feature-space partitioning with Gini splits and animated tree structure
 
 ## Features
 
@@ -67,6 +70,9 @@ src/
     DFSGrid.jsx
     KMeans.jsx
     EditDistance.jsx
+    LinearRegression.jsx
+    LogisticRegression.jsx
+    DecisionTree.jsx
   utils/
     animationConfig.js  # Design tokens: colors, springs, styles
   App.jsx
