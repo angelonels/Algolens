@@ -24,6 +24,9 @@ AlgoLens uses a custom-built design system that prioritizes clarity and intentio
 - **Matrix Traversal** – Spiral traversal with layer coloring
 - **Dijkstra's Path** – Interactive SVG graph with shortest path exploration
 - **BFS Grid Search** – Interactive grid pathfinding with wall drawing and layer-by-layer exploration
+- **DFS Grid Search** – Stack-based depth-first exploration with backtracking visualization
+- **K-Means Clustering** – Animated 2D scatter plot with centroid movement and cluster assignment
+- **Edit Distance (DP)** – 2D DP table visualization for string transformation (LeetCode #72)
 
 ## Features
 
@@ -61,6 +64,9 @@ src/
     MatrixTraversal.jsx
     DijkstraPath.jsx
     BFSGrid.jsx
+    DFSGrid.jsx
+    KMeans.jsx
+    EditDistance.jsx
   utils/
     animationConfig.js  # Design tokens: colors, springs, styles
   App.jsx
