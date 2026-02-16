@@ -11,6 +11,9 @@ import MatrixTraversal from './visualizers/MatrixTraversal'
 import QuickSort from './visualizers/QuickSort'
 import DijkstraPath from './visualizers/DijkstraPath'
 import BFSGrid from './visualizers/BFSGrid'
+import DFSGrid from './visualizers/DFSGrid'
+import KMeans from './visualizers/KMeans'
+import EditDistance from './visualizers/EditDistance'
 
 export default function App() {
   return (
@@ -27,6 +30,9 @@ export default function App() {
         <Route path="/quick-sort" element={<QuickSort />} />
         <Route path="/dijkstra" element={<DijkstraPath />} />
         <Route path="/bfs" element={<BFSGrid />} />
+        <Route path="/dfs" element={<DFSGrid />} />
+        <Route path="/kmeans" element={<KMeans />} />
+        <Route path="/edit-distance" element={<EditDistance />} />
       </Routes>
     </>
   )
