@@ -11,6 +11,8 @@ const algorithms = [
   { name: 'Euclidean GCD', path: '/gcd', tag: 'Math', desc: 'O(log min(a,b)) — Greatest common divisor' },
   { name: 'Matrix Traversal', path: '/matrix-traversal', tag: 'Matrix', desc: 'Row-major, column-major, and diagonal walks' },
   { name: "Dijkstra's Path", path: '/dijkstra', tag: 'Graph', desc: 'O((V+E) log V) — Shortest path in weighted graphs' },
+  { name: 'A* Pathfinding', path: '/astar', tag: 'Graph', desc: 'O(E log V) — Heuristic-guided optimal shortest path search' },
+  { name: 'Algorithm Race', path: '/race', tag: 'Race', desc: 'Pit two sorting algorithms head-to-head on the same array' },
   { name: 'BFS Grid Search', path: '/bfs', tag: 'Graph', desc: 'O(V+E) — Layer-by-layer shortest path on grids' },
   { name: 'DFS Grid Search', path: '/dfs', tag: 'Graph', desc: 'O(V+E) — Stack-based depth-first exploration with backtracking' },
   { name: 'K-Means Clustering', path: '/kmeans', tag: 'ML', desc: 'O(nki) — Unsupervised partitioning into k clusters' },
@@ -27,7 +29,8 @@ const TAG_COLORS = {
   Math: '#d97706',
   Matrix: '#7c3aed',
   DP: '#ea580c',
-  ML: '#16a34a'
+  ML: '#16a34a',
+  Race: '#db2777'
 }
 
 // Derive unique categories from algorithms

@@ -9,6 +9,8 @@ const algorithms = [
   { name: 'Euclidean GCD', path: '/gcd', tag: 'Math' },
   { name: 'Matrix Traversal', path: '/matrix-traversal', tag: 'Matrix' },
   { name: "Dijkstra's Path", path: '/dijkstra', tag: 'Graph' },
+  { name: 'A* Pathfinding', path: '/astar', tag: 'Graph' },
+  { name: 'Algorithm Race', path: '/race', tag: 'Race' },
   { name: 'BFS Grid Search', path: '/bfs', tag: 'Graph' },
   { name: 'DFS Grid Search', path: '/dfs', tag: 'Graph' },
   { name: 'K-Means Clustering', path: '/kmeans', tag: 'ML' },
