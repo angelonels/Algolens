@@ -11,7 +11,6 @@ const algorithms = [
   { name: 'Euclidean GCD', path: '/gcd', tag: 'Math', desc: 'O(log min(a,b)) — Greatest common divisor' },
   { name: 'Matrix Traversal', path: '/matrix-traversal', tag: 'Matrix', desc: 'Row-major, column-major, and diagonal walks' },
   { name: "Dijkstra's Path", path: '/dijkstra', tag: 'Graph', desc: 'O((V+E) log V) — Shortest path in weighted graphs' },
-  { name: 'A* Pathfinding', path: '/astar', tag: 'Graph', desc: 'O(E log V) — Heuristic-guided optimal shortest path search' },
   { name: 'Algorithm Race', path: '/race', tag: 'Race', desc: 'Pit two sorting algorithms head-to-head on the same array' },
   { name: 'BFS Grid Search', path: '/bfs', tag: 'Graph', desc: 'O(V+E) — Layer-by-layer shortest path on grids' },
   { name: 'DFS Grid Search', path: '/dfs', tag: 'Graph', desc: 'O(V+E) — Stack-based depth-first exploration with backtracking' },
@@ -59,40 +58,80 @@ export default function Home() {
 
   return (
     <div style={{
+      position: 'relative',
       padding: '100px 40px 60px',
       maxWidth: '1100px',
       margin: '0 auto',
       minHeight: '100vh'
     }}>
+      {/* ── Animated Background ── */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '400px',
+        zIndex: -1,
+        pointerEvents: 'none',
+        opacity: 0.2,
+        maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)'
+      }}>
+        <svg width="100%" height="100%">
+          <defs>
+            <pattern id="dotGrid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.5" fill="#0a0a0a" />
+            </pattern>
+          </defs>
+          <rect x="0" y="0" width="100%" height="100%" fill="url(#dotGrid)" />
+        </svg>
+      </div>
+
       {/* ── Hero ── */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        style={{ marginBottom: '56px' }}
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.1 } }
+        }}
+        style={{ marginBottom: '56px', position: 'relative' }}
       >
-        <h1 style={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontWeight: 700,
-          fontSize: 'clamp(2.8rem, 6vw, 4.5rem)',
-          lineHeight: 1.05,
-          letterSpacing: '-0.03em',
-          color: '#0a0a0a',
-          marginBottom: '16px'
-        }}>
+        <motion.h1
+          variants={{
+            hidden: { opacity: 0, y: 16 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+          }}
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontWeight: 800,
+            fontSize: 'clamp(3.2rem, 7vw, 5.5rem)',
+            lineHeight: 1.0,
+            letterSpacing: '-0.04em',
+            color: '#0a0a0a',
+            marginBottom: '20px',
+            textShadow: '3px 3px 0px rgba(0,0,0,0.06)'
+          }}
+        >
           Algorithm<br />
           <span style={{ color: '#e63312' }}>Visualizer</span>
-        </h1>
-        <p style={{
-          fontFamily: "'Inter', sans-serif",
-          fontSize: '16px',
-          lineHeight: 1.6,
-          color: '#6b6b60',
-          maxWidth: '440px'
-        }}>
+        </motion.h1>
+        <motion.p
+          variants={{
+            hidden: { opacity: 0, y: 16 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+          }}
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: '17px',
+            lineHeight: 1.6,
+            color: '#6b6b60',
+            maxWidth: '480px'
+          }}
+        >
           Step through searching, sorting, and graph algorithms
           with interactive, real-time visual explanations.
-        </p>
+        </motion.p>
       </motion.div>
 
       {/* ── Divider ── */}
@@ -134,25 +173,32 @@ export default function Home() {
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: '11px',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.08em',
                     padding: '7px 14px',
-                    border: `1px solid ${isActive ? catColor : '#d4d0c8'}`,
+                    border: `1px solid ${isActive ? '#0a0a0a' : '#d4d0c8'}`,
                     borderRadius: '0px',
                     background: isActive ? catColor : 'transparent',
                     color: isActive ? '#ffffff' : '#6b6b60',
                     cursor: 'pointer',
                     transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)',
                     position: 'relative',
-                    overflow: 'hidden'
+                    boxShadow: isActive ? `2px 2px 0px #0a0a0a` : '0px 0px 0px transparent',
+                    transform: isActive ? 'translate(-2px, -2px)' : 'translate(0px, 0px)'
                   }}
-                  whileHover={{
-                    borderColor: catColor,
-                    color: isActive ? '#ffffff' : catColor,
-                    y: -1
+                  whileHover={!isActive ? {
+                    borderColor: '#0a0a0a',
+                    color: '#0a0a0a',
+                    y: -2,
+                    x: -2,
+                    boxShadow: '2px 2px 0px #0a0a0a'
+                  } : {
+                    y: -3,
+                    x: -3,
+                    boxShadow: '3px 3px 0px #0a0a0a'
                   }}
-                  whileTap={{ scale: 0.97 }}
+                  whileTap={{ scale: 0.97, y: 0, x: 0, boxShadow: '0px 0px 0px transparent' }}
                 >
                   {cat}
                   {isActive && cat !== 'All' && (
@@ -191,10 +237,19 @@ export default function Home() {
               color: '#0a0a0a',
               width: '220px',
               outline: 'none',
-              transition: 'border-color 150ms cubic-bezier(0.16, 1, 0.3, 1)'
+              transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+              boxShadow: '0px 0px 0px transparent'
             }}
-            onFocus={e => e.currentTarget.style.borderColor = '#0a0a0a'}
-            onBlur={e => e.currentTarget.style.borderColor = '#d4d0c8'}
+            onFocus={e => {
+              e.currentTarget.style.borderColor = '#0a0a0a'
+              e.currentTarget.style.boxShadow = '3px 3px 0px #e63312'
+              e.currentTarget.style.transform = 'translate(-2px, -2px)'
+            }}
+            onBlur={e => {
+              e.currentTarget.style.borderColor = '#d4d0c8'
+              e.currentTarget.style.boxShadow = '0px 0px 0px transparent'
+              e.currentTarget.style.transform = 'translate(0px, 0px)'
+            }}
           />
           {/* Search Icon */}
           <span style={{
@@ -262,9 +317,16 @@ export default function Home() {
               background: 'transparent',
               color: '#6b6b60',
               cursor: 'pointer',
-              transition: 'all 150ms'
+              transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)'
             }}
-            whileHover={{ borderColor: '#e63312', color: '#e63312' }}
+            whileHover={{
+              borderColor: '#0a0a0a',
+              color: '#0a0a0a',
+              x: -2,
+              y: -2,
+              boxShadow: '2px 2px 0px #e63312'
+            }}
+            whileTap={{ x: 0, y: 0, boxShadow: '0px 0px 0px transparent', scale: 0.95 }}
           >
             Clear Filters ✕
           </motion.button>
@@ -306,26 +368,37 @@ export default function Home() {
                     marginTop: '-1px',
                     marginLeft: '-1px',
                     cursor: 'pointer',
-                    transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+                    transition: 'all 200ms cubic-bezier(0.16, 1, 0.3, 1)',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'flex-start',
-                    gap: '16px'
+                    gap: '16px',
+                    position: 'relative',
+                    zIndex: 0
                   }}
                   className="algo-card"
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = TAG_COLORS[algo.tag] || '#e63312'
+                    const color = TAG_COLORS[algo.tag] || '#e63312'
+                    e.currentTarget.style.borderColor = '#0a0a0a'
                     e.currentTarget.style.zIndex = '1'
-                    e.currentTarget.style.position = 'relative'
+                    e.currentTarget.style.boxShadow = `4px 4px 0px ${color}`
+                    e.currentTarget.style.transform = 'translate(-4px, -4px)'
                     const arrow = e.currentTarget.querySelector('.algo-arrow')
-                    if (arrow) arrow.style.color = TAG_COLORS[algo.tag] || '#e63312'
+                    if (arrow) {
+                      arrow.style.color = color
+                      arrow.style.transform = 'translateX(4px)'
+                    }
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = '#d4d0c8'
                     e.currentTarget.style.zIndex = '0'
-                    e.currentTarget.style.position = 'relative'
+                    e.currentTarget.style.boxShadow = '0px 0px 0px transparent'
+                    e.currentTarget.style.transform = 'translate(0px, 0px)'
                     const arrow = e.currentTarget.querySelector('.algo-arrow')
-                    if (arrow) arrow.style.color = '#d4d0c8'
+                    if (arrow) {
+                      arrow.style.color = '#d4d0c8'
+                      arrow.style.transform = 'translateX(0px)'
+                    }
                   }}
                 >
                   <div>
@@ -400,14 +473,19 @@ export default function Home() {
               marginTop: '-1px'
             }}
           >
-            <div style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: '40px',
-              marginBottom: '16px',
-              opacity: 0.3
-            }}>
+            <motion.div
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '40px',
+                marginBottom: '16px',
+                opacity: 0.3,
+                display: 'inline-block'
+              }}
+              animate={{ rotate: 180 }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+            >
               ∅
-            </div>
+            </motion.div>
             <div style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: '14px',
@@ -430,18 +508,27 @@ export default function Home() {
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: '12px',
-                fontWeight: 600,
+                fontWeight: 700,
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
-                padding: '8px 20px',
+                padding: '10px 24px',
                 border: '1px solid #0a0a0a',
                 borderRadius: '0px',
                 background: '#0a0a0a',
                 color: '#f5f0e8',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                boxShadow: '0px 0px 0px transparent',
+                transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)'
               }}
-              whileHover={{ background: '#e63312', borderColor: '#e63312' }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{
+                background: '#e63312',
+                borderColor: '#0a0a0a',
+                color: '#ffffff',
+                x: -4,
+                y: -4,
+                boxShadow: '4px 4px 0px #0a0a0a'
+              }}
+              whileTap={{ scale: 0.95, x: 0, y: 0, boxShadow: '0px 0px 0px transparent' }}
             >
               Reset Filters
             </motion.button>
