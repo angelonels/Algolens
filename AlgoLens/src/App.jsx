@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
+import KeyboardShortcuts from './components/KeyboardShortcuts'
 import Home from './components/Home'
 
 import BinarySearch from './visualizers/BinarySearch'
@@ -22,6 +23,7 @@ export default function App() {
   return (
     <>
       <Navbar />
+      <KeyboardShortcuts />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/binary-search" element={<BinarySearch />} />
