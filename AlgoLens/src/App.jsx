@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import { ThemeProvider } from './context/ThemeContext'
 import Navbar from './components/Navbar'
 import KeyboardShortcuts from './components/KeyboardShortcuts'
 import Home from './components/Home'
@@ -21,7 +22,7 @@ import DecisionTree from './visualizers/DecisionTree'
 
 export default function App() {
   return (
-    <>
+    <ThemeProvider>
       <Navbar />
       <KeyboardShortcuts />
       <Routes>
@@ -42,7 +43,6 @@ export default function App() {
         <Route path="/logistic-regression" element={<LogisticRegression />} />
         <Route path="/decision-tree" element={<DecisionTree />} />
       </Routes>
-    </>
+    </ThemeProvider>
   )
 }
-

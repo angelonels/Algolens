@@ -26,41 +26,41 @@ export const EASING = {
     bounce: [0.34, 1.56, 0.64, 1]
 }
 
-// Color palette — no gradients, flat and deliberate
+// Color palette — uses CSS variables for theme support
 export const COLORS = {
     // Element states
-    default: '#e8e4dc',
-    active: '#d97706',
-    comparing: '#2563eb',
-    swapping: '#e63312',
-    sorted: '#16a34a',
-    found: '#16a34a',
+    default: 'var(--color-default-el)',
+    active: 'var(--color-active)',
+    comparing: 'var(--color-comparing)',
+    swapping: 'var(--color-swapping)',
+    sorted: 'var(--color-sorted)',
+    found: 'var(--color-found)',
 
     // Accent states
-    pivot: '#7c3aed',
-    current: '#2563eb',
-    visited: '#0891b2',
-    exploring: '#ea580c',
-    eliminated: '#b0ada5',
+    pivot: 'var(--color-pivot)',
+    current: 'var(--color-current)',
+    visited: 'var(--color-visited)',
+    exploring: 'var(--color-exploring)',
+    eliminated: 'var(--color-eliminated)',
 
     // Surfaces
-    bg: '#f5f0e8',
-    bgAlt: '#eee9df',
-    surface: '#ffffff',
-    codeBg: '#0a0a0a',
+    bg: 'var(--bg)',
+    bgAlt: 'var(--bg-alt)',
+    surface: 'var(--surface)',
+    codeBg: 'var(--code-bg)',
 
     // Text
-    fg: '#0a0a0a',
-    fgMuted: '#6b6b60',
-    fgLight: '#f5f0e8',
+    fg: 'var(--fg)',
+    fgMuted: 'var(--fg-muted)',
+    fgLight: 'var(--bg)',
 
     // Borders
-    border: '#d4d0c8',
-    borderStrong: '#0a0a0a',
+    border: 'var(--border)',
+    borderStrong: 'var(--border-strong)',
 
     // Accent
-    accent: '#e63312',
-    accentHover: '#c72a0e'
+    accent: 'var(--accent)',
+    accentHover: 'var(--accent-hover)'
 }
 
 // Shared animation variants
@@ -88,7 +88,7 @@ export const STYLES = {
     container: {
         padding: '80px 40px 60px',
         minHeight: '100vh',
-        background: '#f5f0e8',
+        background: 'var(--bg)',
         maxWidth: '1440px',
         margin: '0 auto'
     },
@@ -98,7 +98,7 @@ export const STYLES = {
         fontWeight: 700,
         fontSize: 'clamp(1.6rem, 3vw, 2.4rem)',
         letterSpacing: '-0.02em',
-        color: '#0a0a0a',
+        color: 'var(--fg)',
         marginBottom: '8px',
         textAlign: 'left'
     },
@@ -130,32 +130,32 @@ export const STYLES = {
     explanationBox: {
         margin: '0 0 16px 0',
         textAlign: 'left',
-        background: '#ffffff',
+        background: 'var(--surface)',
         padding: '24px 28px',
-        border: '1px solid #d4d0c8',
+        border: '1px solid var(--border)',
         borderRadius: '2px',
-        color: '#0a0a0a',
+        color: 'var(--fg)',
         fontSize: '14px',
         lineHeight: '1.7'
     },
 
     visualizationArea: {
-        background: '#ffffff',
-        border: '1px solid #d4d0c8',
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
         borderRadius: '2px',
         padding: '32px',
         margin: '0'
     },
 
     codeBlock: {
-        background: '#0a0a0a',
+        background: 'var(--code-bg)',
         padding: '20px 24px',
         borderRadius: '0px',
-        border: '1px solid #0a0a0a',
+        border: '1px solid var(--code-bg)',
         fontFamily: "'JetBrains Mono', monospace",
         fontSize: '12px',
         lineHeight: '1.65',
-        color: '#e8e4dc',
+        color: 'var(--code-fg)',
         textAlign: 'left',
         margin: '0 0 16px 0',
         overflowX: 'auto'
@@ -168,18 +168,18 @@ export const STYLES = {
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
         padding: '10px 20px',
-        background: '#0a0a0a',
-        color: '#f5f0e8',
-        border: '1px solid #0a0a0a',
+        background: 'var(--fg)',
+        color: 'var(--bg)',
+        border: '1px solid var(--fg)',
         borderRadius: '0px',
         cursor: 'pointer',
         transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)'
     },
 
     controlButtonDisabled: {
-        background: '#d4d0c8',
-        borderColor: '#d4d0c8',
-        color: '#6b6b60',
+        background: 'var(--border)',
+        borderColor: 'var(--border)',
+        color: 'var(--fg-muted)',
         cursor: 'not-allowed'
     },
 
@@ -188,11 +188,11 @@ export const STYLES = {
         fontWeight: 500,
         fontSize: '13px',
         padding: '8px 12px',
-        border: '1px solid #d4d0c8',
+        border: '1px solid var(--border)',
         borderRadius: '0px',
-        background: '#ffffff',
+        background: 'var(--surface)',
         cursor: 'pointer',
-        color: '#0a0a0a'
+        color: 'var(--fg)'
     },
 
     statusBadge: {
@@ -200,10 +200,10 @@ export const STYLES = {
         alignItems: 'center',
         gap: '8px',
         padding: '8px 16px',
-        background: '#ffffff',
-        border: '1px solid #d4d0c8',
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
         borderRadius: '2px',
-        color: '#0a0a0a',
+        color: 'var(--fg)',
         fontFamily: "'JetBrains Mono', monospace",
         fontWeight: 600,
         fontSize: '13px'
@@ -216,7 +216,7 @@ export const STYLES = {
         marginRight: '16px',
         fontFamily: "'JetBrains Mono', monospace",
         fontSize: '12px',
-        color: '#6b6b60',
+        color: 'var(--fg-muted)',
         textTransform: 'uppercase',
         letterSpacing: '0.04em'
     },

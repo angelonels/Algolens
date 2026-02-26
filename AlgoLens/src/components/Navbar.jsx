@@ -1,4 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { useTheme } from '../context/ThemeContext'
 
 const algorithms = [
   { name: 'Binary Search', path: '/binary-search', tag: 'Search' },
@@ -24,6 +26,7 @@ export default function Navbar() {
   const location = useLocation()
   const navigate = useNavigate()
   const isHome = location.pathname === '/'
+  const { isDark, toggleTheme } = useTheme()
 
   return (
     <nav style={{
@@ -34,8 +37,8 @@ export default function Navbar() {
       zIndex: 100,
       height: '52px',
       padding: '0 32px',
-      backgroundColor: '#f5f0e8',
-      borderBottom: '1px solid #d4d0c8',
+      backgroundColor: 'var(--bg)',
+      borderBottom: '1px solid var(--border)',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center'
@@ -49,7 +52,7 @@ export default function Navbar() {
           fontSize: '15px',
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
-          color: '#0a0a0a',
+          color: 'var(--fg)',
           textDecoration: 'none',
           display: 'flex',
           alignItems: 'center',
@@ -57,10 +60,10 @@ export default function Navbar() {
         }}
       >
         <span>ALGO</span>
-        <span style={{ color: '#e63312' }}>LENS</span>
+        <span style={{ color: 'var(--accent)' }}>LENS</span>
       </Link>
 
-      {/* Algorithm Selector */}
+      {/* Right side: Nav + Theme Toggle + Selector */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         {!isHome && (
           <Link
@@ -71,16 +74,45 @@ export default function Navbar() {
               fontWeight: 500,
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
-              color: '#6b6b60',
+              color: 'var(--fg-muted)',
               textDecoration: 'none',
               transition: 'color 150ms cubic-bezier(0.16, 1, 0.3, 1)'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.color = '#e63312'}
-            onMouseLeave={(e) => e.currentTarget.style.color = '#6b6b60'}
+            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'}
+            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--fg-muted)'}
           >
             ← Index
           </Link>
         )}
+
+        {/* Dark Mode Toggle */}
+        <motion.button
+          onClick={toggleTheme}
+          whileHover={{
+            y: -2,
+            boxShadow: '2px 2px 0px var(--accent)',
+          }}
+          whileTap={{ scale: 0.92 }}
+          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          style={{
+            width: '36px',
+            height: '36px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 0,
+            fontSize: '18px',
+            background: 'var(--surface)',
+            color: 'var(--fg)',
+            border: '1px solid var(--border)',
+            borderRadius: '0px',
+            cursor: 'pointer',
+            transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        >
+          {isDark ? '☀' : '☾'}
+        </motion.button>
+
         <select
           value={location.pathname}
           onChange={(e) => navigate(e.target.value)}
@@ -89,10 +121,10 @@ export default function Navbar() {
             fontSize: '12px',
             fontWeight: 500,
             padding: '6px 10px',
-            border: '1px solid #d4d0c8',
+            border: '1px solid var(--border)',
             borderRadius: '0px',
-            background: '#ffffff',
-            color: '#0a0a0a',
+            background: 'var(--surface)',
+            color: 'var(--fg)',
             cursor: 'pointer',
             minWidth: '160px'
           }}

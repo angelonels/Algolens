@@ -28,6 +28,10 @@
   --color-default-el: #e8e4dc;
   --color-eliminated: #b0ada5;
 
+  /* ── Code Block ── */
+  --code-bg: #0a0a0a;
+  --code-fg: #e8e4dc;
+
   /* ── Typography ── */
   --font-body: 'Inter', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
@@ -48,6 +52,25 @@
   /* ── Motion ── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --duration: 150ms;
+}
+
+/* ── Dark Mode ── */
+[data-theme="dark"] {
+  --bg: #111111;
+  --bg-alt: #1a1a1a;
+  --surface: #1e1e1e;
+  --fg: #e8e4dc;
+  --fg-muted: #9a9a90;
+  --accent: #ff4433;
+  --accent-hover: #e63312;
+  --border: #333333;
+  --border-strong: #e8e4dc;
+
+  --color-default-el: #2a2a2a;
+  --color-eliminated: #555555;
+
+  --code-bg: #0d0d0d;
+  --code-fg: #d4d0c8;
 }
 
 /* ── Reset ── */
@@ -72,6 +95,7 @@ body {
   background-color: var(--bg);
   color: var(--fg);
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ── Typography Hierarchy ── */
@@ -221,6 +245,21 @@ select:focus {
 /* ── Utility: Accent text ── */
 .accent {
   color: var(--accent);
+}
+
+/* ── Theme Transition ── */
+*,
+*::before,
+*::after {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Opt out of global transitions for animated elements */
+[data-no-theme-transition],
+[data-no-theme-transition] *,
+motion div,
+.framer-motion {
+  transition: none !important;
 }
 
 /* ── Responsive: Stack split layout on smaller screens ── */

@@ -80,7 +80,7 @@ export default function Home() {
         <svg width="100%" height="100%">
           <defs>
             <pattern id="dotGrid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1.5" fill="#0a0a0a" />
+              <circle cx="2" cy="2" r="1.5" fill="var(--fg)" />
             </pattern>
           </defs>
           <rect x="0" y="0" width="100%" height="100%" fill="url(#dotGrid)" />
@@ -108,13 +108,13 @@ export default function Home() {
             fontSize: 'clamp(3.2rem, 7vw, 5.5rem)',
             lineHeight: 1.0,
             letterSpacing: '-0.04em',
-            color: '#0a0a0a',
+            color: 'var(--fg)',
             marginBottom: '20px',
             textShadow: '3px 3px 0px rgba(0,0,0,0.06)'
           }}
         >
           Algorithm<br />
-          <span style={{ color: '#e63312' }}>Visualizer</span>
+          <span style={{ color: 'var(--accent)' }}>Visualizer</span>
         </motion.h1>
         <motion.p
           variants={{
@@ -125,7 +125,7 @@ export default function Home() {
             fontFamily: "'Inter', sans-serif",
             fontSize: '17px',
             lineHeight: 1.6,
-            color: '#6b6b60',
+            color: 'var(--fg-muted)',
             maxWidth: '480px'
           }}
         >
@@ -136,7 +136,7 @@ export default function Home() {
 
       {/* ── Divider ── */}
       <div style={{
-        borderTop: '1px solid #d4d0c8',
+        borderTop: '1px solid var(--border)',
         marginBottom: '24px'
       }} />
 
@@ -164,7 +164,7 @@ export default function Home() {
           <LayoutGroup>
             {categories.map(cat => {
               const isActive = cat === activeFilter
-              const catColor = cat === 'All' ? '#0a0a0a' : (TAG_COLORS[cat] || '#0a0a0a')
+              const catColor = cat === 'All' ? 'var(--fg)' : (TAG_COLORS[cat] || 'var(--fg)')
               return (
                 <motion.button
                   key={cat}
@@ -177,26 +177,26 @@ export default function Home() {
                     textTransform: 'uppercase',
                     letterSpacing: '0.08em',
                     padding: '7px 14px',
-                    border: `1px solid ${isActive ? '#0a0a0a' : '#d4d0c8'}`,
+                    border: `1px solid ${isActive ? 'var(--border-strong)' : 'var(--border)'}`,
                     borderRadius: '0px',
                     background: isActive ? catColor : 'transparent',
-                    color: isActive ? '#ffffff' : '#6b6b60',
+                    color: isActive ? '#ffffff' : 'var(--fg-muted)',
                     cursor: 'pointer',
                     transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)',
                     position: 'relative',
-                    boxShadow: isActive ? `2px 2px 0px #0a0a0a` : '0px 0px 0px transparent',
+                    boxShadow: isActive ? '2px 2px 0px var(--border-strong)' : '0px 0px 0px transparent',
                     transform: isActive ? 'translate(-2px, -2px)' : 'translate(0px, 0px)'
                   }}
                   whileHover={!isActive ? {
-                    borderColor: '#0a0a0a',
-                    color: '#0a0a0a',
+                    borderColor: 'var(--border-strong)',
+                    color: 'var(--fg)',
                     y: -2,
                     x: -2,
-                    boxShadow: '2px 2px 0px #0a0a0a'
+                    boxShadow: '2px 2px 0px var(--border-strong)'
                   } : {
                     y: -3,
                     x: -3,
-                    boxShadow: '3px 3px 0px #0a0a0a'
+                    boxShadow: '3px 3px 0px var(--border-strong)'
                   }}
                   whileTap={{ scale: 0.97, y: 0, x: 0, boxShadow: '0px 0px 0px transparent' }}
                 >
@@ -231,22 +231,22 @@ export default function Home() {
               fontSize: '12px',
               fontWeight: 500,
               padding: '7px 14px 7px 32px',
-              border: '1px solid #d4d0c8',
+              border: '1px solid var(--border)',
               borderRadius: '0px',
-              background: '#ffffff',
-              color: '#0a0a0a',
+              background: 'var(--surface)',
+              color: 'var(--fg)',
               width: '220px',
               outline: 'none',
               transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)',
               boxShadow: '0px 0px 0px transparent'
             }}
             onFocus={e => {
-              e.currentTarget.style.borderColor = '#0a0a0a'
-              e.currentTarget.style.boxShadow = '3px 3px 0px #e63312'
+              e.currentTarget.style.borderColor = 'var(--border-strong)'
+              e.currentTarget.style.boxShadow = '3px 3px 0px var(--accent)'
               e.currentTarget.style.transform = 'translate(-2px, -2px)'
             }}
             onBlur={e => {
-              e.currentTarget.style.borderColor = '#d4d0c8'
+              e.currentTarget.style.borderColor = 'var(--border)'
               e.currentTarget.style.boxShadow = '0px 0px 0px transparent'
               e.currentTarget.style.transform = 'translate(0px, 0px)'
             }}
@@ -258,7 +258,7 @@ export default function Home() {
             top: '50%',
             transform: 'translateY(-50%)',
             fontSize: '13px',
-            color: '#6b6b60',
+            color: 'var(--fg-muted)',
             pointerEvents: 'none'
           }}>
             ⌕
@@ -284,7 +284,7 @@ export default function Home() {
           fontWeight: 600,
           textTransform: 'uppercase',
           letterSpacing: '0.1em',
-          color: '#6b6b60'
+          color: 'var(--fg-muted)'
         }}>
           <AnimatePresence mode="wait">
             <motion.span
@@ -312,19 +312,19 @@ export default function Home() {
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
               padding: '4px 10px',
-              border: '1px solid #d4d0c8',
+              border: '1px solid var(--border)',
               borderRadius: '0px',
               background: 'transparent',
-              color: '#6b6b60',
+              color: 'var(--fg-muted)',
               cursor: 'pointer',
               transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)'
             }}
             whileHover={{
-              borderColor: '#0a0a0a',
-              color: '#0a0a0a',
+              borderColor: 'var(--border-strong)',
+              color: 'var(--fg)',
               x: -2,
               y: -2,
-              boxShadow: '2px 2px 0px #e63312'
+              boxShadow: '2px 2px 0px var(--accent)'
             }}
             whileTap={{ x: 0, y: 0, boxShadow: '0px 0px 0px transparent', scale: 0.95 }}
           >
@@ -363,8 +363,8 @@ export default function Home() {
                 <div
                   style={{
                     padding: '20px 24px',
-                    background: '#ffffff',
-                    border: '1px solid #d4d0c8',
+                    background: 'var(--surface)',
+                    border: '1px solid var(--border)',
                     marginTop: '-1px',
                     marginLeft: '-1px',
                     cursor: 'pointer',
@@ -379,7 +379,7 @@ export default function Home() {
                   className="algo-card"
                   onMouseEnter={(e) => {
                     const color = TAG_COLORS[algo.tag] || '#e63312'
-                    e.currentTarget.style.borderColor = '#0a0a0a'
+                    e.currentTarget.style.borderColor = 'var(--border-strong)'
                     e.currentTarget.style.zIndex = '1'
                     e.currentTarget.style.boxShadow = `4px 4px 0px ${color}`
                     e.currentTarget.style.transform = 'translate(-4px, -4px)'
@@ -390,13 +390,13 @@ export default function Home() {
                     }
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = '#d4d0c8'
+                    e.currentTarget.style.borderColor = 'var(--border)'
                     e.currentTarget.style.zIndex = '0'
                     e.currentTarget.style.boxShadow = '0px 0px 0px transparent'
                     e.currentTarget.style.transform = 'translate(0px, 0px)'
                     const arrow = e.currentTarget.querySelector('.algo-arrow')
                     if (arrow) {
-                      arrow.style.color = '#d4d0c8'
+                      arrow.style.color = 'var(--border)'
                       arrow.style.transform = 'translateX(0px)'
                     }
                   }}
@@ -409,7 +409,7 @@ export default function Home() {
                       fontWeight: 600,
                       textTransform: 'uppercase',
                       letterSpacing: '0.1em',
-                      color: TAG_COLORS[algo.tag] || '#e63312',
+                      color: TAG_COLORS[algo.tag] || 'var(--accent)',
                       marginBottom: '6px',
                       display: 'block'
                     }}>
@@ -420,7 +420,7 @@ export default function Home() {
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: '16px',
                       fontWeight: 700,
-                      color: '#0a0a0a',
+                      color: 'var(--fg)',
                       display: 'block',
                       marginBottom: '6px'
                     }}>
@@ -430,7 +430,7 @@ export default function Home() {
                     <span style={{
                       fontFamily: "'Inter', sans-serif",
                       fontSize: '13px',
-                      color: '#6b6b60',
+                      color: 'var(--fg-muted)',
                       lineHeight: 1.4
                     }}>
                       {algo.desc}
@@ -442,7 +442,7 @@ export default function Home() {
                     style={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: '18px',
-                      color: '#d4d0c8',
+                      color: 'var(--border)',
                       flexShrink: 0,
                       marginTop: '4px',
                       transition: 'color 150ms, transform 150ms'
@@ -468,8 +468,8 @@ export default function Home() {
             style={{
               textAlign: 'center',
               padding: '80px 40px',
-              border: '1px solid #d4d0c8',
-              background: '#ffffff',
+              border: '1px solid var(--border)',
+              background: 'var(--surface)',
               marginTop: '-1px'
             }}
           >
@@ -490,7 +490,7 @@ export default function Home() {
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: '14px',
               fontWeight: 600,
-              color: '#0a0a0a',
+              color: 'var(--fg)',
               marginBottom: '8px'
             }}>
               No algorithms found
@@ -498,7 +498,7 @@ export default function Home() {
             <div style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: '13px',
-              color: '#6b6b60',
+              color: 'var(--fg-muted)',
               marginBottom: '20px'
             }}>
               Try adjusting your filters or search query.
@@ -512,21 +512,21 @@ export default function Home() {
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
                 padding: '10px 24px',
-                border: '1px solid #0a0a0a',
+                border: '1px solid var(--border-strong)',
                 borderRadius: '0px',
-                background: '#0a0a0a',
-                color: '#f5f0e8',
+                background: 'var(--fg)',
+                color: 'var(--bg)',
                 cursor: 'pointer',
                 boxShadow: '0px 0px 0px transparent',
                 transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)'
               }}
               whileHover={{
                 background: '#e63312',
-                borderColor: '#0a0a0a',
+                borderColor: 'var(--border-strong)',
                 color: '#ffffff',
                 x: -4,
                 y: -4,
-                boxShadow: '4px 4px 0px #0a0a0a'
+                boxShadow: '4px 4px 0px var(--border-strong)'
               }}
               whileTap={{ scale: 0.95, x: 0, y: 0, boxShadow: '0px 0px 0px transparent' }}
             >

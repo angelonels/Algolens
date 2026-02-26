@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTheme } from '../context/ThemeContext'
 
 const ALGORITHMS = [
     { name: 'Binary Search', path: '/binary-search' },
@@ -27,6 +28,7 @@ const SHORTCUTS = [
     { keys: ['Esc'], description: 'Go to home / Close panel' },
     { keys: ['H'], description: 'Go to home page' },
     { keys: ['R'], description: 'Random algorithm' },
+    { keys: ['D'], description: 'Toggle dark mode' },
 ]
 
 function KeyBadge({ children }) {
@@ -41,10 +43,10 @@ function KeyBadge({ children }) {
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: '12px',
             fontWeight: 700,
-            color: '#0a0a0a',
-            background: '#f5f0e8',
-            border: '1px solid #0a0a0a',
-            borderBottom: '3px solid #0a0a0a',
+            color: 'var(--fg)',
+            background: 'var(--bg)',
+            border: '1px solid var(--border-strong)',
+            borderBottom: '3px solid var(--border-strong)',
             borderRadius: '3px',
             textTransform: 'uppercase',
             letterSpacing: '0.04em',
@@ -60,6 +62,7 @@ export default function KeyboardShortcuts() {
     const [flashMessage, setFlashMessage] = useState(null)
     const location = useLocation()
     const navigate = useNavigate()
+    const { toggleTheme } = useTheme()
 
     const currentIndex = ALGORITHMS.findIndex(a => a.path === location.pathname)
 
@@ -127,6 +130,12 @@ export default function KeyboardShortcuts() {
                     break
                 }
 
+                case 'd':
+                case 'D':
+                    toggleTheme()
+                    showFlash('Theme toggled')
+                    break
+
                 default:
                     break
             }
@@ -134,7 +143,7 @@ export default function KeyboardShortcuts() {
 
         window.addEventListener('keydown', handler)
         return () => window.removeEventListener('keydown', handler)
-    }, [isOpen, currentIndex, navigate, goToAlgorithm])
+    }, [isOpen, currentIndex, navigate, goToAlgorithm, toggleTheme, showFlash])
 
     // Navigation context for the shortcut bar
     const prevAlgo = currentIndex > 0 ? ALGORITHMS[currentIndex - 1] : null
@@ -158,13 +167,13 @@ export default function KeyboardShortcuts() {
                             transform: 'translateX(-50%)',
                             zIndex: 9999,
                             padding: '10px 24px',
-                            background: '#0a0a0a',
-                            color: '#f5f0e8',
+                            background: 'var(--fg)',
+                            color: 'var(--bg)',
                             fontFamily: "'JetBrains Mono', monospace",
                             fontSize: '13px',
                             fontWeight: 600,
-                            border: '1px solid #0a0a0a',
-                            boxShadow: '4px 4px 0px #e63312',
+                            border: '1px solid var(--fg)',
+                            boxShadow: '4px 4px 0px var(--accent)',
                             letterSpacing: '0.04em',
                         }}
                     >
@@ -199,7 +208,7 @@ export default function KeyboardShortcuts() {
                         <motion.button
                             onClick={() => prevAlgo && goToAlgorithm(currentIndex - 1)}
                             disabled={!prevAlgo}
-                            whileHover={prevAlgo ? { y: -2, boxShadow: '2px 2px 0px #e63312' } : {}}
+                            whileHover={prevAlgo ? { y: -2, boxShadow: '2px 2px 0px var(--accent)' } : {}}
                             whileTap={prevAlgo ? { scale: 0.95 } : {}}
                             title={prevAlgo ? `Previous: ${prevAlgo.name}` : 'No previous'}
                             style={{
@@ -212,9 +221,9 @@ export default function KeyboardShortcuts() {
                                 fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: '16px',
                                 fontWeight: 700,
-                                background: prevAlgo ? '#ffffff' : '#eee9df',
-                                color: prevAlgo ? '#0a0a0a' : '#b0ada5',
-                                border: `1px solid ${prevAlgo ? '#d4d0c8' : '#d4d0c8'}`,
+                                background: prevAlgo ? 'var(--surface)' : 'var(--bg-alt)',
+                                color: prevAlgo ? 'var(--fg)' : 'var(--fg-muted)',
+                                border: '1px solid var(--border)',
                                 borderRadius: '0px',
                                 cursor: prevAlgo ? 'pointer' : 'not-allowed',
                                 transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)',
@@ -227,7 +236,7 @@ export default function KeyboardShortcuts() {
                             fontFamily: "'JetBrains Mono', monospace",
                             fontSize: '11px',
                             fontWeight: 600,
-                            color: '#6b6b60',
+                            color: 'var(--fg-muted)',
                             letterSpacing: '0.04em',
                             padding: '0 4px',
                             minWidth: '40px',
@@ -239,7 +248,7 @@ export default function KeyboardShortcuts() {
                         <motion.button
                             onClick={() => nextAlgo && goToAlgorithm(currentIndex + 1)}
                             disabled={!nextAlgo}
-                            whileHover={nextAlgo ? { y: -2, boxShadow: '2px 2px 0px #e63312' } : {}}
+                            whileHover={nextAlgo ? { y: -2, boxShadow: '2px 2px 0px var(--accent)' } : {}}
                             whileTap={nextAlgo ? { scale: 0.95 } : {}}
                             title={nextAlgo ? `Next: ${nextAlgo.name}` : 'No next'}
                             style={{
@@ -252,9 +261,9 @@ export default function KeyboardShortcuts() {
                                 fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: '16px',
                                 fontWeight: 700,
-                                background: nextAlgo ? '#ffffff' : '#eee9df',
-                                color: nextAlgo ? '#0a0a0a' : '#b0ada5',
-                                border: `1px solid ${nextAlgo ? '#d4d0c8' : '#d4d0c8'}`,
+                                background: nextAlgo ? 'var(--surface)' : 'var(--bg-alt)',
+                                color: nextAlgo ? 'var(--fg)' : 'var(--fg-muted)',
+                                border: '1px solid var(--border)',
                                 borderRadius: '0px',
                                 cursor: nextAlgo ? 'pointer' : 'not-allowed',
                                 transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)',
@@ -271,7 +280,7 @@ export default function KeyboardShortcuts() {
                     whileHover={{
                         y: -3,
                         x: -3,
-                        boxShadow: '3px 3px 0px #e63312',
+                        boxShadow: '3px 3px 0px var(--accent)',
                     }}
                     whileTap={{ scale: 0.95, y: 0, x: 0, boxShadow: '0px 0px 0px transparent' }}
                     style={{
@@ -284,13 +293,13 @@ export default function KeyboardShortcuts() {
                         fontFamily: "'JetBrains Mono', monospace",
                         fontSize: '18px',
                         fontWeight: 800,
-                        background: isOpen ? '#e63312' : '#0a0a0a',
-                        color: '#f5f0e8',
-                        border: '1px solid #0a0a0a',
+                        background: isOpen ? 'var(--accent)' : 'var(--fg)',
+                        color: 'var(--bg)',
+                        border: '1px solid var(--fg)',
                         borderRadius: '0px',
                         cursor: 'pointer',
                         transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)',
-                        boxShadow: '2px 2px 0px #0a0a0a',
+                        boxShadow: '2px 2px 0px var(--border-strong)',
                     }}
                 >
                     ?
@@ -332,9 +341,9 @@ export default function KeyboardShortcuts() {
                                 zIndex: 9001,
                                 width: '420px',
                                 maxWidth: '90vw',
-                                background: '#ffffff',
-                                border: '1px solid #0a0a0a',
-                                boxShadow: '8px 8px 0px #0a0a0a',
+                                background: 'var(--surface)',
+                                border: '1px solid var(--border-strong)',
+                                boxShadow: '8px 8px 0px var(--border-strong)',
                                 padding: '0',
                                 overflow: 'hidden',
                             }}
@@ -342,7 +351,7 @@ export default function KeyboardShortcuts() {
                             {/* Header */}
                             <div style={{
                                 padding: '20px 28px 16px',
-                                borderBottom: '1px solid #d4d0c8',
+                                borderBottom: '1px solid var(--border)',
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
@@ -352,16 +361,16 @@ export default function KeyboardShortcuts() {
                                         fontFamily: "'JetBrains Mono', monospace",
                                         fontSize: '16px',
                                         fontWeight: 800,
-                                        color: '#0a0a0a',
+                                        color: 'var(--fg)',
                                         letterSpacing: '-0.02em',
                                         margin: 0,
                                     }}>
-                                        Keyboard <span style={{ color: '#e63312' }}>Shortcuts</span>
+                                        Keyboard <span style={{ color: 'var(--accent)' }}>Shortcuts</span>
                                     </h3>
                                     <p style={{
                                         fontFamily: "'Inter', sans-serif",
                                         fontSize: '12px',
-                                        color: '#6b6b60',
+                                        color: 'var(--fg-muted)',
                                         margin: '4px 0 0',
                                         lineHeight: 1.4,
                                     }}>
@@ -370,7 +379,7 @@ export default function KeyboardShortcuts() {
                                 </div>
                                 <motion.button
                                     onClick={() => setIsOpen(false)}
-                                    whileHover={{ scale: 1.1, color: '#e63312' }}
+                                    whileHover={{ scale: 1.1, color: 'var(--accent)' }}
                                     whileTap={{ scale: 0.9 }}
                                     style={{
                                         width: '28px',
@@ -380,12 +389,12 @@ export default function KeyboardShortcuts() {
                                         justifyContent: 'center',
                                         padding: 0,
                                         background: 'transparent',
-                                        border: '1px solid #d4d0c8',
+                                        border: '1px solid var(--border)',
                                         borderRadius: '0px',
                                         fontFamily: "'JetBrains Mono', monospace",
                                         fontSize: '14px',
                                         fontWeight: 700,
-                                        color: '#6b6b60',
+                                        color: 'var(--fg-muted)',
                                         cursor: 'pointer',
                                         transition: 'all 150ms',
                                     }}
@@ -410,7 +419,7 @@ export default function KeyboardShortcuts() {
                                             transition: 'background 150ms',
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.background = '#f5f0e8'
+                                            e.currentTarget.style.background = 'var(--bg-alt)'
                                         }}
                                         onMouseLeave={(e) => {
                                             e.currentTarget.style.background = 'transparent'
@@ -419,7 +428,7 @@ export default function KeyboardShortcuts() {
                                         <span style={{
                                             fontFamily: "'Inter', sans-serif",
                                             fontSize: '13px',
-                                            color: '#0a0a0a',
+                                            color: 'var(--fg)',
                                             fontWeight: 500,
                                         }}>
                                             {shortcut.description}
@@ -436,8 +445,8 @@ export default function KeyboardShortcuts() {
                             {/* Footer */}
                             <div style={{
                                 padding: '14px 28px',
-                                borderTop: '1px solid #d4d0c8',
-                                background: '#f5f0e8',
+                                borderTop: '1px solid var(--border)',
+                                background: 'var(--bg-alt)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
@@ -445,7 +454,7 @@ export default function KeyboardShortcuts() {
                                 <span style={{
                                     fontFamily: "'JetBrains Mono', monospace",
                                     fontSize: '11px',
-                                    color: '#6b6b60',
+                                    color: 'var(--fg-muted)',
                                     fontWeight: 500,
                                     letterSpacing: '0.04em',
                                 }}>
@@ -457,7 +466,7 @@ export default function KeyboardShortcuts() {
                                 <span style={{
                                     fontFamily: "'JetBrains Mono', monospace",
                                     fontSize: '10px',
-                                    color: '#b0ada5',
+                                    color: 'var(--fg-muted)',
                                     fontWeight: 600,
                                     textTransform: 'uppercase',
                                     letterSpacing: '0.06em',
