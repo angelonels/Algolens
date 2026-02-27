@@ -93,6 +93,8 @@ body {
   font-size: 15px;
   line-height: 1.6;
   background-color: var(--bg);
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
   color: var(--fg);
   min-height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -163,33 +165,39 @@ a:hover {
 button {
   font-family: var(--font-mono);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 10px 20px;
-  background-color: var(--fg);
-  color: var(--bg);
-  border: var(--border-w) solid var(--fg);
+  background-color: var(--surface);
+  color: var(--fg);
+  border: 2px solid var(--border-strong);
   border-radius: var(--radius-0);
+  box-shadow: 3px 3px 0 var(--border-strong);
   cursor: pointer;
-  transition: all var(--duration) var(--ease-out);
+  transition: all 0.1s var(--ease-out);
 }
 
 button:hover:not(:disabled) {
   background-color: var(--accent);
-  border-color: var(--accent);
-  transform: translateY(-1px);
+  color: var(--bg);
+  border-color: var(--border-strong);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--border-strong);
 }
 
 button:active:not(:disabled) {
-  transform: translateY(0px);
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0 var(--border-strong);
 }
 
 button:disabled {
-  background-color: var(--border);
+  background-color: var(--bg-alt);
   border-color: var(--border);
   color: var(--fg-muted);
+  box-shadow: none;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* ── Inputs & Selects ── */
@@ -201,15 +209,18 @@ select {
   padding: 8px 12px;
   background: var(--surface);
   color: var(--fg);
-  border: var(--border-w) solid var(--border);
+  border: 2px solid var(--border-strong);
   border-radius: var(--radius-0);
+  box-shadow: 3px 3px 0 var(--border-strong);
   outline: none;
-  transition: border-color var(--duration) var(--ease-out);
+  transition: all 0.1s var(--ease-out);
 }
 
 input:focus,
 select:focus {
-  border-color: var(--fg);
+  border-color: var(--accent);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--accent);
 }
 
 /* ── Selection ── */
