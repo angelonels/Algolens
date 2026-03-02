@@ -1,5 +1,5 @@
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useState, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { SPEED_PRESETS, COLORS, STYLES } from '../../utils/animationConfig'
 
 // ── Speed Control ──
@@ -46,31 +46,54 @@ export function StepCounter({ current, total }) {
             gap: '4px',
             minWidth: '140px'
         }}>
-            <span style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: '12px',
-                fontWeight: 600,
-                color: COLORS.fg,
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em'
-            }}>
-                Step {current} / {total}
-            </span>
+            <AnimatePresence mode="wait">
+                <motion.span
+                    key={current}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.12 }}
+                    style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        color: COLORS.fg,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.04em'
+                    }}
+                >
+                    Step {current} / {total}
+                </motion.span>
+            </AnimatePresence>
             <div style={{
                 width: '100%',
                 height: '3px',
                 background: COLORS.border,
-                overflow: 'hidden'
+                overflow: 'hidden',
+                position: 'relative'
             }}>
                 <motion.div
                     style={{
                         height: '100%',
-                        background: COLORS.accent
+                        background: COLORS.accent,
+                        position: 'relative'
                     }}
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
                     transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
                 />
+                {progress > 0 && progress < 100 && (
+                    <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                        backgroundSize: '200% 100%',
+                        animation: 'shimmer 1.5s infinite linear'
+                    }} />
+                )}
             </div>
         </div>
     )
@@ -88,24 +111,27 @@ export function StatusMessage({ message, type = 'info' }) {
         swap: COLORS.swapping
     }
 
+    const borderColor = borderColors[type] || COLORS.border
+
     return (
         <motion.div
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
             style={{
                 display: 'inline-block',
                 padding: '8px 16px',
                 background: COLORS.surface,
-                border: `1px solid ${borderColors[type] || COLORS.border}`,
-                borderLeft: `3px solid ${borderColors[type] || COLORS.border}`,
+                border: `1px solid ${borderColor}`,
+                borderLeft: `3px solid ${borderColor}`,
                 borderRadius: '0px',
                 color: COLORS.fg,
                 fontFamily: "'JetBrains Mono', monospace",
                 fontWeight: 500,
                 fontSize: '13px',
-                marginBottom: '16px'
+                marginBottom: '16px',
+                animation: type === 'swap' || type === 'warning' ? 'pulseGlow 0.6s ease-out' : 'none'
             }}
         >
             {message}
@@ -145,9 +171,18 @@ export function ControlButton({ onClick, disabled, children, variant = 'primary'
         <motion.button
             onClick={onClick}
             disabled={disabled}
-            whileHover={!disabled ? { y: -1 } : {}}
-            whileTap={!disabled ? { scale: 0.98 } : {}}
-            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={!disabled ? {
+                y: -2,
+                x: -2,
+                boxShadow: `3px 3px 0px ${v.hoverBorder || 'var(--border-strong)'}`
+            } : {}}
+            whileTap={!disabled ? {
+                y: 1,
+                x: 1,
+                boxShadow: '0px 0px 0px transparent',
+                scale: 0.98
+            } : {}}
+            transition={{ duration: 0.12, ease: [0.16, 1, 0.3, 1] }}
             style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontWeight: 600,
@@ -160,7 +195,8 @@ export function ControlButton({ onClick, disabled, children, variant = 'primary'
                 border: `1px solid ${disabled ? COLORS.border : v.borderColor}`,
                 borderRadius: '0px',
                 cursor: disabled ? 'not-allowed' : 'pointer',
-                transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+                transition: 'background 150ms cubic-bezier(0.16, 1, 0.3, 1), color 150ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+                boxShadow: disabled ? 'none' : '2px 2px 0px var(--border-strong)',
                 ...props.style
             }}
             onMouseEnter={(e) => {
@@ -215,10 +251,14 @@ export function Legend({ items }) {
 
 // ── Code Block ──
 export function CodeBlock({ code, onCopy }) {
-    const handleCopy = () => {
+    const [copied, setCopied] = useState(false)
+
+    const handleCopy = useCallback(() => {
         navigator.clipboard.writeText(code)
+        setCopied(true)
         if (onCopy) onCopy()
-    }
+        setTimeout(() => setCopied(false), 1500)
+    }, [code, onCopy])
 
     return (
         <div style={{
@@ -235,9 +275,9 @@ export function CodeBlock({ code, onCopy }) {
                     top: '12px',
                     right: '12px',
                     padding: '6px 14px',
-                    background: 'transparent',
-                    color: COLORS.fgLight,
-                    border: `1px solid rgba(255,255,255,0.2)`,
+                    background: copied ? 'rgba(22, 163, 74, 0.2)' : 'transparent',
+                    color: copied ? '#4ade80' : COLORS.fgLight,
+                    border: `1px solid ${copied ? 'rgba(22, 163, 74, 0.4)' : 'rgba(255,255,255,0.2)'}`,
                     borderRadius: '0px',
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: '11px',
@@ -245,18 +285,32 @@ export function CodeBlock({ code, onCopy }) {
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
                     cursor: 'pointer',
-                    transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)'
+                    transition: 'all 200ms cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
                 onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)'
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.08)'
+                    if (!copied) {
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)'
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.08)'
+                    }
                 }}
                 onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'
-                    e.currentTarget.style.background = 'transparent'
+                    if (!copied) {
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'
+                        e.currentTarget.style.background = 'transparent'
+                    }
                 }}
             >
-                Copy
+                <AnimatePresence mode="wait">
+                    <motion.span
+                        key={copied ? 'check' : 'copy'}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -4 }}
+                        transition={{ duration: 0.12 }}
+                    >
+                        {copied ? '✓ Copied' : 'Copy'}
+                    </motion.span>
+                </AnimatePresence>
             </motion.button>
         </div>
     )

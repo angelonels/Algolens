@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { STAGGER } from '../utils/animationConfig'
 
 const algorithms = [
   { name: 'Binary Search', path: '/binary-search', tag: 'Search', desc: 'O(log n) — Divide and conquer on sorted arrays' },
@@ -93,14 +94,29 @@ export default function Home() {
         animate="visible"
         variants={{
           hidden: {},
-          visible: { transition: { staggerChildren: 0.1 } }
+          visible: { transition: { staggerChildren: 0.12 } }
         }}
         style={{ marginBottom: '56px', position: 'relative' }}
       >
+        {/* Decorative accent bar */}
+        <motion.div
+          variants={{
+            hidden: { scaleX: 0, opacity: 0 },
+            visible: { scaleX: 1, opacity: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+          }}
+          style={{
+            width: '48px',
+            height: '4px',
+            background: 'var(--accent)',
+            marginBottom: '20px',
+            transformOrigin: 'left',
+            borderRadius: '0px'
+          }}
+        />
         <motion.h1
           variants={{
-            hidden: { opacity: 0, y: 16 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } }
           }}
           style={{
             fontFamily: "'JetBrains Mono', monospace",
@@ -118,8 +134,8 @@ export default function Home() {
         </motion.h1>
         <motion.p
           variants={{
-            hidden: { opacity: 0, y: 16 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } }
           }}
           style={{
             fontFamily: "'Inter', sans-serif",
@@ -135,16 +151,22 @@ export default function Home() {
       </motion.div>
 
       {/* ── Divider ── */}
-      <div style={{
-        borderTop: '1px solid var(--border)',
-        marginBottom: '24px'
-      }} />
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ delay: 0.3, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          borderTop: '1px solid var(--border)',
+          marginBottom: '24px',
+          transformOrigin: 'left'
+        }}
+      />
 
       {/* ── Filter Bar ── */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.2, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -336,6 +358,12 @@ export default function Home() {
       {/* ── Algorithm Grid ── */}
       <motion.div
         layout
+        variants={{
+          hidden: {},
+          visible: { transition: STAGGER.fast }
+        }}
+        initial="hidden"
+        animate="visible"
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
@@ -343,16 +371,27 @@ export default function Home() {
         }}
       >
         <AnimatePresence mode="popLayout">
-          {filtered.map((algo) => (
+          {filtered.map((algo, index) => (
             <motion.div
               key={algo.path}
               layout
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
+              variants={{
+                hidden: { opacity: 0, y: 20, scale: 0.97 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: {
+                    duration: 0.35,
+                    ease: [0.16, 1, 0.3, 1],
+                    delay: index * 0.03
+                  }
+                }
+              }}
+              initial="hidden"
+              animate="visible"
+              exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.2 } }}
               transition={{
-                duration: 0.25,
-                ease: [0.16, 1, 0.3, 1],
                 layout: { duration: 0.3, ease: [0.16, 1, 0.3, 1] }
               }}
             >
@@ -445,7 +484,7 @@ export default function Home() {
                       color: 'var(--border)',
                       flexShrink: 0,
                       marginTop: '4px',
-                      transition: 'color 150ms, transform 150ms'
+                      transition: 'color 200ms cubic-bezier(0.16, 1, 0.3, 1), transform 200ms cubic-bezier(0.16, 1, 0.3, 1)'
                     }}
                   >
                     →
@@ -481,8 +520,11 @@ export default function Home() {
                 opacity: 0.3,
                 display: 'inline-block'
               }}
-              animate={{ rotate: 180 }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+              animate={{
+                scale: [1, 1.1, 1],
+                opacity: [0.2, 0.35, 0.2]
+              }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
             >
               ∅
             </motion.div>
@@ -517,7 +559,7 @@ export default function Home() {
                 background: 'var(--fg)',
                 color: 'var(--bg)',
                 cursor: 'pointer',
-                boxShadow: '0px 0px 0px transparent',
+                boxShadow: '2px 2px 0px var(--border-strong)',
                 transition: 'all 150ms cubic-bezier(0.16, 1, 0.3, 1)'
               }}
               whileHover={{
@@ -535,6 +577,30 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ── Footer ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.4 }}
+        style={{
+          marginTop: '48px',
+          paddingTop: '24px',
+          borderTop: '1px solid var(--border)',
+          textAlign: 'center'
+        }}
+      >
+        <span style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: '11px',
+          fontWeight: 500,
+          color: 'var(--fg-muted)',
+          letterSpacing: '0.06em',
+          textTransform: 'uppercase'
+        }}>
+          AlgoLens — Interactive Algorithm Visualizer
+        </span>
+      </motion.div>
     </div>
   )
 }

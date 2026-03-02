@@ -1,5 +1,7 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeProvider } from './context/ThemeContext'
+import { PAGE_TRANSITION } from './utils/animationConfig'
 import Navbar from './components/Navbar'
 import KeyboardShortcuts from './components/KeyboardShortcuts'
 import Home from './components/Home'
@@ -20,29 +22,52 @@ import LinearRegression from './visualizers/LinearRegression'
 import LogisticRegression from './visualizers/LogisticRegression'
 import DecisionTree from './visualizers/DecisionTree'
 
+function PageTransition({ children }) {
+  return (
+    <motion.div
+      initial={PAGE_TRANSITION.initial}
+      animate={PAGE_TRANSITION.animate}
+      exit={PAGE_TRANSITION.exit}
+      transition={PAGE_TRANSITION.transition}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function AnimatedRoutes() {
+  const location = useLocation()
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+        <Route path="/binary-search" element={<PageTransition><BinarySearch /></PageTransition>} />
+        <Route path="/bubble-sort" element={<PageTransition><BubbleSort /></PageTransition>} />
+        <Route path="/insertion-sort" element={<PageTransition><InsertionSort /></PageTransition>} />
+        <Route path="/merge-sort" element={<PageTransition><MergeSort /></PageTransition>} />
+        <Route path="/gcd" element={<PageTransition><EuclideanGCD /></PageTransition>} />
+        <Route path="/matrix-traversal" element={<PageTransition><MatrixTraversal /></PageTransition>} />
+        <Route path="/quick-sort" element={<PageTransition><QuickSort /></PageTransition>} />
+        <Route path="/dijkstra" element={<PageTransition><DijkstraPath /></PageTransition>} />
+        <Route path="/bfs" element={<PageTransition><BFSGrid /></PageTransition>} />
+        <Route path="/dfs" element={<PageTransition><DFSGrid /></PageTransition>} />
+        <Route path="/kmeans" element={<PageTransition><KMeans /></PageTransition>} />
+        <Route path="/edit-distance" element={<PageTransition><EditDistance /></PageTransition>} />
+        <Route path="/linear-regression" element={<PageTransition><LinearRegression /></PageTransition>} />
+        <Route path="/logistic-regression" element={<PageTransition><LogisticRegression /></PageTransition>} />
+        <Route path="/decision-tree" element={<PageTransition><DecisionTree /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  )
+}
+
 export default function App() {
   return (
     <ThemeProvider>
       <Navbar />
       <KeyboardShortcuts />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/binary-search" element={<BinarySearch />} />
-        <Route path="/bubble-sort" element={<BubbleSort />} />
-        <Route path="/insertion-sort" element={<InsertionSort />} />
-        <Route path="/merge-sort" element={<MergeSort />} />
-        <Route path="/gcd" element={<EuclideanGCD />} />
-        <Route path="/matrix-traversal" element={<MatrixTraversal />} />
-        <Route path="/quick-sort" element={<QuickSort />} />
-        <Route path="/dijkstra" element={<DijkstraPath />} />
-        <Route path="/bfs" element={<BFSGrid />} />
-        <Route path="/dfs" element={<DFSGrid />} />
-        <Route path="/kmeans" element={<KMeans />} />
-        <Route path="/edit-distance" element={<EditDistance />} />
-        <Route path="/linear-regression" element={<LinearRegression />} />
-        <Route path="/logistic-regression" element={<LogisticRegression />} />
-        <Route path="/decision-tree" element={<DecisionTree />} />
-      </Routes>
+      <AnimatedRoutes />
     </ThemeProvider>
   )
 }

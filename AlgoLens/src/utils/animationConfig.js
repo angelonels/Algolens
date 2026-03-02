@@ -63,6 +63,21 @@ export const COLORS = {
     accentHover: 'var(--accent-hover)'
 }
 
+// Page transition config
+export const PAGE_TRANSITION = {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -10 },
+    transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] }
+}
+
+// Stagger presets for grids and lists
+export const STAGGER = {
+    fast: { staggerChildren: 0.03, delayChildren: 0.1 },
+    normal: { staggerChildren: 0.06, delayChildren: 0.15 },
+    slow: { staggerChildren: 0.1, delayChildren: 0.2 }
+}
+
 // Shared animation variants
 export const VARIANTS = {
     fadeInUp: {
@@ -80,6 +95,11 @@ export const VARIANTS = {
             scale: [1, 1.03, 1],
             transition: { duration: 0.6, repeat: Infinity }
         }
+    },
+    cardItem: {
+        initial: { opacity: 0, y: 16, scale: 0.97 },
+        animate: { opacity: 1, y: 0, scale: 1 },
+        exit: { opacity: 0, scale: 0.97 }
     }
 }
 

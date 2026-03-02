@@ -37,8 +37,11 @@ export default function Navbar() {
       zIndex: 100,
       height: '52px',
       padding: '0 32px',
-      backgroundColor: 'var(--bg)',
+      backgroundColor: 'color-mix(in srgb, var(--bg) 80%, transparent)',
+      backdropFilter: 'blur(12px) saturate(1.4)',
+      WebkitBackdropFilter: 'blur(12px) saturate(1.4)',
       borderBottom: '1px solid var(--border)',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center'
@@ -126,7 +129,16 @@ export default function Navbar() {
             background: 'var(--surface)',
             color: 'var(--fg)',
             cursor: 'pointer',
-            minWidth: '160px'
+            minWidth: '160px',
+            transition: 'border-color 150ms ease, box-shadow 150ms ease'
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = 'var(--accent)'
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(230, 51, 18, 0.12)'
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = 'var(--border)'
+            e.currentTarget.style.boxShadow = 'none'
           }}
         >
           <option value="/" disabled={isHome}>Select algorithm…</option>
