@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
     SpeedControl, StepCounter, StatusMessage, ControlButton, Legend,
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
-} from '../components/ui/AnimationComponents'
+} from '../components/ui/shared'
 
 const dijkstraPythonCode = `import heapq
 
@@ -97,7 +97,7 @@ export default function DijkstraVisualizer() {
     const [steps, setSteps] = useState([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [running, setRunning] = useState(false)
-    const [speed, setSpeed] = useState(SPEED_PRESETS.normal)
+    const [speed, setSpeed] = useState('1x' as SpeedKey)
     const [isPaused, setIsPaused] = useState(false)
     const [finalDistances, setFinalDistances] = useState(null)
     const svgRef = useRef(null)
@@ -112,7 +112,7 @@ export default function DijkstraVisualizer() {
 
     useEffect(() => {
         if (running && !isPaused && currentStep >= 0 && currentStep < steps.length - 1) {
-            const timer = setTimeout(() => setCurrentStep(prev => prev + 1), speed)
+            const timer = setTimeout(() => setCurrentStep(prev => prev + 1), SPEED_PRESETS[speed])
             return () => clearTimeout(timer)
         } else if (currentStep >= steps.length - 1) { setRunning(false) }
     }, [running, currentStep, steps.length, speed, isPaused])
@@ -120,17 +120,17 @@ export default function DijkstraVisualizer() {
     const currentState = steps[currentStep] || { distances: {}, visited: new Set(), current: null, exploring: null, edge: null, message: '' }
 
     const getNodeColor = (nodeId) => {
-        if (currentState.current === nodeId) return COLORS.accent
-        if (currentState.exploring === nodeId) return COLORS.active
-        if (currentState.visited?.has(nodeId)) return COLORS.sorted
-        return COLORS.surface
+        if (currentState.current === nodeId) return 'var(--accent)'
+        if (currentState.exploring === nodeId) return 'var(--color-active)'
+        if (currentState.visited?.has(nodeId)) return 'var(--color-sorted)'
+        return 'var(--surface)'
     }
 
     const getEdgeColor = (edge) => {
         if (currentState.edge && ((currentState.edge.from === edge.from && currentState.edge.to === edge.to) || (currentState.edge.from === edge.to && currentState.edge.to === edge.from))) {
-            return currentState.type === 'update' ? COLORS.sorted : COLORS.active
+            return currentState.type === 'update' ? 'var(--color-sorted)' : 'var(--color-active)'
         }
-        return COLORS.border
+        return 'var(--border)'
     }
 
     const getEdgeWidth = (edge) => {
@@ -144,10 +144,10 @@ export default function DijkstraVisualizer() {
     }
 
     const legendItems = [
-        { color: COLORS.accent, label: 'Current' },
-        { color: COLORS.active, label: 'Exploring' },
-        { color: COLORS.sorted, label: 'Visited' },
-        { color: COLORS.surface, label: 'Unvisited' }
+        { color: 'var(--accent)', label: 'Current' },
+        { color: 'var(--color-active)', label: 'Exploring' },
+        { color: 'var(--color-sorted)', label: 'Visited' },
+        { color: 'var(--surface)', label: 'Unvisited' }
     ]
 
     const isFinalStep = currentStep === steps.length - 1 && !running
@@ -157,7 +157,7 @@ export default function DijkstraVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Dijkstra's Algorithm?</h3>
+                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Dijkstra's Algorithm?</h3>
                         <p>
                             Dijkstra's algorithm, conceived by computer scientist Edsger Dijkstra in 1956, is a
                             greedy algorithm that finds the <strong>shortest path</strong> from a single source node to all
@@ -190,7 +190,7 @@ export default function DijkstraVisualizer() {
                         </ul>
                         <p style={{ marginTop: 12 }}><strong>Time Complexity:</strong> O((V + E) log V) with a binary heap priority queue</p>
                         <p style={{ marginTop: 4 }}><strong>Space Complexity:</strong> O(V) for the distance array and priority queue</p>
-                        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
                             <strong>Real-world uses:</strong> Google Maps routing, network packet routing (OSPF protocol),
                             flight booking systems (cheapest route), robot path planning, and any scenario involving
                             weighted shortest paths. For graphs with negative edges, Bellman-Ford is used instead;
@@ -198,14 +198,14 @@ export default function DijkstraVisualizer() {
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={dijkstraPythonCode} onCopy={() => { }} />
+                    <CodeBlock code={dijkstraPythonCode} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>
                         <div style={{ marginBottom: 20 }}>
-                            <label style={{ marginRight: 12, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', color: COLORS.fgMuted }}>Start Node</label>
+                            <label style={{ marginRight: 12, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--fg-muted)' }}>Start Node</label>
                             <select value={startNode} onChange={(e) => { setStartNode(e.target.value); reset() }} disabled={running}
-                                style={{ padding: '8px 16px', fontSize: 14, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, borderRadius: '0px', border: `1px solid ${COLORS.border}`, background: COLORS.surface }}>
+                                style={{ padding: '8px 16px', fontSize: 14, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, borderRadius: '0px', border: `1px solid ${'var(--border)'}`, background: 'var(--surface)' }}>
                                 {graph.nodes.map(n => <option key={n.id} value={n.id}>{n.id}</option>)}
                             </select>
                         </div>
@@ -217,7 +217,7 @@ export default function DijkstraVisualizer() {
                             )}
                         </AnimatePresence>
 
-                        <div style={{ background: COLORS.surface, border: `1px solid ${COLORS.border}`, borderRadius: '2px', padding: 20, marginTop: 20 }}>
+                        <div style={{ background: 'var(--surface)', border: `1px solid ${'var(--border)'}`, borderRadius: '2px', padding: 20, marginTop: 20 }}>
                             <svg ref={svgRef} width="100%" height={280} viewBox="0 0 600 280" style={{ overflow: 'visible' }}>
                                 {graph.edges.map((edge, i) => {
                                     const from = getNodePosition(edge.from), to = getNodePosition(edge.to)
@@ -225,16 +225,16 @@ export default function DijkstraVisualizer() {
                                     return (
                                         <g key={i}>
                                             <motion.line x1={from.x} y1={from.y} x2={to.x} y2={to.y} stroke={getEdgeColor(edge)} strokeWidth={getEdgeWidth(edge)} animate={{ stroke: getEdgeColor(edge), strokeWidth: getEdgeWidth(edge) }} transition={{ duration: 0.2 }} />
-                                            <rect x={midX - 14} y={midY - 12} width={28} height={24} fill={COLORS.bg} stroke={COLORS.border} strokeWidth={1} />
-                                            <text x={midX} y={midY + 5} textAnchor="middle" fontSize={13} fill={COLORS.fg} fontWeight="bold" fontFamily="'JetBrains Mono', monospace">{edge.weight}</text>
+                                            <rect x={midX - 14} y={midY - 12} width={28} height={24} fill={'var(--bg)'} stroke={'var(--border)'} strokeWidth={1} />
+                                            <text x={midX} y={midY + 5} textAnchor="middle" fontSize={13} fill={'var(--fg)'} fontWeight="bold" fontFamily="'JetBrains Mono', monospace">{edge.weight}</text>
                                         </g>
                                     )
                                 })}
                                 {graph.nodes.map(node => (
                                     <g key={node.id}>
-                                        <motion.circle cx={node.x} cy={node.y} r={30} fill={getNodeColor(node.id)} stroke={currentState.current === node.id ? COLORS.accent : COLORS.fg} strokeWidth={currentState.current === node.id ? 3 : 1.5} animate={{ fill: getNodeColor(node.id), scale: currentState.current === node.id ? 1.08 : 1 }} transition={SPRING.snappy} />
-                                        <text x={node.x} y={node.y - 4} textAnchor="middle" fontSize={16} fontWeight="bold" fontFamily="'JetBrains Mono', monospace" fill={currentState.visited?.has(node.id) || currentState.current === node.id ? '#fff' : COLORS.fg}>{node.id}</text>
-                                        <text x={node.x} y={node.y + 12} textAnchor="middle" fontSize={11} fontFamily="'JetBrains Mono', monospace" fill={currentState.visited?.has(node.id) ? 'rgba(255,255,255,0.85)' : COLORS.fgMuted} fontWeight="600">
+                                        <motion.circle cx={node.x} cy={node.y} r={30} fill={getNodeColor(node.id)} stroke={currentState.current === node.id ? 'var(--accent)' : 'var(--fg)'} strokeWidth={currentState.current === node.id ? 3 : 1.5} animate={{ fill: getNodeColor(node.id), scale: currentState.current === node.id ? 1.08 : 1 }} transition={SPRING.snappy} />
+                                        <text x={node.x} y={node.y - 4} textAnchor="middle" fontSize={16} fontWeight="bold" fontFamily="'JetBrains Mono', monospace" fill={currentState.visited?.has(node.id) || currentState.current === node.id ? '#fff' : 'var(--fg)'}>{node.id}</text>
+                                        <text x={node.x} y={node.y + 12} textAnchor="middle" fontSize={11} fontFamily="'JetBrains Mono', monospace" fill={currentState.visited?.has(node.id) ? 'rgba(255,255,255,0.85)' : 'var(--fg-muted)'} fontWeight="600">
                                             {currentState.distances[node.id] === Infinity ? '∞' : currentState.distances[node.id] ?? '-'}
                                         </text>
                                     </g>
@@ -255,13 +255,13 @@ export default function DijkstraVisualizer() {
                         <AnimatePresence>
                             {isFinalStep && finalDistances && (
                                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ marginTop: 24 }}>
-                                    <h3 style={{ marginBottom: 12, fontFamily: "'JetBrains Mono', monospace", fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.05em', color: COLORS.fg }}>Shortest Distances from {startNode}</h3>
+                                    <h3 style={{ marginBottom: 12, fontFamily: "'JetBrains Mono', monospace", fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--fg)' }}>Shortest Distances from {startNode}</h3>
                                     <div style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
                                         {graph.nodes.map(node => (
                                             <motion.div key={node.id} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: graph.nodes.indexOf(node) * 0.08 }}
-                                                style={{ padding: '10px 18px', background: COLORS.surface, border: `1px solid ${node.id === startNode ? COLORS.accent : COLORS.sorted}`, borderTop: `3px solid ${node.id === startNode ? COLORS.accent : COLORS.sorted}`, borderRadius: '0px', textAlign: 'center' }}>
-                                                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: COLORS.fgMuted }}>To {node.id}</div>
-                                                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 22, fontWeight: 700, color: COLORS.fg }}>{finalDistances[node.id]}</div>
+                                                style={{ padding: '10px 18px', background: 'var(--surface)', border: `1px solid ${node.id === startNode ? 'var(--accent)' : 'var(--color-sorted)'}`, borderTop: `3px solid ${node.id === startNode ? 'var(--accent)' : 'var(--color-sorted)'}`, borderRadius: '0px', textAlign: 'center' }}>
+                                                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--fg-muted)' }}>To {node.id}</div>
+                                                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 22, fontWeight: 700, color: 'var(--fg)' }}>{finalDistances[node.id]}</div>
                                             </motion.div>
                                         ))}
                                     </div>

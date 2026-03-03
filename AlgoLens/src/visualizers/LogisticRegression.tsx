@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence, useSpring, useTransform } from 'framer-motion'
-import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
     SpeedControl, StepCounter, StatusMessage, ControlButton,
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
-} from '../components/ui/AnimationComponents'
+} from '../components/ui/shared'
 
 const logregPythonCode = `import numpy as np
 
@@ -157,13 +157,13 @@ function ParamSlider({ label, value, min, max, step, onChange, unit = '', disabl
                 <label style={{
                     fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
                     fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em',
-                    color: COLORS.fgMuted
+                    color: 'var(--fg-muted)'
                 }}>
                     {label}
                 </label>
                 <span style={{
                     fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
-                    fontWeight: 700, color: COLORS.fg
+                    fontWeight: 700, color: 'var(--fg)'
                 }}>
                     {typeof value === 'number' && value < 1 ? value.toFixed(2) : value}{unit}
                 </span>
@@ -175,8 +175,8 @@ function ParamSlider({ label, value, min, max, step, onChange, unit = '', disabl
                 style={{
                     width: '100%', height: 4, appearance: 'none', WebkitAppearance: 'none',
                     background: disabled
-                        ? COLORS.border
-                        : `linear-gradient(to right, ${COLORS.accent} 0%, ${COLORS.accent} ${((value - min) / (max - min)) * 100}%, ${COLORS.border} ${((value - min) / (max - min)) * 100}%, ${COLORS.border} 100%)`,
+                        ? 'var(--border)'
+                        : `linear-gradient(to right, ${'var(--accent)'} 0%, ${'var(--accent)'} ${((value - min) / (max - min)) * 100}%, ${'var(--border)'} ${((value - min) / (max - min)) * 100}%, ${'var(--border)'} 100%)`,
                     outline: 'none', cursor: disabled ? 'not-allowed' : 'pointer',
                     borderRadius: 0, opacity: disabled ? 0.5 : 1,
                 }}
@@ -319,7 +319,7 @@ export default function LogisticRegressionVisualizer() {
     const [steps, setSteps] = useState([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [running, setRunning] = useState(false)
-    const [speed, setSpeed] = useState(SPEED_PRESETS.normal)
+    const [speed, setSpeed] = useState('1x' as SpeedKey)
     const [isPaused, setIsPaused] = useState(false)
     const [showConfetti, setShowConfetti] = useState(false)
 
@@ -448,7 +448,7 @@ export default function LogisticRegressionVisualizer() {
     // ── Auto-advance ──
     useEffect(() => {
         if (running && !isPaused && currentStep >= 0 && currentStep < steps.length - 1) {
-            const t = setTimeout(() => setCurrentStep(cs => cs + 1), speed)
+            const t = setTimeout(() => setCurrentStep(cs => cs + 1), SPEED_PRESETS[speed])
             return () => clearTimeout(t)
         } else if (running && currentStep >= steps.length - 1) {
             setRunning(false)
@@ -498,7 +498,7 @@ export default function LogisticRegressionVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Logistic Regression?</h3>
+                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Logistic Regression?</h3>
                         <p>
                             Logistic Regression is a fundamental <strong>classification</strong> algorithm that
                             predicts the probability of a data point belonging to one of two classes. Despite its
@@ -540,13 +540,13 @@ export default function LogisticRegressionVisualizer() {
                         <p style={{ marginTop: 4 }}>
                             <strong>Space Complexity:</strong> O(features) for model parameters
                         </p>
-                        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
                             <strong>Real-world uses:</strong> Spam detection, medical diagnosis (disease/no disease),
                             credit scoring, churn prediction, and as the output layer of neural networks.
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={logregPythonCode} onCopy={() => { }} />
+                    <CodeBlock code={logregPythonCode} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>
@@ -558,8 +558,8 @@ export default function LogisticRegressionVisualizer() {
                             style={{
                                 display: 'flex', gap: 16, flexWrap: 'wrap',
                                 padding: '16px 20px',
-                                background: COLORS.bgAlt,
-                                border: `1px solid ${COLORS.border}`,
+                                background: 'var(--bg-alt)',
+                                border: `1px solid ${'var(--border)'}`,
                                 marginBottom: 16,
                             }}
                         >
@@ -603,7 +603,7 @@ export default function LogisticRegressionVisualizer() {
                             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                             style={{
                                 margin: '12px auto',
-                                border: `1px solid ${COLORS.border}`,
+                                border: `1px solid ${'var(--border)'}`,
                                 overflow: 'hidden', width: W, position: 'relative',
                                 background: '#fafaf8'
                             }}
@@ -710,7 +710,7 @@ export default function LogisticRegressionVisualizer() {
                                             y1={H / 2}
                                             x2={boundaryX + (step.dw > 0 ? -20 : 20)}
                                             y2={H / 2}
-                                            stroke={COLORS.accent}
+                                            stroke={'var(--accent)'}
                                             strokeWidth={2.5}
                                             markerEnd="url(#arrowhead)"
                                             animate={{
@@ -725,7 +725,7 @@ export default function LogisticRegressionVisualizer() {
                                 <defs>
                                     <marker id="arrowhead" markerWidth="8" markerHeight="6"
                                         refX="8" refY="3" orient="auto">
-                                        <polygon points="0 0, 8 3, 0 6" fill={COLORS.accent} />
+                                        <polygon points="0 0, 8 3, 0 6" fill={'var(--accent)'} />
                                     </marker>
                                 </defs>
 
@@ -792,17 +792,17 @@ export default function LogisticRegressionVisualizer() {
                                             layout
                                             style={{
                                                 padding: '5px 10px',
-                                                background: accent ? 'rgba(22,163,74,0.06)' : COLORS.surface,
-                                                border: `1px solid ${accent ? COLORS.sorted : COLORS.border}`,
+                                                background: accent ? 'rgba(22,163,74,0.06)' : 'var(--surface)',
+                                                border: `1px solid ${accent ? 'var(--color-sorted)' : 'var(--border)'}`,
                                                 fontFamily: "'JetBrains Mono', monospace",
                                                 fontSize: 10, fontWeight: 600,
                                                 textTransform: 'uppercase', letterSpacing: '0.04em',
-                                                color: COLORS.fgMuted,
+                                                color: 'var(--fg-muted)',
                                                 transition: 'all 300ms cubic-bezier(0.16,1,0.3,1)'
                                             }}
                                         >
                                             <span style={{
-                                                color: accent ? COLORS.sorted : COLORS.fg,
+                                                color: accent ? 'var(--color-sorted)' : 'var(--fg)',
                                                 fontWeight: 700
                                             }}>{val}</span>{' '}{label}
                                         </motion.div>
@@ -820,7 +820,7 @@ export default function LogisticRegressionVisualizer() {
                                     exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                                     style={{
-                                        margin: '8px auto', border: `1px solid ${COLORS.border}`,
+                                        margin: '8px auto', border: `1px solid ${'var(--border)'}`,
                                         overflow: 'hidden', width: SIG_W, background: '#fafaf8'
                                     }}
                                 >
@@ -917,7 +917,7 @@ export default function LogisticRegressionVisualizer() {
                                     exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                                     style={{
-                                        margin: '8px auto', border: `1px solid ${COLORS.border}`,
+                                        margin: '8px auto', border: `1px solid ${'var(--border)'}`,
                                         overflow: 'hidden', width: COST_W, background: '#fafaf8'
                                     }}
                                 >
@@ -1012,7 +1012,7 @@ export default function LogisticRegressionVisualizer() {
                         <div style={{
                             display: 'flex', gap: 20, justifyContent: 'center', margin: '10px 0',
                             fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600,
-                            textTransform: 'uppercase', letterSpacing: '0.04em', color: COLORS.fgMuted
+                            textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--fg-muted)'
                         }}>
                             <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                                 <span style={{
@@ -1076,10 +1076,10 @@ export default function LogisticRegressionVisualizer() {
                                     style={{
                                         marginTop: 20, padding: '14px 24px',
                                         background: 'rgba(22,163,74,0.04)',
-                                        border: `1px solid ${COLORS.sorted}`,
-                                        borderLeft: `4px solid ${COLORS.sorted}`,
+                                        border: `1px solid ${'var(--color-sorted)'}`,
+                                        borderLeft: `4px solid ${'var(--color-sorted)'}`,
                                         fontFamily: "'JetBrains Mono', monospace",
-                                        fontWeight: 600, fontSize: 14, color: COLORS.fg,
+                                        fontWeight: 600, fontSize: 14, color: 'var(--fg)',
                                         display: 'inline-block'
                                     }}
                                 >
@@ -1094,7 +1094,7 @@ export default function LogisticRegressionVisualizer() {
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         transition={{ delay: 0.4 }}
-                                        style={{ color: COLORS.fgMuted, marginLeft: 8 }}
+                                        style={{ color: 'var(--fg-muted)', marginLeft: 8 }}
                                     >
                                         — boundary at x={step.w !== 0 ? (-step.b / step.w).toFixed(2) : '∞'}
                                     </motion.span>
@@ -1102,7 +1102,7 @@ export default function LogisticRegressionVisualizer() {
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         transition={{ delay: 0.6 }}
-                                        style={{ color: COLORS.fgMuted, marginLeft: 8, fontSize: 12 }}
+                                        style={{ color: 'var(--fg-muted)', marginLeft: 8, fontSize: 12 }}
                                     >
                                         ({step.epoch} epochs, lr={learningRate})
                                     </motion.span>

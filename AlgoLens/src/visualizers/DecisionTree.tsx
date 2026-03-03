@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
     SpeedControl, StepCounter, StatusMessage, ControlButton,
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
-} from '../components/ui/AnimationComponents'
+} from '../components/ui/shared'
 
 const dtPythonCode = `class DecisionTree:
     def __init__(self, max_depth=4):
@@ -250,7 +250,7 @@ export default function DecisionTreeVisualizer() {
 
     useEffect(() => {
         if (running && !isPaused && currentStep >= 0 && currentStep < steps.length - 1) {
-            const t = setTimeout(() => setCurrentStep(cs => cs + 1), speed)
+            const t = setTimeout(() => setCurrentStep(cs => cs + 1), SPEED_PRESETS[speed])
             return () => clearTimeout(t)
         } else if (running && currentStep >= steps.length - 1) {
             setRunning(false)
@@ -408,7 +408,7 @@ export default function DecisionTreeVisualizer() {
         fontFamily: "'JetBrains Mono', monospace",
         fontWeight: 600, fontSize: '12px',
         textTransform: 'uppercase', letterSpacing: '0.05em',
-        color: COLORS.fgMuted
+        color: 'var(--fg-muted)'
     }
 
     return (
@@ -416,7 +416,7 @@ export default function DecisionTreeVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is a Decision Tree?</h3>
+                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is a Decision Tree?</h3>
                         <p>
                             A Decision Tree is a <strong>supervised learning</strong> algorithm that creates a
                             tree-like model of decisions by recursively <strong>partitioning the feature space</strong>.
@@ -456,13 +456,13 @@ export default function DecisionTreeVisualizer() {
                         <p style={{ marginTop: 4 }}>
                             <strong>Space Complexity:</strong> O(tree depth) for recursion stack
                         </p>
-                        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
                             <strong>Real-world uses:</strong> Medical diagnosis, fraud detection, customer segmentation,
                             and forms the basis of Random Forests and Gradient Boosted Trees (XGBoost, LightGBM).
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={dtPythonCode} onCopy={() => { }} />
+                    <CodeBlock code={dtPythonCode} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>
@@ -477,8 +477,8 @@ export default function DecisionTreeVisualizer() {
                                     style={{
                                         fontFamily: "'JetBrains Mono', monospace",
                                         fontSize: 13, padding: '4px 8px',
-                                        border: `1px solid ${COLORS.border}`,
-                                        borderRadius: '0px', background: COLORS.surface, cursor: 'pointer'
+                                        border: `1px solid ${'var(--border)'}`,
+                                        borderRadius: '0px', background: 'var(--surface)', cursor: 'pointer'
                                     }}
                                 >
                                     {[2, 3, 4, 5, 6].map(d => (
@@ -501,7 +501,7 @@ export default function DecisionTreeVisualizer() {
 
                         {/* Feature space scatter */}
                         <div style={{
-                            margin: '12px auto', border: `1px solid ${COLORS.border}`,
+                            margin: '12px auto', border: `1px solid ${'var(--border)'}`,
                             borderRadius: '2px', overflow: 'hidden', width: W
                         }}>
                             <canvas ref={canvasRef} style={{ width: W, height: H, display: 'block' }} />
@@ -514,15 +514,15 @@ export default function DecisionTreeVisualizer() {
                                 animate={{ opacity: 1, height: 'auto' }}
                                 style={{
                                     margin: '12px 0', padding: '12px',
-                                    background: COLORS.surface,
-                                    border: `1px solid ${COLORS.border}`,
+                                    background: 'var(--surface)',
+                                    border: `1px solid ${'var(--border)'}`,
                                     overflow: 'auto', maxHeight: 200
                                 }}
                             >
                                 <div style={{
                                     fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
                                     fontWeight: 600, textTransform: 'uppercase',
-                                    letterSpacing: '0.05em', color: COLORS.fgMuted, marginBottom: 8
+                                    letterSpacing: '0.05em', color: 'var(--fg-muted)', marginBottom: 8
                                 }}>
                                     Tree Structure
                                 </div>
@@ -542,7 +542,7 @@ export default function DecisionTreeVisualizer() {
                                                 padding: `2px 6px 2px ${node.depth * 18 + 6}px`,
                                                 fontFamily: "'JetBrains Mono', monospace",
                                                 fontSize: 10,
-                                                color: COLORS.fg,
+                                                color: 'var(--fg)',
                                                 borderRadius: '2px',
                                                 borderLeft: node.id === step.activeNode
                                                     ? '2px solid #e63312' : '2px solid transparent'
@@ -556,7 +556,7 @@ export default function DecisionTreeVisualizer() {
                                             ) : (
                                                 <span>
                                                     ├ {node.feature} &lt; {node.value.toFixed(2)}{' '}
-                                                    <span style={{ color: COLORS.fgMuted }}>
+                                                    <span style={{ color: 'var(--fg-muted)' }}>
                                                         gini={node.gini.toFixed(3)}
                                                     </span>
                                                 </span>
@@ -571,7 +571,7 @@ export default function DecisionTreeVisualizer() {
                         <div style={{
                             display: 'flex', gap: 16, justifyContent: 'center', margin: '8px 0',
                             fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600,
-                            textTransform: 'uppercase', letterSpacing: '0.04em', color: COLORS.fgMuted
+                            textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--fg-muted)'
                         }}>
                             {['Class 0 ●', 'Class 1 ◆', 'Class 2 ▲'].map((label, i) => (
                                 <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
@@ -622,12 +622,12 @@ export default function DecisionTreeVisualizer() {
                                     transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                                     style={{
                                         marginTop: 20, padding: '12px 20px',
-                                        background: COLORS.surface,
-                                        border: `1px solid ${COLORS.sorted}`,
-                                        borderLeft: `3px solid ${COLORS.sorted}`,
+                                        background: 'var(--surface)',
+                                        border: `1px solid ${'var(--color-sorted)'}`,
+                                        borderLeft: `3px solid ${'var(--color-sorted)'}`,
                                         borderRadius: '0px',
                                         fontFamily: "'JetBrains Mono', monospace",
-                                        fontWeight: 600, fontSize: 14, color: COLORS.fg,
+                                        fontWeight: 600, fontSize: 14, color: 'var(--fg)',
                                         display: 'inline-block'
                                     }}
                                 >

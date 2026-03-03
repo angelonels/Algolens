@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
     SpeedControl, StepCounter, StatusMessage, ControlButton, Legend,
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
-} from '../components/ui/AnimationComponents'
+} from '../components/ui/shared'
 
 const bfsPythonCode = `from collections import deque
 
@@ -161,7 +161,7 @@ export default function BFSGridVisualizer() {
 
     useEffect(() => {
         if (running && !isPaused && currentStep >= 0 && currentStep < steps.length - 1) {
-            const t = setTimeout(() => setCurrentStep(cs => cs + 1), speed)
+            const t = setTimeout(() => setCurrentStep(cs => cs + 1), SPEED_PRESETS[speed])
             return () => clearTimeout(t)
         } else if (running && currentStep >= steps.length - 1) {
             setRunning(false)
@@ -187,23 +187,23 @@ export default function BFSGridVisualizer() {
     }
 
     const cellColors = {
-        empty: COLORS.surface,
-        wall: COLORS.fg,
-        start: COLORS.accent,
-        end: COLORS.sorted,
-        current: COLORS.active,
-        frontier: COLORS.comparing,
+        empty: 'var(--surface)',
+        wall: 'var(--fg)',
+        start: 'var(--accent)',
+        end: 'var(--color-sorted)',
+        current: 'var(--color-active)',
+        frontier: 'var(--color-comparing)',
         visited: '#bfdbfe',
-        path: COLORS.active
+        path: 'var(--color-active)'
     }
 
     const legendItems = [
-        { color: COLORS.accent, label: 'Start' },
-        { color: COLORS.sorted, label: 'End' },
-        { color: COLORS.fg, label: 'Wall' },
-        { color: COLORS.comparing, label: 'Frontier' },
+        { color: 'var(--accent)', label: 'Start' },
+        { color: 'var(--color-sorted)', label: 'End' },
+        { color: 'var(--fg)', label: 'Wall' },
+        { color: 'var(--color-comparing)', label: 'Frontier' },
         { color: '#bfdbfe', label: 'Visited' },
-        { color: COLORS.active, label: 'Path' }
+        { color: 'var(--color-active)', label: 'Path' }
     ]
 
     const isFinalStep = currentStep === steps.length - 1 && !running
@@ -213,7 +213,7 @@ export default function BFSGridVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Breadth-First Search?</h3>
+                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Breadth-First Search?</h3>
                         <p>
                             Breadth-First Search (BFS) is a fundamental graph traversal algorithm that explores
                             nodes level by level, visiting <strong>all neighbors</strong> at the current depth before
@@ -254,14 +254,14 @@ export default function BFSGridVisualizer() {
                         <p style={{ marginTop: 4 }}>
                             <strong>Space Complexity:</strong> O(V) — the queue and visited set can hold up to all vertices
                         </p>
-                        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
                             <strong>Real-world uses:</strong> GPS navigation (shortest route), social network friend suggestions
                             (people within k connections), web crawlers, network broadcasting, and puzzle solving (like
                             finding the fewest moves in a maze).
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={bfsPythonCode} onCopy={() => { }} />
+                    <CodeBlock code={bfsPythonCode} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>
@@ -270,13 +270,13 @@ export default function BFSGridVisualizer() {
                             <div style={{
                                 marginBottom: 16,
                                 padding: '8px 14px',
-                                background: COLORS.surface,
-                                border: `1px solid ${COLORS.border}`,
-                                borderLeft: `3px solid ${COLORS.comparing}`,
+                                background: 'var(--surface)',
+                                border: `1px solid ${'var(--border)'}`,
+                                borderLeft: `3px solid ${'var(--color-comparing)'}`,
                                 borderRadius: '0px',
                                 fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: '12px',
-                                color: COLORS.fgMuted
+                                color: 'var(--fg-muted)'
                             }}>
                                 Click cells to toggle walls, or use "Random Maze" to generate obstacles
                             </div>
@@ -299,8 +299,8 @@ export default function BFSGridVisualizer() {
                                 display: 'grid',
                                 gridTemplateColumns: `repeat(${COLS}, 1fr)`,
                                 gap: 1,
-                                background: COLORS.border,
-                                border: `1px solid ${COLORS.border}`,
+                                background: 'var(--border)',
+                                border: `1px solid ${'var(--border)'}`,
                                 maxWidth: 500,
                                 margin: '16px auto',
                                 userSelect: 'none'
@@ -391,14 +391,14 @@ export default function BFSGridVisualizer() {
                                     style={{
                                         marginTop: 24,
                                         padding: '12px 20px',
-                                        background: COLORS.surface,
-                                        border: `1px solid ${step.phase === 'found' ? COLORS.sorted : COLORS.accent}`,
-                                        borderLeft: `3px solid ${step.phase === 'found' ? COLORS.sorted : COLORS.accent}`,
+                                        background: 'var(--surface)',
+                                        border: `1px solid ${step.phase === 'found' ? 'var(--color-sorted)' : 'var(--accent)'}`,
+                                        borderLeft: `3px solid ${step.phase === 'found' ? 'var(--color-sorted)' : 'var(--accent)'}`,
                                         borderRadius: '0px',
                                         fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600,
                                         fontSize: 15,
-                                        color: COLORS.fg,
+                                        color: 'var(--fg)',
                                         display: 'inline-block'
                                     }}
                                 >

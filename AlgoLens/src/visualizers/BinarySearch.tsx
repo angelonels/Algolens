@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
   SpeedControl,
   StepCounter,
@@ -15,7 +15,7 @@ import {
   SplitLayout,
   SplitLeft,
   SplitRight
-} from '../components/ui/AnimationComponents'
+} from '../components/ui/shared'
 
 const binarySearchPythonCode = `def binary_search(arr, target):
     low, high = 0, len(arr) - 1
@@ -36,7 +36,7 @@ export default function BinarySearchVisualizer() {
   const [currentStep, setCurrentStep] = useState(-1)
   const [searching, setSearching] = useState(false)
   const [result, setResult] = useState(null)
-  const [speed, setSpeed] = useState(SPEED_PRESETS.normal)
+  const [speed, setSpeed] = useState('1x' as SpeedKey)
   const [isPaused, setIsPaused] = useState(false)
 
   const computeSteps = () => {
@@ -87,7 +87,7 @@ export default function BinarySearchVisualizer() {
   useEffect(() => {
     if (searching && !isPaused && currentStep >= 0) {
       if (currentStep < steps.length - 1) {
-        const t = setTimeout(() => setCurrentStep(cs => cs + 1), speed)
+        const t = setTimeout(() => setCurrentStep(cs => cs + 1), SPEED_PRESETS[speed])
         return () => clearTimeout(t)
       } else {
         setSearching(false)
@@ -113,10 +113,10 @@ export default function BinarySearchVisualizer() {
   }
 
   const legendItems = [
-    { color: COLORS.current, label: 'Mid' },
-    { color: COLORS.active, label: 'Search Range' },
-    { color: COLORS.eliminated, label: 'Eliminated' },
-    { color: COLORS.found, label: 'Found' }
+    { color: 'var(--color-current)', label: 'Mid' },
+    { color: 'var(--color-active)', label: 'Search Range' },
+    { color: 'var(--color-eliminated)', label: 'Eliminated' },
+    { color: 'var(--color-found)', label: 'Found' }
   ]
 
   return (
@@ -124,7 +124,7 @@ export default function BinarySearchVisualizer() {
       <SplitLayout>
         <SplitLeft>
           <ExplanationBox>
-            <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Binary Search?</h3>
+            <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Binary Search?</h3>
             <p>
               Binary Search is a highly efficient search algorithm that finds the position of a target value
               within a <strong>sorted array</strong>. Rather than checking every element one by one (as in linear search),
@@ -159,14 +159,14 @@ export default function BinarySearchVisualizer() {
             <p style={{ marginTop: 4 }}>
               <strong>Space Complexity:</strong> O(1) iterative | O(log n) recursive (due to call stack)
             </p>
-            <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+            <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
               <strong>When to use:</strong> Ideal for searching in sorted arrays, databases, and any scenario where data
               is ordered. Commonly used in standard library functions like Python's <code>bisect</code> module
               and C++'s <code>std::lower_bound</code>.
             </p>
           </ExplanationBox>
 
-          <CodeBlock code={binarySearchPythonCode} onCopy={() => { }} />
+          <CodeBlock code={binarySearchPythonCode} />
         </SplitLeft>
         <SplitRight>
           <VisualizationContainer>
@@ -179,7 +179,7 @@ export default function BinarySearchVisualizer() {
                 fontWeight: 600,
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
-                color: COLORS.fgMuted
+                color: 'var(--fg-muted)'
               }}>Target</label>
               <input
                 type="number"
@@ -195,9 +195,9 @@ export default function BinarySearchVisualizer() {
                   fontFamily: "'JetBrains Mono', monospace",
                   fontWeight: 600,
                   textAlign: 'center',
-                  border: `1px solid ${COLORS.border}`,
+                  border: `1px solid ${'var(--border)'}`,
                   borderRadius: '0px',
-                  background: COLORS.surface
+                  background: 'var(--surface)'
                 }}
               />
             </div>
@@ -237,7 +237,7 @@ export default function BinarySearchVisualizer() {
                       fontWeight: 700,
                       textTransform: 'uppercase',
                       letterSpacing: '0.04em',
-                      color: isMid ? COLORS.current : COLORS.fgMuted
+                      color: isMid ? 'var(--color-current)' : 'var(--fg-muted)'
                     }}
                   >
                     {isMid && '▼ mid'}
@@ -253,10 +253,10 @@ export default function BinarySearchVisualizer() {
               {array.map((v, i) => {
                 const state = getElementState(i)
                 const colors = {
-                  found: COLORS.found,
-                  current: COLORS.current,
-                  active: COLORS.active,
-                  eliminated: COLORS.eliminated
+                  found: 'var(--color-found)',
+                  current: 'var(--color-current)',
+                  active: 'var(--color-active)',
+                  eliminated: 'var(--color-eliminated)'
                 }
 
                 return (
@@ -281,7 +281,7 @@ export default function BinarySearchVisualizer() {
                       fontWeight: 700,
                       fontSize: 16,
                       color: (state === 'eliminated' || state === 'current' || state === 'found')
-                        ? '#fff' : COLORS.fg,
+                        ? '#fff' : 'var(--fg)',
                       border: `1px solid rgba(0,0,0,0.1)`
                     }}
                   >
@@ -336,14 +336,14 @@ export default function BinarySearchVisualizer() {
                   style={{
                     marginTop: 24,
                     padding: '12px 20px',
-                    background: COLORS.surface,
-                    border: `1px solid ${result >= 0 ? COLORS.sorted : COLORS.accent}`,
-                    borderLeft: `3px solid ${result >= 0 ? COLORS.sorted : COLORS.accent}`,
+                    background: 'var(--surface)',
+                    border: `1px solid ${result >= 0 ? 'var(--color-sorted)' : 'var(--accent)'}`,
+                    borderLeft: `3px solid ${result >= 0 ? 'var(--color-sorted)' : 'var(--accent)'}`,
                     borderRadius: '0px',
                     fontFamily: "'JetBrains Mono', monospace",
                     fontWeight: 600,
                     fontSize: 15,
-                    color: COLORS.fg,
+                    color: 'var(--fg)',
                     display: 'inline-block'
                   }}
                 >

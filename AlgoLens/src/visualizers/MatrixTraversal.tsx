@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
   SpeedControl, StepCounter, StatusMessage, ControlButton, Legend,
   CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
   SplitLayout, SplitLeft, SplitRight
-} from '../components/ui/AnimationComponents'
+} from '../components/ui/shared'
 
 const spiralPythonCode = `def spiral_traverse(matrix):
     result = []
@@ -93,7 +93,7 @@ export default function SpiralMatrixVisualizer() {
         setVisitedCells(prev => new Set([...prev, `${step.row}-${step.col}`]))
       }
       if (currentStep < steps.length - 1) {
-        const t = setTimeout(() => setCurrentStep(cs => cs + 1), speed)
+        const t = setTimeout(() => setCurrentStep(cs => cs + 1), SPEED_PRESETS[speed])
         return () => clearTimeout(t)
       } else { setRunning(false) }
     }
@@ -103,21 +103,21 @@ export default function SpiralMatrixVisualizer() {
   const isFinalStep = currentStep === steps.length - 1 && !running
 
   const legendItems = [
-    { color: COLORS.active, label: 'Current' },
-    { color: COLORS.comparing, label: 'Layer 1' },
-    { color: COLORS.pivot, label: 'Layer 2' },
-    { color: COLORS.sorted, label: 'Visited' }
+    { color: 'var(--color-active)', label: 'Current' },
+    { color: 'var(--color-comparing)', label: 'Layer 1' },
+    { color: 'var(--color-pivot)', label: 'Layer 2' },
+    { color: 'var(--color-sorted)', label: 'Visited' }
   ]
 
-  const layerColors = [COLORS.comparing, COLORS.pivot, '#ec4899', COLORS.exploring, COLORS.sorted]
-  const labelStyle = { fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', color: COLORS.fgMuted }
+  const layerColors = ['var(--color-comparing)', 'var(--color-pivot)', '#ec4899', 'var(--color-exploring)', 'var(--color-sorted)']
+  const labelStyle = { fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--fg-muted)' }
 
   return (
     <PageContainer title="Spiral Matrix Traversal">
       <SplitLayout>
         <SplitLeft>
           <ExplanationBox>
-            <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Spiral Matrix Traversal?</h3>
+            <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Spiral Matrix Traversal?</h3>
             <p>
               Spiral Matrix Traversal is a popular matrix manipulation problem that visits all elements of
               an N×N (or M×N) matrix in a clockwise spiral order — starting from the top-left corner, moving
@@ -146,14 +146,14 @@ export default function SpiralMatrixVisualizer() {
             </ul>
             <p style={{ marginTop: 12 }}><strong>Time Complexity:</strong> O(N²) — every element is visited exactly once</p>
             <p style={{ marginTop: 4 }}><strong>Space Complexity:</strong> O(1) extra space (excluding the output array)</p>
-            <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+            <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
               <strong>Common variations:</strong> Counter-clockwise spiral, printing a matrix in anti-spiral order,
               generating a spiral matrix from 1 to N², and spiral order for non-square matrices. Frequently
               asked in technical interviews at companies like Google, Amazon, and Meta.
             </p>
           </ExplanationBox>
 
-          <CodeBlock code={spiralPythonCode} onCopy={() => { }} />
+          <CodeBlock code={spiralPythonCode} />
         </SplitLeft>
         <SplitRight>
           <VisualizationContainer>
@@ -162,13 +162,13 @@ export default function SpiralMatrixVisualizer() {
               <input type="number" min="2" max="8" value={N}
                 onChange={e => setN(Math.max(2, Math.min(8, +e.target.value)))}
                 disabled={running}
-                style={{ width: 60, padding: '8px 12px', fontSize: 14, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, textAlign: 'center', border: `1px solid ${COLORS.border}`, borderRadius: '0px', background: COLORS.surface }} />
+                style={{ width: 60, padding: '8px 12px', fontSize: 14, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, textAlign: 'center', border: `1px solid ${'var(--border)'}`, borderRadius: '0px', background: 'var(--surface)' }} />
             </div>
 
             <AnimatePresence mode="wait">
               {step && (
                 <motion.div key={currentStep} initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                  style={{ marginBottom: 12, padding: '6px 14px', background: COLORS.surface, border: `1px solid ${layerColors[step.layer % layerColors.length]}`, borderLeft: `3px solid ${layerColors[step.layer % layerColors.length]}`, borderRadius: '0px', ...labelStyle, display: 'inline-block', color: COLORS.fg }}>
+                  style={{ marginBottom: 12, padding: '6px 14px', background: 'var(--surface)', border: `1px solid ${layerColors[step.layer % layerColors.length]}`, borderLeft: `3px solid ${layerColors[step.layer % layerColors.length]}`, borderRadius: '0px', ...labelStyle, display: 'inline-block', color: 'var(--fg)' }}>
                   {step.direction} · Layer {step.layer + 1}
                 </motion.div>
               )}
@@ -180,9 +180,9 @@ export default function SpiralMatrixVisualizer() {
                 const isVisited = visitedCells.has(`${i}-${j}`)
                 return (
                   <motion.div key={`${i}-${j}`}
-                    animate={{ scale: isCurrent ? 1.1 : 1, backgroundColor: isCurrent ? COLORS.active : isVisited ? COLORS.sorted : COLORS.surface }}
+                    animate={{ scale: isCurrent ? 1.1 : 1, backgroundColor: isCurrent ? 'var(--color-active)' : isVisited ? 'var(--color-sorted)' : 'var(--surface)' }}
                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                    style={{ width: 50, height: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '2px', fontFamily: "'JetBrains Mono', monospace", fontSize: 14, fontWeight: 700, color: (isCurrent || isVisited) ? '#fff' : COLORS.fg, border: `1px solid ${isCurrent ? COLORS.active : COLORS.border}` }}>
+                    style={{ width: 50, height: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '2px', fontFamily: "'JetBrains Mono', monospace", fontSize: 14, fontWeight: 700, color: (isCurrent || isVisited) ? '#fff' : 'var(--fg)', border: `1px solid ${isCurrent ? 'var(--color-active)' : 'var(--border)'}` }}>
                     {val}
                   </motion.div>
                 )
@@ -193,12 +193,12 @@ export default function SpiralMatrixVisualizer() {
 
             {result.length > 0 && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                style={{ marginTop: 24, padding: '14px 20px', background: COLORS.surface, border: `1px solid ${COLORS.border}`, borderRadius: '0px', maxWidth: 600 }}>
+                style={{ marginTop: 24, padding: '14px 20px', background: 'var(--surface)', border: `1px solid ${'var(--border)'}`, borderRadius: '0px', maxWidth: 600 }}>
                 <div style={{ ...labelStyle, marginBottom: 8, fontSize: '11px', letterSpacing: '0.06em' }}>Traversal Order</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                   {result.map((val, i) => (
                     <motion.span key={i} initial={{ scale: 0 }} animate={{ scale: 1 }}
-                      style={{ padding: '3px 8px', background: i === result.length - 1 ? COLORS.active : COLORS.sorted, borderRadius: '0px', color: '#fff', fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: 12 }}>
+                      style={{ padding: '3px 8px', background: i === result.length - 1 ? 'var(--color-active)' : 'var(--color-sorted)', borderRadius: '0px', color: '#fff', fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: 12 }}>
                       {val}
                     </motion.span>
                   ))}
@@ -220,7 +220,7 @@ export default function SpiralMatrixVisualizer() {
               {isFinalStep && (
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                   transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ marginTop: 24, padding: '12px 20px', background: COLORS.surface, border: `1px solid ${COLORS.sorted}`, borderLeft: `3px solid ${COLORS.sorted}`, borderRadius: '0px', fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: 15, color: COLORS.fg, display: 'inline-block' }}>
+                  style={{ marginTop: 24, padding: '12px 20px', background: 'var(--surface)', border: `1px solid ${'var(--color-sorted)'}`, borderLeft: `3px solid ${'var(--color-sorted)'}`, borderRadius: '0px', fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: 15, color: 'var(--fg)', display: 'inline-block' }}>
                   ✓ Traversal complete — {N * N} elements visited
                 </motion.div>
               )}

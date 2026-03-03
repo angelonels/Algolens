@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
   SpeedControl,
   StepCounter,
@@ -14,7 +14,7 @@ import {
   SplitLayout,
   SplitLeft,
   SplitRight
-} from '../components/ui/AnimationComponents'
+} from '../components/ui/shared'
 
 const gcdPythonCode = `def gcd(a, b):
     while b != 0:
@@ -27,7 +27,7 @@ export default function GCDVisualizer() {
   const [steps, setSteps] = useState([])
   const [currentStep, setCurrentStep] = useState(-1)
   const [running, setRunning] = useState(false)
-  const [speed, setSpeed] = useState(SPEED_PRESETS.normal)
+  const [speed, setSpeed] = useState('1x' as SpeedKey)
   const [isPaused, setIsPaused] = useState(false)
   const [result, setResult] = useState(null)
 
@@ -92,7 +92,7 @@ export default function GCDVisualizer() {
   useEffect(() => {
     if (running && !isPaused && currentStep >= 0) {
       if (currentStep < steps.length - 1) {
-        const t = setTimeout(() => setCurrentStep(cs => cs + 1), speed)
+        const t = setTimeout(() => setCurrentStep(cs => cs + 1), SPEED_PRESETS[speed])
         return () => clearTimeout(t)
       } else {
         setRunning(false)
@@ -112,9 +112,9 @@ export default function GCDVisualizer() {
     fontFamily: "'JetBrains Mono', monospace",
     fontWeight: 600,
     textAlign: 'center',
-    border: `1px solid ${COLORS.border}`,
+    border: `1px solid ${'var(--border)'}`,
     borderRadius: '0px',
-    background: COLORS.surface
+    background: 'var(--surface)'
   }
 
   const labelStyle = {
@@ -124,7 +124,7 @@ export default function GCDVisualizer() {
     fontSize: '12px',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
-    color: COLORS.fgMuted
+    color: 'var(--fg-muted)'
   }
 
   return (
@@ -132,7 +132,7 @@ export default function GCDVisualizer() {
       <SplitLayout>
         <SplitLeft>
           <ExplanationBox>
-            <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is the Euclidean Algorithm?</h3>
+            <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is the Euclidean Algorithm?</h3>
             <p>
               The Euclidean algorithm is one of the oldest known algorithms, dating back to around 300 BC
               in Euclid's <em>Elements</em>. It efficiently computes the <strong>Greatest Common Divisor (GCD)</strong> of
@@ -175,14 +175,14 @@ export default function GCDVisualizer() {
             <p style={{ marginTop: 4 }}>
               <strong>Space Complexity:</strong> O(1) iterative | O(log min(a, b)) recursive
             </p>
-            <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+            <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
               <strong>Real-world uses:</strong> Simplifying fractions, cryptographic key generation (RSA),
               computing least common multiples (LCM = a·b / gcd(a,b)), Bézout's identity, and modular
               arithmetic in competitive programming.
             </p>
           </ExplanationBox>
 
-          <CodeBlock code={gcdPythonCode} onCopy={() => { }} />
+          <CodeBlock code={gcdPythonCode} />
         </SplitLeft>
         <SplitRight>
           <VisualizationContainer>
@@ -235,9 +235,9 @@ export default function GCDVisualizer() {
                     animate={{ scale: step.phase === 'compute' ? 1.04 : 1 }}
                     style={{
                       padding: '16px 24px',
-                      background: COLORS.surface,
-                      border: `1px solid ${COLORS.comparing}`,
-                      borderTop: `3px solid ${COLORS.comparing}`,
+                      background: 'var(--surface)',
+                      border: `1px solid ${'var(--color-comparing)'}`,
+                      borderTop: `3px solid ${'var(--color-comparing)'}`,
                       borderRadius: '0px',
                       textAlign: 'center'
                     }}
@@ -247,7 +247,7 @@ export default function GCDVisualizer() {
                       fontSize: 11,
                       textTransform: 'uppercase',
                       letterSpacing: '0.08em',
-                      color: COLORS.fgMuted,
+                      color: 'var(--fg-muted)',
                       marginBottom: 4
                     }}>a</div>
                     <motion.div
@@ -258,7 +258,7 @@ export default function GCDVisualizer() {
                         fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 28,
                         fontWeight: 700,
-                        color: COLORS.fg
+                        color: 'var(--fg)'
                       }}
                     >
                       {step.x}
@@ -268,7 +268,7 @@ export default function GCDVisualizer() {
                   <div style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 20,
-                    color: COLORS.fgMuted
+                    color: 'var(--fg-muted)'
                   }}>
                     %
                   </div>
@@ -277,9 +277,9 @@ export default function GCDVisualizer() {
                     animate={{ scale: step.phase === 'compute' ? 1.04 : 1 }}
                     style={{
                       padding: '16px 24px',
-                      background: COLORS.surface,
-                      border: `1px solid ${COLORS.pivot}`,
-                      borderTop: `3px solid ${COLORS.pivot}`,
+                      background: 'var(--surface)',
+                      border: `1px solid ${'var(--color-pivot)'}`,
+                      borderTop: `3px solid ${'var(--color-pivot)'}`,
                       borderRadius: '0px',
                       textAlign: 'center'
                     }}
@@ -289,7 +289,7 @@ export default function GCDVisualizer() {
                       fontSize: 11,
                       textTransform: 'uppercase',
                       letterSpacing: '0.08em',
-                      color: COLORS.fgMuted,
+                      color: 'var(--fg-muted)',
                       marginBottom: 4
                     }}>b</div>
                     <motion.div
@@ -300,7 +300,7 @@ export default function GCDVisualizer() {
                         fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 28,
                         fontWeight: 700,
-                        color: COLORS.fg
+                        color: 'var(--fg)'
                       }}
                     >
                       {step.y}
@@ -312,7 +312,7 @@ export default function GCDVisualizer() {
                       <div style={{
                         fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 20,
-                        color: COLORS.fgMuted
+                        color: 'var(--fg-muted)'
                       }}>
                         =
                       </div>
@@ -321,9 +321,9 @@ export default function GCDVisualizer() {
                         animate={{ scale: 1, opacity: 1 }}
                         style={{
                           padding: '16px 24px',
-                          background: COLORS.surface,
-                          border: `1px solid ${COLORS.active}`,
-                          borderTop: `3px solid ${COLORS.active}`,
+                          background: 'var(--surface)',
+                          border: `1px solid ${'var(--color-active)'}`,
+                          borderTop: `3px solid ${'var(--color-active)'}`,
                           borderRadius: '0px',
                           textAlign: 'center'
                         }}
@@ -333,14 +333,14 @@ export default function GCDVisualizer() {
                           fontSize: 11,
                           textTransform: 'uppercase',
                           letterSpacing: '0.08em',
-                          color: COLORS.fgMuted,
+                          color: 'var(--fg-muted)',
                           marginBottom: 4
                         }}>remainder</div>
                         <div style={{
                           fontFamily: "'JetBrains Mono', monospace",
                           fontSize: 28,
                           fontWeight: 700,
-                          color: COLORS.fg
+                          color: 'var(--fg)'
                         }}>{step.r}</div>
                       </motion.div>
                     </>
@@ -369,9 +369,9 @@ export default function GCDVisualizer() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
                   style={{
-                    background: COLORS.surface,
-                    border: `1px solid ${st.phase === 'done' ? COLORS.sorted : COLORS.border}`,
-                    borderLeft: st.phase === 'done' ? `3px solid ${COLORS.sorted}` : `1px solid ${COLORS.border}`,
+                    background: 'var(--surface)',
+                    border: `1px solid ${st.phase === 'done' ? 'var(--color-sorted)' : 'var(--border)'}`,
+                    borderLeft: st.phase === 'done' ? `3px solid ${'var(--color-sorted)'}` : `1px solid ${'var(--border)'}`,
                     padding: '10px 16px',
                     margin: '4px 0',
                     borderRadius: '0px',
@@ -379,7 +379,7 @@ export default function GCDVisualizer() {
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 13,
                     fontWeight: 600,
-                    color: COLORS.fg
+                    color: 'var(--fg)'
                   }}
                 >
                   {st.message}
@@ -425,14 +425,14 @@ export default function GCDVisualizer() {
                   style={{
                     marginTop: 24,
                     padding: '14px 24px',
-                    background: COLORS.surface,
-                    border: `1px solid ${COLORS.sorted}`,
-                    borderLeft: `3px solid ${COLORS.sorted}`,
+                    background: 'var(--surface)',
+                    border: `1px solid ${'var(--color-sorted)'}`,
+                    borderLeft: `3px solid ${'var(--color-sorted)'}`,
                     borderRadius: '0px',
                     fontFamily: "'JetBrains Mono', monospace",
                     fontWeight: 700,
                     fontSize: 18,
-                    color: COLORS.fg,
+                    color: 'var(--fg)',
                     display: 'inline-block'
                   }}
                 >

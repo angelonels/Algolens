@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
     SpeedControl, StepCounter, StatusMessage, ControlButton, Legend,
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
-} from '../components/ui/AnimationComponents'
+} from '../components/ui/shared'
 
 const dfsPythonCode = `def dfs(grid, start, end):
     rows, cols = len(grid), len(grid[0])
@@ -164,7 +164,7 @@ export default function DFSGridVisualizer() {
 
     useEffect(() => {
         if (running && !isPaused && currentStep >= 0 && currentStep < steps.length - 1) {
-            const t = setTimeout(() => setCurrentStep(cs => cs + 1), speed)
+            const t = setTimeout(() => setCurrentStep(cs => cs + 1), SPEED_PRESETS[speed])
             return () => clearTimeout(t)
         } else if (running && currentStep >= steps.length - 1) {
             setRunning(false)
@@ -190,23 +190,23 @@ export default function DFSGridVisualizer() {
     }
 
     const cellColors = {
-        empty: COLORS.surface,
-        wall: COLORS.fg,
-        start: COLORS.accent,
-        end: COLORS.sorted,
-        current: COLORS.active,
-        inStack: COLORS.swapping,
+        empty: 'var(--surface)',
+        wall: 'var(--fg)',
+        start: 'var(--accent)',
+        end: 'var(--color-sorted)',
+        current: 'var(--color-active)',
+        inStack: 'var(--color-swapping)',
         visited: '#c7d2fe',
-        path: COLORS.active
+        path: 'var(--color-active)'
     }
 
     const legendItems = [
-        { color: COLORS.accent, label: 'Start' },
-        { color: COLORS.sorted, label: 'End' },
-        { color: COLORS.fg, label: 'Wall' },
-        { color: COLORS.swapping, label: 'In Stack' },
+        { color: 'var(--accent)', label: 'Start' },
+        { color: 'var(--color-sorted)', label: 'End' },
+        { color: 'var(--fg)', label: 'Wall' },
+        { color: 'var(--color-swapping)', label: 'In Stack' },
         { color: '#c7d2fe', label: 'Visited' },
-        { color: COLORS.active, label: 'Path' }
+        { color: 'var(--color-active)', label: 'Path' }
     ]
 
     const isFinalStep = currentStep === steps.length - 1 && !running
@@ -216,7 +216,7 @@ export default function DFSGridVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Depth-First Search?</h3>
+                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Depth-First Search?</h3>
                         <p>
                             Depth-First Search (DFS) is a fundamental graph traversal algorithm that explores
                             as <strong>far as possible</strong> along each branch before backtracking. It uses a
@@ -258,14 +258,14 @@ export default function DFSGridVisualizer() {
                         <p style={{ marginTop: 4 }}>
                             <strong>Space Complexity:</strong> O(V) in the worst case for the stack and visited set
                         </p>
-                        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
                             <strong>Real-world uses:</strong> Maze generation, puzzle solving (Sudoku backtracking),
                             topological ordering of build dependencies, detecting cycles in graphs, and finding
                             connected components in networks.
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={dfsPythonCode} onCopy={() => { }} />
+                    <CodeBlock code={dfsPythonCode} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>
@@ -274,13 +274,13 @@ export default function DFSGridVisualizer() {
                             <div style={{
                                 marginBottom: 16,
                                 padding: '8px 14px',
-                                background: COLORS.surface,
-                                border: `1px solid ${COLORS.border}`,
-                                borderLeft: `3px solid ${COLORS.swapping}`,
+                                background: 'var(--surface)',
+                                border: `1px solid ${'var(--border)'}`,
+                                borderLeft: `3px solid ${'var(--color-swapping)'}`,
                                 borderRadius: '0px',
                                 fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: '12px',
-                                color: COLORS.fgMuted
+                                color: 'var(--fg-muted)'
                             }}>
                                 Click cells to toggle walls, or use "Random Maze" to generate obstacles
                             </div>
@@ -303,8 +303,8 @@ export default function DFSGridVisualizer() {
                                 display: 'grid',
                                 gridTemplateColumns: `repeat(${COLS}, 1fr)`,
                                 gap: 1,
-                                background: COLORS.border,
-                                border: `1px solid ${COLORS.border}`,
+                                background: 'var(--border)',
+                                border: `1px solid ${'var(--border)'}`,
                                 maxWidth: 500,
                                 margin: '16px auto',
                                 userSelect: 'none'
@@ -395,14 +395,14 @@ export default function DFSGridVisualizer() {
                                     style={{
                                         marginTop: 24,
                                         padding: '12px 20px',
-                                        background: COLORS.surface,
-                                        border: `1px solid ${step.phase === 'found' ? COLORS.sorted : COLORS.accent}`,
-                                        borderLeft: `3px solid ${step.phase === 'found' ? COLORS.sorted : COLORS.accent}`,
+                                        background: 'var(--surface)',
+                                        border: `1px solid ${step.phase === 'found' ? 'var(--color-sorted)' : 'var(--accent)'}`,
+                                        borderLeft: `3px solid ${step.phase === 'found' ? 'var(--color-sorted)' : 'var(--accent)'}`,
                                         borderRadius: '0px',
                                         fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600,
                                         fontSize: 15,
-                                        color: COLORS.fg,
+                                        color: 'var(--fg)',
                                         display: 'inline-block'
                                     }}
                                 >

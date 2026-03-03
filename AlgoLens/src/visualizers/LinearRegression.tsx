@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
     SpeedControl, StepCounter, StatusMessage, ControlButton,
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
-} from '../components/ui/AnimationComponents'
+} from '../components/ui/shared'
 
 const lrPythonCode = `import numpy as np
 
@@ -135,7 +135,7 @@ export default function LinearRegressionVisualizer() {
 
     useEffect(() => {
         if (running && !isPaused && currentStep >= 0 && currentStep < steps.length - 1) {
-            const t = setTimeout(() => setCurrentStep(cs => cs + 1), speed)
+            const t = setTimeout(() => setCurrentStep(cs => cs + 1), SPEED_PRESETS[speed])
             return () => clearTimeout(t)
         } else if (running && currentStep >= steps.length - 1) {
             setRunning(false)
@@ -351,7 +351,7 @@ export default function LinearRegressionVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Linear Regression?</h3>
+                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Linear Regression?</h3>
                         <p>
                             Linear Regression is a foundational <strong>supervised learning</strong> algorithm that
                             models the relationship between a dependent variable y and one or more independent
@@ -385,13 +385,13 @@ export default function LinearRegressionVisualizer() {
                         <p style={{ marginTop: 4 }}>
                             <strong>Space Complexity:</strong> O(n) to store the dataset
                         </p>
-                        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
                             <strong>Real-world uses:</strong> House price prediction, stock forecasting, trend analysis,
                             scientific modeling, and as a building block for more complex models like neural networks.
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={lrPythonCode} onCopy={() => { }} />
+                    <CodeBlock code={lrPythonCode} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>
@@ -409,7 +409,7 @@ export default function LinearRegressionVisualizer() {
                         {/* Main scatter plot */}
                         <div style={{
                             margin: '12px auto',
-                            border: `1px solid ${COLORS.border}`,
+                            border: `1px solid ${'var(--border)'}`,
                             borderRadius: '2px',
                             overflow: 'hidden',
                             width: W
@@ -441,16 +441,16 @@ export default function LinearRegressionVisualizer() {
                                 ].map(({ label, val }) => (
                                     <div key={label} style={{
                                         padding: '4px 10px',
-                                        background: COLORS.surface,
-                                        border: `1px solid ${COLORS.border}`,
+                                        background: 'var(--surface)',
+                                        border: `1px solid ${'var(--border)'}`,
                                         fontFamily: "'JetBrains Mono', monospace",
                                         fontSize: 10,
                                         fontWeight: 600,
                                         textTransform: 'uppercase',
                                         letterSpacing: '0.04em',
-                                        color: COLORS.fgMuted
+                                        color: 'var(--fg-muted)'
                                     }}>
-                                        <span style={{ color: COLORS.fg }}>{val}</span> {label}
+                                        <span style={{ color: 'var(--fg)' }}>{val}</span> {label}
                                     </div>
                                 ))}
                             </motion.div>
@@ -464,7 +464,7 @@ export default function LinearRegressionVisualizer() {
                                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                                 style={{
                                     margin: '8px auto',
-                                    border: `1px solid ${COLORS.border}`,
+                                    border: `1px solid ${'var(--border)'}`,
                                     borderRadius: '2px',
                                     overflow: 'hidden',
                                     width: COST_W
@@ -480,7 +480,7 @@ export default function LinearRegressionVisualizer() {
                         {/* Toggle */}
                         <div style={{
                             display: 'flex', gap: 12, justifyContent: 'center', margin: '8px 0',
-                            fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: COLORS.fgMuted
+                            fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--fg-muted)'
                         }}>
                             <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
                                 <input
@@ -529,14 +529,14 @@ export default function LinearRegressionVisualizer() {
                                     style={{
                                         marginTop: 20,
                                         padding: '12px 20px',
-                                        background: COLORS.surface,
-                                        border: `1px solid ${COLORS.sorted}`,
-                                        borderLeft: `3px solid ${COLORS.sorted}`,
+                                        background: 'var(--surface)',
+                                        border: `1px solid ${'var(--color-sorted)'}`,
+                                        borderLeft: `3px solid ${'var(--color-sorted)'}`,
                                         borderRadius: '0px',
                                         fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600,
                                         fontSize: 14,
-                                        color: COLORS.fg,
+                                        color: 'var(--fg)',
                                         display: 'inline-block'
                                     }}
                                 >

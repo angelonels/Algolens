@@ -10,9 +10,9 @@ import BinarySearch from './visualizers/BinarySearch'
 import BubbleSort from './visualizers/BubbleSort'
 import InsertionSort from './visualizers/InsertionSort'
 import MergeSort from './visualizers/MergeSort'
+import QuickSort from './visualizers/QuickSort'
 import EuclideanGCD from './visualizers/EuclideanGCD'
 import MatrixTraversal from './visualizers/MatrixTraversal'
-import QuickSort from './visualizers/QuickSort'
 import DijkstraPath from './visualizers/DijkstraPath'
 import BFSGrid from './visualizers/BFSGrid'
 import DFSGrid from './visualizers/DFSGrid'
@@ -22,7 +22,9 @@ import LinearRegression from './visualizers/LinearRegression'
 import LogisticRegression from './visualizers/LogisticRegression'
 import DecisionTree from './visualizers/DecisionTree'
 
-function PageTransition({ children }) {
+import type { ReactNode } from 'react'
+
+function PageWrap({ children }: { children: ReactNode }) {
   return (
     <motion.div
       initial={PAGE_TRANSITION.initial}
@@ -35,28 +37,33 @@ function PageTransition({ children }) {
   )
 }
 
+const routes = [
+  { path: '/binary-search', element: <BinarySearch /> },
+  { path: '/bubble-sort', element: <BubbleSort /> },
+  { path: '/insertion-sort', element: <InsertionSort /> },
+  { path: '/merge-sort', element: <MergeSort /> },
+  { path: '/quick-sort', element: <QuickSort /> },
+  { path: '/gcd', element: <EuclideanGCD /> },
+  { path: '/matrix-traversal', element: <MatrixTraversal /> },
+  { path: '/dijkstra', element: <DijkstraPath /> },
+  { path: '/bfs', element: <BFSGrid /> },
+  { path: '/dfs', element: <DFSGrid /> },
+  { path: '/kmeans', element: <KMeans /> },
+  { path: '/edit-distance', element: <EditDistance /> },
+  { path: '/linear-regression', element: <LinearRegression /> },
+  { path: '/logistic-regression', element: <LogisticRegression /> },
+  { path: '/decision-tree', element: <DecisionTree /> },
+]
+
 function AnimatedRoutes() {
   const location = useLocation()
-
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-        <Route path="/binary-search" element={<PageTransition><BinarySearch /></PageTransition>} />
-        <Route path="/bubble-sort" element={<PageTransition><BubbleSort /></PageTransition>} />
-        <Route path="/insertion-sort" element={<PageTransition><InsertionSort /></PageTransition>} />
-        <Route path="/merge-sort" element={<PageTransition><MergeSort /></PageTransition>} />
-        <Route path="/gcd" element={<PageTransition><EuclideanGCD /></PageTransition>} />
-        <Route path="/matrix-traversal" element={<PageTransition><MatrixTraversal /></PageTransition>} />
-        <Route path="/quick-sort" element={<PageTransition><QuickSort /></PageTransition>} />
-        <Route path="/dijkstra" element={<PageTransition><DijkstraPath /></PageTransition>} />
-        <Route path="/bfs" element={<PageTransition><BFSGrid /></PageTransition>} />
-        <Route path="/dfs" element={<PageTransition><DFSGrid /></PageTransition>} />
-        <Route path="/kmeans" element={<PageTransition><KMeans /></PageTransition>} />
-        <Route path="/edit-distance" element={<PageTransition><EditDistance /></PageTransition>} />
-        <Route path="/linear-regression" element={<PageTransition><LinearRegression /></PageTransition>} />
-        <Route path="/logistic-regression" element={<PageTransition><LogisticRegression /></PageTransition>} />
-        <Route path="/decision-tree" element={<PageTransition><DecisionTree /></PageTransition>} />
+        <Route path="/" element={<PageWrap><Home /></PageWrap>} />
+        {routes.map(r => (
+          <Route key={r.path} path={r.path} element={<PageWrap>{r.element}</PageWrap>} />
+        ))}
       </Routes>
     </AnimatePresence>
   )

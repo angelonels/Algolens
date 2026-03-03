@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
     SpeedControl, StepCounter, StatusMessage, ControlButton, Legend,
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
-} from '../components/ui/AnimationComponents'
+} from '../components/ui/shared'
 
 const kmeansPythonCode = `import random
 import math
@@ -162,7 +162,7 @@ export default function KMeansVisualizer() {
 
     useEffect(() => {
         if (running && !isPaused && currentStep >= 0 && currentStep < steps.length - 1) {
-            const t = setTimeout(() => setCurrentStep(cs => cs + 1), speed)
+            const t = setTimeout(() => setCurrentStep(cs => cs + 1), SPEED_PRESETS[speed])
             return () => clearTimeout(t)
         } else if (running && currentStep >= steps.length - 1) {
             setRunning(false)
@@ -186,7 +186,7 @@ export default function KMeansVisualizer() {
         fontSize: '12px',
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
-        color: COLORS.fgMuted
+        color: 'var(--fg-muted)'
     }
 
     return (
@@ -194,7 +194,7 @@ export default function KMeansVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is K-Means Clustering?</h3>
+                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is K-Means Clustering?</h3>
                         <p>
                             K-Means is one of the most popular <strong>unsupervised machine learning</strong> algorithms.
                             Given a set of data points, it partitions them into <strong>k clusters</strong> where each
@@ -226,13 +226,13 @@ export default function KMeansVisualizer() {
                         <p style={{ marginTop: 4 }}>
                             <strong>Space Complexity:</strong> O(n + k) for storing assignments and centroids
                         </p>
-                        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
                             <strong>Real-world uses:</strong> Customer segmentation, image compression (color quantization),
                             anomaly detection, document clustering, recommendation systems, and market analysis.
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={kmeansPythonCode} onCopy={() => { }} />
+                    <CodeBlock code={kmeansPythonCode} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>
@@ -247,9 +247,9 @@ export default function KMeansVisualizer() {
                                     fontFamily: "'JetBrains Mono', monospace",
                                     fontSize: 13,
                                     padding: '4px 8px',
-                                    border: `1px solid ${COLORS.border}`,
+                                    border: `1px solid ${'var(--border)'}`,
                                     borderRadius: '0px',
-                                    background: COLORS.surface,
+                                    background: 'var(--surface)',
                                     cursor: 'pointer'
                                 }}
                             >
@@ -276,14 +276,14 @@ export default function KMeansVisualizer() {
                             width: CANVAS_W,
                             height: CANVAS_H,
                             margin: '16px auto',
-                            background: COLORS.surface,
-                            border: `1px solid ${COLORS.border}`,
+                            background: 'var(--surface)',
+                            border: `1px solid ${'var(--border)'}`,
                             overflow: 'hidden'
                         }}>
                             {/* Data Points */}
                             {step.points.map((p, i) => {
                                 const a = step.assignments[i]
-                                const color = a >= 0 ? CLUSTER_COLORS[a % CLUSTER_COLORS.length] : COLORS.fgMuted
+                                const color = a >= 0 ? CLUSTER_COLORS[a % CLUSTER_COLORS.length] : 'var(--fg-muted)'
                                 return (
                                     <motion.div
                                         key={`p-${i}`}
@@ -345,7 +345,7 @@ export default function KMeansVisualizer() {
                             gap: 16,
                             justifyContent: 'center',
                             padding: '12px 0',
-                            borderTop: `1px solid ${COLORS.border}`,
+                            borderTop: `1px solid ${'var(--border)'}`,
                             marginBottom: 8
                         }}>
                             {Array.from({ length: k }, (_, i) => (
@@ -358,7 +358,7 @@ export default function KMeansVisualizer() {
                                     fontWeight: 600,
                                     textTransform: 'uppercase',
                                     letterSpacing: '0.04em',
-                                    color: COLORS.fgMuted
+                                    color: 'var(--fg-muted)'
                                 }}>
                                     <div style={{
                                         width: 10, height: 10,
@@ -415,14 +415,14 @@ export default function KMeansVisualizer() {
                                     style={{
                                         marginTop: 24,
                                         padding: '12px 20px',
-                                        background: COLORS.surface,
-                                        border: `1px solid ${COLORS.sorted}`,
-                                        borderLeft: `3px solid ${COLORS.sorted}`,
+                                        background: 'var(--surface)',
+                                        border: `1px solid ${'var(--color-sorted)'}`,
+                                        borderLeft: `3px solid ${'var(--color-sorted)'}`,
                                         borderRadius: '0px',
                                         fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600,
                                         fontSize: 15,
-                                        color: COLORS.fg,
+                                        color: 'var(--fg)',
                                         display: 'inline-block'
                                     }}
                                 >

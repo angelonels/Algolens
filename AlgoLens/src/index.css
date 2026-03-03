@@ -1,21 +1,18 @@
+@import "tailwindcss";
+
 /* ═══════════════════════════════════════════
-   ALGOLENS — Design System
-   Swiss-Style / Neobrutalist Hybrid
+   ALGOLENS — Tailwind v4 Theme
    ═══════════════════════════════════════════ */
 
-:root {
-  /* ── Color Palette ── */
-  --bg: #f5f0e8;
-  --bg-alt: #eee9df;
-  --surface: #ffffff;
-  --fg: #0a0a0a;
-  --fg-muted: #6b6b60;
-  --accent: #e63312;
-  --accent-hover: #c72a0e;
-  --border: #d4d0c8;
-  --border-strong: #0a0a0a;
+@theme {
+  /* Typography */
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-  /* ── Semantic State Colors ── */
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Semantic Algorithm Colors */
   --color-comparing: #2563eb;
   --color-swapping: #e63312;
   --color-sorted: #16a34a;
@@ -25,36 +22,26 @@
   --color-pivot: #7c3aed;
   --color-visited: #0891b2;
   --color-exploring: #ea580c;
-  --color-default-el: #e8e4dc;
   --color-eliminated: #b0ada5;
-
-  /* ── Code Block ── */
-  --code-bg: #0a0a0a;
-  --code-fg: #e8e4dc;
-
-  /* ── Typography ── */
-  --font-body: 'Inter', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-
-  /* ── Spacing ── */
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 40px;
-  --space-2xl: 64px;
-
-  /* ── Borders & Radii ── */
-  --radius: 2px;
-  --radius-0: 0px;
-  --border-w: 1px;
-
-  /* ── Motion ── */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration: 150ms;
 }
 
-/* ── Dark Mode ── */
+/* ── Light Theme (default) ── */
+:root {
+  --bg: #f5f0e8;
+  --bg-alt: #eee9df;
+  --surface: #ffffff;
+  --fg: #0a0a0a;
+  --fg-muted: #6b6b60;
+  --accent: #e63312;
+  --accent-hover: #c72a0e;
+  --border: #d4d0c8;
+  --border-strong: #0a0a0a;
+  --el-default: #e8e4dc;
+  --code-bg: #0a0a0a;
+  --code-fg: #e8e4dc;
+}
+
+/* ── Dark Theme ── */
 [data-theme="dark"] {
   --bg: #111111;
   --bg-alt: #1a1a1a;
@@ -65,10 +52,7 @@
   --accent-hover: #e63312;
   --border: #333333;
   --border-strong: #e8e4dc;
-
-  --color-default-el: #2a2a2a;
-  --color-eliminated: #555555;
-
+  --el-default: #2a2a2a;
   --code-bg: #0d0d0d;
   --code-fg: #d4d0c8;
 }
@@ -98,10 +82,9 @@ body {
   background-size: 24px 24px;
   color: var(--fg);
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* ── Typography Hierarchy ── */
+/* ── Typography ── */
 h1,
 h2,
 h3,
@@ -112,37 +95,13 @@ h4 {
   letter-spacing: -0.02em;
 }
 
-h1 {
-  font-size: clamp(2rem, 4vw, 3.2rem);
-}
-
-h2 {
-  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
-}
-
-h3 {
-  font-size: 1.15rem;
-}
-
-h4 {
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--fg-muted);
-}
-
-p {
-  max-width: 65ch;
-  color: var(--fg);
-}
-
 code {
   font-family: var(--font-mono);
   font-size: 0.875em;
   background: var(--bg-alt);
   padding: 2px 6px;
-  border: var(--border-w) solid var(--border);
-  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  border-radius: 2px;
 }
 
 pre {
@@ -151,88 +110,20 @@ pre {
   line-height: 1.65;
 }
 
-/* ── Links ── */
-a {
-  color: var(--fg);
-  text-decoration: none;
-  transition: color var(--duration) var(--ease-out);
-}
-
-a:hover {
-  color: var(--accent);
-}
-
-/* ── Buttons (Global Reset) ── */
-button {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 10px 20px;
-  background-color: var(--surface);
-  color: var(--fg);
-  border: 2px solid var(--border-strong);
-  border-radius: var(--radius-0);
-  box-shadow: 3px 3px 0 var(--border-strong);
-  cursor: pointer;
-  transition: all 0.1s var(--ease-out);
-}
-
-button:hover:not(:disabled) {
-  background-color: var(--accent);
-  color: var(--bg);
-  border-color: var(--border-strong);
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 var(--border-strong);
-}
-
-button:active:not(:disabled) {
-  transform: translate(3px, 3px);
-  box-shadow: 0px 0px 0 var(--border-strong);
-}
-
-button:disabled {
-  background-color: var(--bg-alt);
-  border-color: var(--border);
-  color: var(--fg-muted);
-  box-shadow: none;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* ── Inputs & Selects ── */
-input,
-select {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 500;
-  padding: 8px 12px;
-  background: var(--surface);
-  color: var(--fg);
-  border: 2px solid var(--border-strong);
-  border-radius: var(--radius-0);
-  box-shadow: 3px 3px 0 var(--border-strong);
-  outline: none;
-  transition: all 0.1s var(--ease-out);
-}
-
-input:focus,
-select:focus {
-  border-color: var(--accent);
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 var(--accent);
-}
-
 /* ── Selection ── */
 ::selection {
   background-color: var(--accent);
-  color: #ffffff;
+  color: #fff;
 }
 
 [data-theme="dark"] ::selection {
-  background-color: var(--accent);
-  color: #111111;
+  color: #111;
+}
+
+/* ── Focus ── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* ── Scrollbar ── */
@@ -247,74 +138,24 @@ select:focus {
 
 ::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
 
-/* ── Utility: Mono label ── */
-.mono {
-  font-family: var(--font-mono);
-}
-
-/* ── Utility: Accent text ── */
-.accent {
-  color: var(--accent);
-}
-
-/* ── Focus Ring (Accessibility) ── */
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-button:focus-visible,
-select:focus-visible,
-input:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(230, 51, 18, 0.15);
-}
-
-/* ── Theme Transition (scoped) ── */
+/* ── Theme Transitions (scoped) ── */
 body,
 nav,
-.algo-card,
 select,
 input,
 button,
 pre,
 code {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
-/* ── Keyframe Animations ── */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
+/* ── Keyframes ── */
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -325,7 +166,7 @@ code {
   }
 }
 
-@keyframes pulseGlow {
+@keyframes pulse-glow {
 
   0%,
   100% {
@@ -337,7 +178,7 @@ code {
   }
 }
 
-/* ── Card Hover Shine (CSS pseudo-element) ── */
+/* ── Card Hover Shine ── */
 .algo-card {
   overflow: hidden;
 }
@@ -349,10 +190,7 @@ code {
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(255, 255, 255, 0.06),
-      transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
   transition: left 0.5s ease;
   pointer-events: none;
   z-index: 1;
@@ -363,13 +201,5 @@ code {
 }
 
 [data-theme="dark"] .algo-card::before {
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(255, 255, 255, 0.03),
-      transparent);
-}
-
-/* ── Responsive: Stack split layout on smaller screens ── */
-@media (max-width: 1024px) {
-  /* Override inline flex to column on small screens */
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
 }

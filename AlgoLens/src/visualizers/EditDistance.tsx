@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SPEED_PRESETS, COLORS, SPRING } from '../utils/animationConfig'
+import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
     SpeedControl, StepCounter, StatusMessage, ControlButton, Legend,
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
-} from '../components/ui/AnimationComponents'
+} from '../components/ui/shared'
 
 const editDistPythonCode = `def edit_distance(word1, word2):
     m, n = len(word1), len(word2)
@@ -136,7 +136,7 @@ export default function EditDistanceVisualizer() {
     const [steps, setSteps] = useState([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [running, setRunning] = useState(false)
-    const [speed, setSpeed] = useState(SPEED_PRESETS.normal)
+    const [speed, setSpeed] = useState('1x' as SpeedKey)
     const [isPaused, setIsPaused] = useState(false)
 
     const startDP = () => {
@@ -159,7 +159,7 @@ export default function EditDistanceVisualizer() {
 
     useEffect(() => {
         if (running && !isPaused && currentStep >= 0 && currentStep < steps.length - 1) {
-            const t = setTimeout(() => setCurrentStep(cs => cs + 1), speed)
+            const t = setTimeout(() => setCurrentStep(cs => cs + 1), SPEED_PRESETS[speed])
             return () => clearTimeout(t)
         } else if (running && currentStep >= steps.length - 1) {
             setRunning(false)
@@ -178,17 +178,17 @@ export default function EditDistanceVisualizer() {
         fontSize: '12px',
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
-        color: COLORS.fgMuted
+        color: 'var(--fg-muted)'
     }
 
     const inputStyle = {
         fontFamily: "'JetBrains Mono', monospace",
         fontSize: 14,
         padding: '6px 10px',
-        border: `1px solid ${COLORS.border}`,
+        border: `1px solid ${'var(--border)'}`,
         borderRadius: '0px',
-        background: COLORS.surface,
-        color: COLORS.fg,
+        background: 'var(--surface)',
+        color: 'var(--fg)',
         width: 120
     }
 
@@ -200,18 +200,18 @@ export default function EditDistanceVisualizer() {
         const isOnEditPath = step.editPath && step.editPath.has(k)
         const isFilled = step.filledCells?.has(k)
 
-        if (isCurrent) return { background: COLORS.active, color: '#fff', fontWeight: 800 }
-        if (isOnEditPath) return { background: COLORS.active, color: '#fff', fontWeight: 800 }
-        if (isComparing) return { background: COLORS.comparing, color: '#fff', fontWeight: 700 }
+        if (isCurrent) return { background: 'var(--color-active)', color: '#fff', fontWeight: 800 }
+        if (isOnEditPath) return { background: 'var(--color-active)', color: '#fff', fontWeight: 800 }
+        if (isComparing) return { background: 'var(--color-comparing)', color: '#fff', fontWeight: 700 }
         if (isFilled) {
             const op = step.ops?.[i]?.[j]
-            if (op === 'match') return { background: '#d1fae5', color: COLORS.fg }
-            if (op === 'replace') return { background: '#fef3c7', color: COLORS.fg }
-            if (op === 'delete') return { background: '#fee2e2', color: COLORS.fg }
-            if (op === 'insert') return { background: '#dbeafe', color: COLORS.fg }
-            return { background: '#f3f4f6', color: COLORS.fg }
+            if (op === 'match') return { background: '#d1fae5', color: 'var(--fg)' }
+            if (op === 'replace') return { background: '#fef3c7', color: 'var(--fg)' }
+            if (op === 'delete') return { background: '#fee2e2', color: 'var(--fg)' }
+            if (op === 'insert') return { background: '#dbeafe', color: 'var(--fg)' }
+            return { background: '#f3f4f6', color: 'var(--fg)' }
         }
-        return { background: COLORS.surface, color: '#ccc' }
+        return { background: 'var(--surface)', color: '#ccc' }
     }
 
     const opColors = [
@@ -219,7 +219,7 @@ export default function EditDistanceVisualizer() {
         { color: '#fef3c7', label: 'Replace' },
         { color: '#fee2e2', label: 'Delete' },
         { color: '#dbeafe', label: 'Insert' },
-        { color: COLORS.active, label: 'Current / Path' }
+        { color: 'var(--color-active)', label: 'Current / Path' }
     ]
 
     // Dynamic cell size based on table dimensions
@@ -231,13 +231,13 @@ export default function EditDistanceVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: COLORS.fg }}>What is Edit Distance?</h3>
+                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Edit Distance?</h3>
                         <p>
                             Edit Distance (also known as <strong>Levenshtein Distance</strong>) measures the minimum
                             number of single-character operations required to transform one string into another.
                             It's a classic <strong>dynamic programming</strong> problem
                             (<a href="https://leetcode.com/problems/edit-distance/" target="_blank" rel="noopener noreferrer"
-                                style={{ color: COLORS.accent }}>LeetCode #72</a>).
+                                style={{ color: 'var(--accent)' }}>LeetCode #72</a>).
                         </p>
                         <p style={{ marginTop: 8 }}>
                             The three allowed operations are: <strong>Insert</strong> a character,
@@ -266,13 +266,13 @@ export default function EditDistanceVisualizer() {
                         <p style={{ marginTop: 4 }}>
                             <strong>Space Complexity:</strong> O(m × n) for the DP table (optimizable to O(min(m,n)))
                         </p>
-                        <p style={{ marginTop: 12, color: COLORS.fgMuted, fontSize: '0.9em' }}>
+                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
                             <strong>Real-world uses:</strong> Spell checkers, DNA sequence alignment, diff tools (git diff),
                             fuzzy string matching, autocorrect, and natural language processing.
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={editDistPythonCode} onCopy={() => { }} />
+                    <CodeBlock code={editDistPythonCode} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>
@@ -311,10 +311,10 @@ export default function EditDistanceVisualizer() {
                                         fontFamily: "'JetBrains Mono', monospace",
                                         fontSize: 10,
                                         padding: '4px 8px',
-                                        border: `1px solid ${COLORS.border}`,
+                                        border: `1px solid ${'var(--border)'}`,
                                         borderRadius: '0px',
-                                        background: (word1 === p.word1 && word2 === p.word2) ? COLORS.fg : COLORS.surface,
-                                        color: (word1 === p.word1 && word2 === p.word2) ? '#fff' : COLORS.fgMuted,
+                                        background: (word1 === p.word1 && word2 === p.word2) ? 'var(--fg)' : 'var(--surface)',
+                                        color: (word1 === p.word1 && word2 === p.word2) ? '#fff' : 'var(--fg-muted)',
                                         cursor: 'pointer'
                                     }}
                                 >
@@ -350,13 +350,13 @@ export default function EditDistanceVisualizer() {
                                         <th style={{ width: cellSize, height: cellSize }} />
                                         <th style={{
                                             width: cellSize, height: cellSize,
-                                            fontSize: 11, fontWeight: 600, color: COLORS.fgMuted,
+                                            fontSize: 11, fontWeight: 600, color: 'var(--fg-muted)',
                                             textAlign: 'center'
                                         }}>ε</th>
                                         {word2.split('').map((ch, j) => (
                                             <th key={j} style={{
                                                 width: cellSize, height: cellSize,
-                                                fontSize: 13, fontWeight: 700, color: COLORS.accent,
+                                                fontSize: 13, fontWeight: 700, color: 'var(--accent)',
                                                 textAlign: 'center'
                                             }}>{ch}</th>
                                         ))}
@@ -369,7 +369,7 @@ export default function EditDistanceVisualizer() {
                                                 width: cellSize, height: cellSize,
                                                 fontSize: i === 0 ? 11 : 13,
                                                 fontWeight: i === 0 ? 600 : 700,
-                                                color: i === 0 ? COLORS.fgMuted : COLORS.accent,
+                                                color: i === 0 ? 'var(--fg-muted)' : 'var(--accent)',
                                                 textAlign: 'center'
                                             }}>
                                                 {i === 0 ? 'ε' : word1[i - 1]}
@@ -386,7 +386,7 @@ export default function EditDistanceVisualizer() {
                                                         textAlign: 'center',
                                                         fontSize: 13,
                                                         fontWeight: 600,
-                                                        border: `1px solid ${COLORS.border}`,
+                                                        border: `1px solid ${'var(--border)'}`,
                                                         transition: 'all 0.2s ease',
                                                         ...cellStyle
                                                     }}>
@@ -407,7 +407,7 @@ export default function EditDistanceVisualizer() {
                             gap: 12,
                             justifyContent: 'center',
                             padding: '12px 0',
-                            borderTop: `1px solid ${COLORS.border}`,
+                            borderTop: `1px solid ${'var(--border)'}`,
                             marginBottom: 8
                         }}>
                             {opColors.map(({ color, label }) => (
@@ -420,12 +420,12 @@ export default function EditDistanceVisualizer() {
                                     fontWeight: 600,
                                     textTransform: 'uppercase',
                                     letterSpacing: '0.04em',
-                                    color: COLORS.fgMuted
+                                    color: 'var(--fg-muted)'
                                 }}>
                                     <div style={{
                                         width: 12, height: 12,
                                         backgroundColor: color,
-                                        border: `1px solid ${COLORS.border}`
+                                        border: `1px solid ${'var(--border)'}`
                                     }} />
                                     {label}
                                 </div>
@@ -468,14 +468,14 @@ export default function EditDistanceVisualizer() {
                                     style={{
                                         marginTop: 24,
                                         padding: '12px 20px',
-                                        background: COLORS.surface,
-                                        border: `1px solid ${COLORS.sorted}`,
-                                        borderLeft: `3px solid ${COLORS.sorted}`,
+                                        background: 'var(--surface)',
+                                        border: `1px solid ${'var(--color-sorted)'}`,
+                                        borderLeft: `3px solid ${'var(--color-sorted)'}`,
                                         borderRadius: '0px',
                                         fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600,
                                         fontSize: 15,
-                                        color: COLORS.fg,
+                                        color: 'var(--fg)',
                                         display: 'inline-block'
                                     }}
                                 >
