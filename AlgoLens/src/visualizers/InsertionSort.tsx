@@ -80,7 +80,7 @@ export default function InsertionSortVisualizer() {
 
   const getScale = (i: number) => (step.keyIndex === i || step.insertedIndex === i) ? 1.06 : 1
   const getY = (i: number) => step.keyIndex === i ? -24 : step.shiftIndex === i ? -8 : 0
-  const isFinal = currentStep === steps.length - 1 && !sorting
+  const isFinal = steps.length > 0 && currentStep === steps.length - 1 && !sorting
 
   return (
     <PageContainer>
@@ -130,7 +130,7 @@ export default function InsertionSortVisualizer() {
                   key={i} layout
                   animate={{ height: (v / maxVal) * 200 + 40, backgroundColor: getColor(i), scale: getScale(i), y: getY(i) }}
                   transition={{ ...SPRING.bouncy, layout: { type: 'spring', stiffness: 500, damping: 30 } }}
-                  className="w-14 rounded-t-sm flex flex-col items-center justify-end pb-2 font-mono font-bold text-base border border-black/10"
+                  className="w-14 rounded-t-sm flex flex-col items-center justify-end pb-2 font-mono font-bold text-base border border-[var(--border-subtle)]"
                   style={{ color: [step.keyIndex, step.comparingIndex, step.shiftIndex].includes(i) ? '#fff' : 'var(--fg)' }}
                 >
                   {v}

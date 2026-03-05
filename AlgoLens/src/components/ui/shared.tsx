@@ -38,14 +38,14 @@ interface CodeBlockProps {
 // ── Speed Control ──
 export function SpeedControl({ speed, onSpeedChange }: SpeedControlProps) {
     return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
             <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[var(--fg-muted)]">
                 Speed
             </span>
             <select
                 value={speed}
                 onChange={e => onSpeedChange(e.target.value as SpeedKey)}
-                className="font-mono text-xs font-medium px-2 py-1.5 bg-[var(--surface)] text-[var(--fg)] border border-[var(--border)] cursor-pointer hover:border-[var(--border-strong)] transition-colors focus:outline-none focus:border-[var(--accent)]"
+                className="font-mono text-xs font-medium px-3 py-2 bg-[var(--surface)] text-[var(--fg)] border border-[var(--border)] cursor-pointer hover:border-[var(--border-strong)] transition-colors focus:outline-none focus:border-[var(--accent)]"
             >
                 {Object.keys(SPEED_PRESETS).map(key => (
                     <option key={key} value={key}>{key}</option>
@@ -60,7 +60,7 @@ export function StepCounter({ current, total }: StepCounterProps) {
     const progress = total > 0 ? (current / total) * 100 : 0
 
     return (
-        <div className="flex flex-col items-center gap-1 min-w-[140px]">
+        <div className="flex flex-col items-center gap-1.5 min-w-[160px]">
             <AnimatePresence mode="wait">
                 <motion.span
                     key={current}
@@ -73,7 +73,7 @@ export function StepCounter({ current, total }: StepCounterProps) {
                     Step {current} / {total}
                 </motion.span>
             </AnimatePresence>
-            <div className="w-full h-[3px] bg-[var(--border)] overflow-hidden relative">
+            <div className="w-full h-1 bg-[var(--border)] overflow-hidden relative rounded-sm">
                 <motion.div
                     className="h-full bg-[var(--accent)] relative"
                     initial={{ width: 0 }}
@@ -116,7 +116,7 @@ export function StatusMessage({ message, type = 'info' }: StatusProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.18, ease: EASE_OUT }}
-            className="inline-block px-4 py-2 bg-[var(--surface)] font-mono font-medium text-[13px] text-[var(--fg)] mb-4"
+            className="px-5 py-2.5 bg-[var(--surface)] font-mono font-medium text-[13px] text-[var(--fg)] mb-4 rounded-sm"
             style={{
                 border: `1px solid ${color}`,
                 borderLeft: `3px solid ${color}`,
@@ -144,7 +144,7 @@ export function ControlButton({ onClick, disabled, children, variant = 'primary'
             whileHover={!disabled ? { y: -2, x: -2, boxShadow: `3px 3px 0px ${s.hover}` } : {}}
             whileTap={!disabled ? { y: 1, x: 1, boxShadow: '0px 0px 0px transparent', scale: 0.98 } : {}}
             transition={{ duration: 0.12, ease: EASE_OUT }}
-            className={`font-mono font-semibold text-[13px] uppercase tracking-wider px-5 py-2.5 cursor-pointer disabled:cursor-not-allowed transition-colors ${className}`}
+            className={`font-mono font-semibold text-[13px] uppercase tracking-wider px-6 py-2.5 cursor-pointer disabled:cursor-not-allowed transition-colors ${className}`}
             style={{
                 background: disabled ? 'var(--border)' : s.bg,
                 color: disabled ? 'var(--fg-muted)' : s.text,
@@ -176,10 +176,10 @@ export function ControlButton({ onClick, disabled, children, variant = 'primary'
 // ── Legend ──
 export function Legend({ items }: { items: LegendItem[] }) {
     return (
-        <div className="flex gap-5 flex-wrap py-3 px-1">
+        <div className="flex gap-5 flex-wrap py-4 px-1 mt-2">
             {items.map(item => (
                 <div key={item.label} className="flex items-center gap-2">
-                    <div className="w-3 h-3 border border-black/20" style={{ background: item.color }} />
+                    <div className="w-3.5 h-3.5 border border-[var(--border-subtle)] rounded-sm" style={{ background: item.color }} />
                     <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[var(--fg-muted)]">
                         {item.label}
                     </span>
@@ -200,15 +200,15 @@ export function CodeBlock({ code }: CodeBlockProps) {
     }, [code])
 
     return (
-        <div className="relative bg-[var(--code-bg)] text-[var(--code-fg)] p-4 border border-[var(--border)] font-mono text-[13px] leading-relaxed overflow-x-auto">
+        <div className="relative bg-[var(--code-bg)] text-[var(--code-fg)] p-5 border border-[var(--border)] font-mono text-[13px] leading-relaxed overflow-x-auto rounded-sm">
             <pre className="m-0 whitespace-pre-wrap">{code}</pre>
             <motion.button
                 onClick={handleCopy}
                 whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.97 }}
-                className={`absolute top-3 right-3 px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider cursor-pointer transition-all ${copied
-                        ? 'bg-green-600/20 text-green-400 border border-green-600/40'
-                        : 'bg-transparent text-[var(--code-fg)] border border-white/20 hover:bg-white/10 hover:border-white/40'
+                className={`absolute top-3 right-3 px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider cursor-pointer transition-all rounded-sm ${copied
+                    ? 'bg-green-600/20 text-green-400 border border-green-600/40'
+                    : 'bg-transparent text-[var(--code-fg)] border border-white/20 hover:bg-white/10 hover:border-white/40'
                     }`}
             >
                 <AnimatePresence mode="wait">
@@ -230,7 +230,7 @@ export function CodeBlock({ code }: CodeBlockProps) {
 // ── Layout Components ──
 export function PageContainer({ children }: { children: ReactNode }) {
     return (
-        <div className="pt-[68px] pb-10 px-8 max-w-[1400px] mx-auto min-h-screen">
+        <div className="pt-20 pb-12 px-6 sm:px-10 lg:px-14 max-w-[1440px] mx-auto min-h-screen">
             {children}
         </div>
     )
@@ -238,7 +238,7 @@ export function PageContainer({ children }: { children: ReactNode }) {
 
 export function SplitLayout({ children }: { children: ReactNode }) {
     return (
-        <div className="flex gap-6 items-start max-lg:flex-col">
+        <div className="flex gap-8 lg:gap-10 items-start max-lg:flex-col">
             {children}
         </div>
     )
@@ -247,7 +247,7 @@ export function SplitLayout({ children }: { children: ReactNode }) {
 export function SplitLeft({ children }: { children: ReactNode }) {
     return (
         <motion.div
-            className="w-[380px] flex-shrink-0 flex flex-col gap-4 max-lg:w-full max-lg:order-2"
+            className="w-[400px] flex-shrink-0 flex flex-col gap-5 max-lg:w-full max-lg:order-2"
             initial={{ opacity: 0, x: -12 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, ease: EASE_OUT }}
@@ -260,7 +260,7 @@ export function SplitLeft({ children }: { children: ReactNode }) {
 export function SplitRight({ children }: { children: ReactNode }) {
     return (
         <motion.div
-            className="flex-1 flex flex-col gap-4 min-w-0"
+            className="flex-1 flex flex-col gap-5 min-w-0"
             initial={{ opacity: 0, x: 12 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.1 }}
@@ -272,7 +272,7 @@ export function SplitRight({ children }: { children: ReactNode }) {
 
 export function ExplanationBox({ children }: { children: ReactNode }) {
     return (
-        <div className="bg-[var(--surface)] border border-[var(--border)] p-6">
+        <div className="bg-[var(--surface)] border border-[var(--border)] p-6 lg:p-7 rounded-sm transition-colors [&_ol]:list-decimal [&_ul]:list-disc [&_li]:marker:text-[var(--fg-muted)]">
             {children}
         </div>
     )
@@ -280,7 +280,7 @@ export function ExplanationBox({ children }: { children: ReactNode }) {
 
 export function VisualizationContainer({ children }: { children: ReactNode }) {
     return (
-        <div className="bg-[var(--surface)] border border-[var(--border)] p-5 min-h-[320px] flex flex-col">
+        <div className="bg-[var(--surface)] border border-[var(--border)] p-6 lg:p-8 min-h-[400px] flex flex-col rounded-sm font-mono transition-colors">
             {children}
         </div>
     )
@@ -288,7 +288,7 @@ export function VisualizationContainer({ children }: { children: ReactNode }) {
 
 export function ControlsRow({ children }: { children: ReactNode }) {
     return (
-        <div className="flex items-center gap-3 flex-wrap py-3">
+        <div className="flex items-center gap-4 flex-wrap py-4 mt-2 border-t border-[var(--border)]">
             {children}
         </div>
     )
@@ -310,7 +310,7 @@ export function ArrayElement({ value, height, color, label }: ArrayElementProps)
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         >
             <motion.div
-                className="w-10 flex items-end justify-center border border-black/15 font-mono text-xs font-bold"
+                className="w-12 flex items-end justify-center border border-[var(--border-subtle)] font-mono text-xs font-bold rounded-t-sm"
                 style={{ height, backgroundColor: color }}
                 layout
                 animate={{ backgroundColor: color }}

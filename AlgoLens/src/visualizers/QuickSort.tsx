@@ -100,7 +100,7 @@ export default function QuickSortVisualizer() {
         return 'var(--el-default)'
     }
 
-    const isFinal = currentStep === steps.length - 1 && !sorting
+    const isFinal = steps.length > 0 && currentStep === steps.length - 1 && !sorting
 
     return (
         <PageContainer>
@@ -147,7 +147,7 @@ export default function QuickSortVisualizer() {
                                     key={i} layout
                                     animate={{ height: (v / maxVal) * 200 + 40, backgroundColor: getColor(i), scale: (step.pivot === i || step.phase === 'swap' && step.compare?.includes(i)) ? 1.06 : 1, y: step.phase === 'swap' && step.compare?.includes(i) ? -10 : step.pivot === i ? -6 : 0 }}
                                     transition={{ ...SPRING.bouncy, layout: { type: 'spring', stiffness: 500, damping: 30 } }}
-                                    className="w-12 rounded-t-sm flex flex-col items-center justify-end pb-2 font-mono font-bold text-sm border border-black/10"
+                                    className="w-12 rounded-t-sm flex flex-col items-center justify-end pb-2 font-mono font-bold text-sm border border-[var(--border-subtle)]"
                                     style={{ color: ['comparing', 'swap', 'select-pivot'].includes(step.phase) && (step.compare?.includes(i) || step.pivot === i) ? '#fff' : 'var(--fg)', borderWidth: step.pivot === i ? 2 : 1, borderColor: step.pivot === i ? 'var(--color-pivot)' : 'rgba(0,0,0,0.08)' }}
                                 >{v}</motion.div>
                             ))}

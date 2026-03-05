@@ -77,7 +77,7 @@ export default function BubbleSortVisualizer() {
     return 'var(--el-default)'
   }
 
-  const isFinal = currentStep === steps.length - 1 && !sorting
+  const isFinal = steps.length > 0 && currentStep === steps.length - 1 && !sorting
 
   return (
     <PageContainer>
@@ -122,7 +122,7 @@ export default function BubbleSortVisualizer() {
                   key={i} layout
                   animate={{ height: (v / maxVal) * 200 + 40, backgroundColor: getColor(i), scale: step.compare.includes(i) ? 1.04 : 1, y: step.swapping && step.compare.includes(i) ? -10 : 0 }}
                   transition={{ ...SPRING.bouncy, layout: { type: 'spring', stiffness: 500, damping: 30 } }}
-                  className="w-[52px] rounded-t-sm flex flex-col items-center justify-end pb-2 font-mono font-bold text-[15px] border border-black/10"
+                  className="w-[52px] rounded-t-sm flex flex-col items-center justify-end pb-2 font-mono font-bold text-[15px] border border-[var(--border-subtle)]"
                   style={{ color: step.compare.includes(i) ? '#fff' : 'var(--fg)' }}
                 >
                   {v}

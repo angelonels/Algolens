@@ -19,7 +19,6 @@ const algorithms: Algorithm[] = [
   { name: 'Euclidean GCD', path: '/gcd', tag: 'Math', desc: 'O(log min(a,b)) — Greatest common divisor' },
   { name: 'Matrix Traversal', path: '/matrix-traversal', tag: 'Matrix', desc: 'Row-major, column-major, and diagonal walks' },
   { name: "Dijkstra's Path", path: '/dijkstra', tag: 'Graph', desc: 'O((V+E) log V) — Shortest path in weighted graphs' },
-  { name: 'Algorithm Race', path: '/race', tag: 'Race', desc: 'Pit two sorting algorithms head-to-head on the same array' },
   { name: 'BFS Grid Search', path: '/bfs', tag: 'Graph', desc: 'O(V+E) — Layer-by-layer shortest path on grids' },
   { name: 'DFS Grid Search', path: '/dfs', tag: 'Graph', desc: 'O(V+E) — Stack-based depth-first exploration with backtracking' },
   { name: 'K-Means Clustering', path: '/kmeans', tag: 'ML', desc: 'O(nki) — Unsupervised partitioning into k clusters' },
@@ -31,7 +30,7 @@ const algorithms: Algorithm[] = [
 
 const TAG_COLORS: Record<string, string> = {
   Sort: '#e63312', Search: '#2563eb', Graph: '#0891b2', Math: '#d97706',
-  Matrix: '#7c3aed', DP: '#ea580c', ML: '#16a34a', Race: '#db2777',
+  Matrix: '#7c3aed', DP: '#ea580c', ML: '#16a34a',
 }
 
 const categories = ['All', ...Array.from(new Set(algorithms.map(a => a.tag)))]
@@ -55,13 +54,13 @@ export default function Home() {
   }, [activeFilter, searchQuery])
 
   return (
-    <div className="relative pt-24 pb-16 px-10 max-w-[1100px] mx-auto min-h-screen">
+    <div className="relative pt-28 pb-20 px-6 sm:px-10 lg:px-16 max-w-[1200px] mx-auto min-h-screen">
       {/* Dot grid fade */}
-      <div className="absolute top-0 left-0 w-full h-[400px] -z-10 pointer-events-none opacity-20" style={{ maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)' }}>
+      <div className="absolute top-0 left-0 w-full h-[350px] -z-10 pointer-events-none opacity-15" style={{ maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)' }}>
         <svg width="100%" height="100%">
           <defs>
             <pattern id="dotGrid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1.5" fill="var(--fg)" />
+              <circle cx="2" cy="2" r="1" fill="var(--fg)" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#dotGrid)" />
@@ -72,22 +71,22 @@ export default function Home() {
       <motion.div
         initial="hidden" animate="visible"
         variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
-        className="mb-14"
+        className="mb-16"
       >
         <motion.div
           variants={{ hidden: { scaleX: 0, opacity: 0 }, visible: { scaleX: 1, opacity: 1, transition: { duration: 0.6, ease: EASE_OUT } } }}
-          className="w-12 h-1 bg-[var(--accent)] mb-5 origin-left"
+          className="w-10 h-1 bg-[var(--accent)] mb-6 origin-left"
         />
         <motion.h1
           variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE_OUT } } }}
-          className="font-mono font-extrabold text-[clamp(3.2rem,7vw,5.5rem)] leading-none tracking-tighter text-[var(--fg)] mb-5"
+          className="font-mono font-extrabold text-[clamp(2.4rem,5vw,4rem)] leading-[1.05] tracking-tighter text-[var(--fg)] mb-5"
         >
           Algorithm<br />
           <span className="text-[var(--accent)]">Visualizer</span>
         </motion.h1>
         <motion.p
           variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE_OUT } } }}
-          className="text-[17px] leading-relaxed text-[var(--fg-muted)] max-w-[480px]"
+          className="text-base leading-relaxed text-[var(--fg-muted)] max-w-[520px]"
         >
           Step through searching, sorting, and graph algorithms with interactive, real-time visual explanations.
         </motion.p>
@@ -97,16 +96,16 @@ export default function Home() {
       <motion.div
         initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
         transition={{ delay: 0.3, duration: 0.5, ease: EASE_OUT }}
-        className="border-t border-[var(--border)] mb-6 origin-left"
+        className="border-t border-[var(--border)] mb-8 origin-left"
       />
 
       {/* Filter Bar */}
       <motion.div
         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.35, ease: EASE_OUT }}
-        className="flex justify-between items-center flex-wrap gap-3 mb-6"
+        className="flex justify-between items-center flex-wrap gap-4 mb-4"
       >
-        <div className="flex gap-1.5 flex-wrap relative">
+        <div className="flex gap-2 flex-wrap">
           <LayoutGroup>
             {categories.map(cat => {
               const isActive = cat === activeFilter
@@ -115,7 +114,7 @@ export default function Home() {
                 <motion.button
                   key={cat} layout
                   onClick={() => setActiveFilter(cat)}
-                  className="font-mono text-[11px] font-bold uppercase tracking-widest px-3.5 py-1.5 border cursor-pointer transition-all"
+                  className="font-mono text-[11px] font-bold uppercase tracking-widest px-4 py-2 border cursor-pointer transition-all"
                   style={{
                     borderColor: isActive ? 'var(--border-strong)' : 'var(--border)',
                     background: isActive ? color : 'transparent',
@@ -143,14 +142,14 @@ export default function Home() {
             type="text" value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search algorithms…"
-            className="font-mono text-xs font-medium py-1.5 pl-8 pr-3.5 border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] w-[220px] outline-none transition-all focus:border-[var(--border-strong)] focus:shadow-[3px_3px_0px_var(--accent)] focus:-translate-x-0.5 focus:-translate-y-0.5"
+            className="font-mono text-xs font-medium py-2 pl-9 pr-4 border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] w-[240px] outline-none transition-all focus:border-[var(--border-strong)] focus:shadow-[3px_3px_0px_var(--accent)] focus:-translate-x-0.5 focus:-translate-y-0.5"
           />
-          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[13px] text-[var(--fg-muted)] pointer-events-none">⌕</span>
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[var(--fg-muted)] pointer-events-none">⌕</span>
         </div>
       </motion.div>
 
       {/* Count */}
-      <div className="flex justify-between items-center mb-5">
+      <div className="flex justify-between items-center mb-6">
         <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[var(--fg-muted)]">
           <AnimatePresence mode="wait">
             <motion.span
@@ -167,7 +166,7 @@ export default function Home() {
           <motion.button
             initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
             onClick={() => { setActiveFilter('All'); setSearchQuery('') }}
-            className="font-mono text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 border border-[var(--border)] bg-transparent text-[var(--fg-muted)] cursor-pointer transition-all hover:border-[var(--border-strong)] hover:text-[var(--fg)]"
+            className="font-mono text-[10px] font-semibold uppercase tracking-wider px-3 py-1.5 border border-[var(--border)] bg-transparent text-[var(--fg-muted)] cursor-pointer transition-all hover:border-[var(--border-strong)] hover:text-[var(--fg)]"
             whileHover={{ x: -2, y: -2, boxShadow: '2px 2px 0px var(--accent)' }}
             whileTap={{ scale: 0.95 }}
           >
@@ -181,7 +180,7 @@ export default function Home() {
         layout
         variants={{ hidden: {}, visible: { transition: STAGGER.fast } }}
         initial="hidden" animate="visible"
-        className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))]"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
       >
         <AnimatePresence mode="popLayout">
           {filtered.map((algo, i) => (
@@ -195,9 +194,9 @@ export default function Home() {
               exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.2 } }}
               transition={{ layout: { duration: 0.3, ease: EASE_OUT } }}
             >
-              <Link to={algo.path} className="no-underline text-inherit">
+              <Link to={algo.path} className="no-underline text-inherit block h-full">
                 <div
-                  className="algo-card relative p-5 bg-[var(--surface)] border border-[var(--border)] -mt-px -ml-px cursor-pointer transition-all flex justify-between items-start gap-4 hover:z-10 hover:border-[var(--border-strong)]"
+                  className="algo-card relative p-5 lg:p-6 bg-[var(--surface)] border-2 border-[var(--border)] cursor-pointer transition-all flex justify-between items-start gap-4 hover:border-[var(--border-strong)] h-full"
                   style={{ zIndex: 0 }}
                   onMouseEnter={e => {
                     const c = TAG_COLORS[algo.tag] ?? '#e63312'
@@ -213,14 +212,14 @@ export default function Home() {
                     if (arrow) { arrow.style.color = 'var(--border)'; arrow.style.transform = 'none' }
                   }}
                 >
-                  <div>
-                    <span className="font-mono text-[10px] font-semibold uppercase tracking-widest block mb-1.5" style={{ color: TAG_COLORS[algo.tag] ?? 'var(--accent)' }}>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-widest" style={{ color: TAG_COLORS[algo.tag] ?? 'var(--accent)' }}>
                       {algo.tag}
                     </span>
-                    <span className="font-mono text-base font-bold text-[var(--fg)] block mb-1.5">{algo.name}</span>
-                    <span className="text-[13px] text-[var(--fg-muted)] leading-snug">{algo.desc}</span>
+                    <span className="font-mono text-base font-bold text-[var(--fg)]">{algo.name}</span>
+                    <span className="text-[13px] text-[var(--fg-muted)] leading-snug mt-0.5">{algo.desc}</span>
                   </div>
-                  <span className="arrow font-mono text-lg text-[var(--border)] shrink-0 mt-1 transition-all">→</span>
+                  <span className="arrow font-mono text-xl text-[var(--border)] shrink-0 mt-2 transition-all">→</span>
                 </div>
               </Link>
             </motion.div>
@@ -233,7 +232,7 @@ export default function Home() {
         {filtered.length === 0 && (
           <motion.div
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-            className="text-center py-20 border border-[var(--border)] bg-[var(--surface)] -mt-px"
+            className="text-center py-24 border-2 border-[var(--border)] bg-[var(--surface)] mt-4"
           >
             <motion.div
               className="font-mono text-[40px] mb-4 inline-block opacity-30"
@@ -241,10 +240,10 @@ export default function Home() {
               transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
             >∅</motion.div>
             <div className="font-mono text-sm font-semibold text-[var(--fg)] mb-2">No algorithms found</div>
-            <div className="text-[13px] text-[var(--fg-muted)] mb-5">Try adjusting your filters or search query.</div>
+            <div className="text-[13px] text-[var(--fg-muted)] mb-6">Try adjusting your filters or search query.</div>
             <motion.button
               onClick={() => { setActiveFilter('All'); setSearchQuery('') }}
-              className="font-mono text-xs font-bold uppercase tracking-wider px-6 py-2.5 border border-[var(--border-strong)] bg-[var(--fg)] text-[var(--bg)] cursor-pointer"
+              className="font-mono text-xs font-bold uppercase tracking-wider px-6 py-3 border border-[var(--border-strong)] bg-[var(--fg)] text-[var(--bg)] cursor-pointer"
               style={{ boxShadow: '2px 2px 0px var(--border-strong)' }}
               whileHover={{ background: '#e63312', color: '#fff', x: -4, y: -4, boxShadow: '4px 4px 0px var(--border-strong)' }}
               whileTap={{ scale: 0.95 }}
@@ -259,7 +258,7 @@ export default function Home() {
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.4 }}
-        className="mt-12 pt-6 border-t border-[var(--border)] text-center"
+        className="mt-16 pt-8 border-t border-[var(--border)] text-center"
       >
         <span className="font-mono text-[11px] font-medium text-[var(--fg-muted)] uppercase tracking-wider">
           AlgoLens — Interactive Algorithm Visualizer

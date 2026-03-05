@@ -124,21 +124,21 @@ export default function BinarySearchVisualizer() {
       <SplitLayout>
         <SplitLeft>
           <ExplanationBox>
-            <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Binary Search?</h3>
+            <h3 className="font-mono text-base font-bold text-[var(--fg)] mb-3">What is Binary Search?</h3>
             <p>
               Binary Search is a highly efficient search algorithm that finds the position of a target value
               within a <strong>sorted array</strong>. Rather than checking every element one by one (as in linear search),
               it repeatedly divides the search space in half — comparing the target to the middle element and
               eliminating the half where the target cannot exist.
             </p>
-            <p style={{ marginTop: 8 }}>
+            <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
               Think of it like looking up a word in a dictionary: you open to the middle, decide if your word
               comes before or after, and then repeat the process on the relevant half. Each step cuts the
               remaining possibilities in half, achieving a time complexity of <strong>O(log n)</strong> — meaning
               even an array of 1 billion elements can be searched in at most ~30 comparisons.
             </p>
-            <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-            <ol style={{ paddingLeft: 20, margin: 0 }}>
+            <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">How It Works</h4>
+            <ol className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
               <li>Initialize two pointers: <code>low = 0</code> and <code>high = length - 1</code></li>
               <li>Compute the middle index: <code>mid = (low + high) / 2</code></li>
               <li>If <code>arr[mid] === target</code>, the element is found — return the index</li>
@@ -146,20 +146,20 @@ export default function BinarySearchVisualizer() {
               <li>If the target is smaller than <code>arr[mid]</code>, discard the right half by setting <code>high = mid - 1</code></li>
               <li>Repeat until the element is found or the search range becomes empty (<code>low &gt; high</code>)</li>
             </ol>
-            <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-            <ul style={{ paddingLeft: 20, margin: 0 }}>
+            <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Key Characteristics</h4>
+            <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
               <li><strong>Prerequisite:</strong> The array must be sorted beforehand</li>
               <li><strong>Divide and conquer:</strong> Halves the search space at each step</li>
               <li><strong>Iterative or recursive:</strong> Can be implemented either way with equivalent performance</li>
               <li><strong>Variants:</strong> Lower bound, upper bound, and finding the first/last occurrence of a value</li>
             </ul>
-            <p style={{ marginTop: 12 }}>
+            <p className="mt-3 text-sm text-[var(--fg-muted)] leading-relaxed">
               <strong>Time Complexity:</strong> O(log n) — logarithmic in all cases
             </p>
-            <p style={{ marginTop: 4 }}>
+            <p className="mt-1 text-sm text-[var(--fg-muted)] leading-relaxed">
               <strong>Space Complexity:</strong> O(1) iterative | O(log n) recursive (due to call stack)
             </p>
-            <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
+            <p className="mt-3 text-xs text-[var(--fg-muted)] leading-relaxed">
               <strong>When to use:</strong> Ideal for searching in sorted arrays, databases, and any scenario where data
               is ordered. Commonly used in standard library functions like Python's <code>bisect</code> module
               and C++'s <code>std::lower_bound</code>.
@@ -174,7 +174,6 @@ export default function BinarySearchVisualizer() {
             <div style={{ marginBottom: 20 }}>
               <label style={{
                 marginRight: 12,
-                fontFamily: "'JetBrains Mono', monospace",
                 fontSize: '12px',
                 fontWeight: 600,
                 textTransform: 'uppercase',
@@ -192,7 +191,6 @@ export default function BinarySearchVisualizer() {
                   width: 80,
                   padding: '8px 12px',
                   fontSize: 14,
-                  fontFamily: "'JetBrains Mono', monospace",
                   fontWeight: 600,
                   textAlign: 'center',
                   border: `1px solid ${'var(--border)'}`,
@@ -232,7 +230,6 @@ export default function BinarySearchVisualizer() {
                       width: 48,
                       margin: '0 2px',
                       textAlign: 'center',
-                      fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 10,
                       fontWeight: 700,
                       textTransform: 'uppercase',
@@ -277,7 +274,6 @@ export default function BinarySearchVisualizer() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       borderRadius: '2px',
-                      fontFamily: "'JetBrains Mono', monospace",
                       fontWeight: 700,
                       fontSize: 16,
                       color: (state === 'eliminated' || state === 'current' || state === 'found')
@@ -287,7 +283,6 @@ export default function BinarySearchVisualizer() {
                   >
                     {v}
                     <span style={{
-                      fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 9,
                       opacity: 0.6
                     }}>{i}</span>
@@ -340,7 +335,6 @@ export default function BinarySearchVisualizer() {
                     border: `1px solid ${result >= 0 ? 'var(--color-sorted)' : 'var(--accent)'}`,
                     borderLeft: `3px solid ${result >= 0 ? 'var(--color-sorted)' : 'var(--accent)'}`,
                     borderRadius: '0px',
-                    fontFamily: "'JetBrains Mono', monospace",
                     fontWeight: 600,
                     fontSize: 15,
                     color: 'var(--fg)',

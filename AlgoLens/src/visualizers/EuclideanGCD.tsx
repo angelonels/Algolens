@@ -103,13 +103,12 @@ export default function GCDVisualizer() {
 
   const step = steps[currentStep] || { x: a, y: b, phase: 'idle', message: '' }
 
-  const isFinalStep = currentStep === steps.length - 1 && !running
+  const isFinalStep = steps.length > 0 && currentStep === steps.length - 1 && !running
 
   const inputStyle = {
     width: 100,
     padding: '8px 12px',
     fontSize: 14,
-    fontFamily: "'JetBrains Mono', monospace",
     fontWeight: 600,
     textAlign: 'center',
     border: `1px solid ${'var(--border)'}`,
@@ -119,7 +118,6 @@ export default function GCDVisualizer() {
 
   const labelStyle = {
     marginRight: 8,
-    fontFamily: "'JetBrains Mono', monospace",
     fontWeight: 600,
     fontSize: '12px',
     textTransform: 'uppercase',
@@ -132,7 +130,7 @@ export default function GCDVisualizer() {
       <SplitLayout>
         <SplitLeft>
           <ExplanationBox>
-            <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is the Euclidean Algorithm?</h3>
+            <h3 className="font-mono text-base font-bold text-[var(--fg)] mb-3">What is the Euclidean Algorithm?</h3>
             <p>
               The Euclidean algorithm is one of the oldest known algorithms, dating back to around 300 BC
               in Euclid's <em>Elements</em>. It efficiently computes the <strong>Greatest Common Divisor (GCD)</strong> of
@@ -140,21 +138,21 @@ export default function GCDVisualizer() {
               origins, it remains one of the fastest methods for computing GCD and is foundational to modern
               number theory and cryptography.
             </p>
-            <p style={{ marginTop: 8 }}>
+            <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
               The algorithm is based on a simple but powerful mathematical property: <strong>gcd(a, b) = gcd(b, a % b)</strong>.
               This means repeatedly replacing the larger number with the remainder of dividing the two numbers
               will eventually produce the GCD when the remainder becomes zero. The number of steps is
               proportional to the number of digits — making it extremely fast even for very large numbers.
             </p>
-            <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-            <ol style={{ paddingLeft: 20, margin: 0 }}>
+            <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">How It Works</h4>
+            <ol className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
               <li>Start with two numbers <code>a</code> and <code>b</code> (where a ≥ b)</li>
               <li>Compute the remainder: <code>r = a % b</code></li>
               <li>Replace: set <code>a ← b</code> and <code>b ← r</code></li>
               <li>Repeat steps 2–3 until <code>b = 0</code></li>
               <li>When <code>b = 0</code>, the value of <code>a</code> is the GCD</li>
             </ol>
-            <h4 style={{ margin: '16px 0 8px' }}>Why It Works</h4>
+            <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Why It Works</h4>
             <p>
               If <code>d</code> divides both <code>a</code> and <code>b</code>, then <code>d</code> also
               divides <code>a % b</code> (since <code>a % b = a - k·b</code> for some integer k). This means
@@ -162,20 +160,20 @@ export default function GCDVisualizer() {
               preserving the GCD at each step. The process terminates because <code>b</code> strictly decreases
               toward zero.
             </p>
-            <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-            <ul style={{ paddingLeft: 20, margin: 0 }}>
+            <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Key Characteristics</h4>
+            <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
               <li><strong>Extremely efficient:</strong> Number of steps is at most ~5× the number of digits in the smaller number</li>
               <li><strong>Works for any positive integers:</strong> No restrictions on the size or relationship between inputs</li>
               <li><strong>Extended version:</strong> The Extended Euclidean Algorithm also finds integers x, y such that ax + by = gcd(a, b) — essential for modular inverse computation</li>
               <li><strong>Basis for RSA:</strong> The extended form is critical in RSA encryption for computing private keys</li>
             </ul>
-            <p style={{ marginTop: 12 }}>
+            <p className="mt-3 text-sm text-[var(--fg-muted)] leading-relaxed">
               <strong>Time Complexity:</strong> O(log min(a, b)) — logarithmic in the smaller input
             </p>
-            <p style={{ marginTop: 4 }}>
+            <p className="mt-1 text-sm text-[var(--fg-muted)] leading-relaxed">
               <strong>Space Complexity:</strong> O(1) iterative | O(log min(a, b)) recursive
             </p>
-            <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
+            <p className="mt-3 text-xs text-[var(--fg-muted)] leading-relaxed">
               <strong>Real-world uses:</strong> Simplifying fractions, cryptographic key generation (RSA),
               computing least common multiples (LCM = a·b / gcd(a,b)), Bézout's identity, and modular
               arithmetic in competitive programming.
@@ -243,7 +241,6 @@ export default function GCDVisualizer() {
                     }}
                   >
                     <div style={{
-                      fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 11,
                       textTransform: 'uppercase',
                       letterSpacing: '0.08em',
@@ -255,7 +252,6 @@ export default function GCDVisualizer() {
                       initial={{ scale: 1.2 }}
                       animate={{ scale: 1 }}
                       style={{
-                        fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 28,
                         fontWeight: 700,
                         color: 'var(--fg)'
@@ -266,7 +262,6 @@ export default function GCDVisualizer() {
                   </motion.div>
 
                   <div style={{
-                    fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 20,
                     color: 'var(--fg-muted)'
                   }}>
@@ -285,7 +280,6 @@ export default function GCDVisualizer() {
                     }}
                   >
                     <div style={{
-                      fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 11,
                       textTransform: 'uppercase',
                       letterSpacing: '0.08em',
@@ -297,7 +291,6 @@ export default function GCDVisualizer() {
                       initial={{ scale: 1.2 }}
                       animate={{ scale: 1 }}
                       style={{
-                        fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 28,
                         fontWeight: 700,
                         color: 'var(--fg)'
@@ -310,7 +303,6 @@ export default function GCDVisualizer() {
                   {step.r !== null && (
                     <>
                       <div style={{
-                        fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 20,
                         color: 'var(--fg-muted)'
                       }}>
@@ -329,7 +321,6 @@ export default function GCDVisualizer() {
                         }}
                       >
                         <div style={{
-                          fontFamily: "'JetBrains Mono', monospace",
                           fontSize: 11,
                           textTransform: 'uppercase',
                           letterSpacing: '0.08em',
@@ -337,7 +328,6 @@ export default function GCDVisualizer() {
                           marginBottom: 4
                         }}>remainder</div>
                         <div style={{
-                          fontFamily: "'JetBrains Mono', monospace",
                           fontSize: 28,
                           fontWeight: 700,
                           color: 'var(--fg)'
@@ -376,7 +366,6 @@ export default function GCDVisualizer() {
                     margin: '4px 0',
                     borderRadius: '0px',
                     maxWidth: 400,
-                    fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 13,
                     fontWeight: 600,
                     color: 'var(--fg)'
@@ -429,7 +418,6 @@ export default function GCDVisualizer() {
                     border: `1px solid ${'var(--color-sorted)'}`,
                     borderLeft: `3px solid ${'var(--color-sorted)'}`,
                     borderRadius: '0px',
-                    fontFamily: "'JetBrains Mono', monospace",
                     fontWeight: 700,
                     fontSize: 18,
                     color: 'var(--fg)',

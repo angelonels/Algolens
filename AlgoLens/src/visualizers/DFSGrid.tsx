@@ -209,28 +209,28 @@ export default function DFSGridVisualizer() {
         { color: 'var(--color-active)', label: 'Path' }
     ]
 
-    const isFinalStep = currentStep === steps.length - 1 && !running
+    const isFinalStep = steps.length > 0 && currentStep === steps.length - 1 && !running
 
     return (
         <PageContainer title="DFS Grid Search">
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Depth-First Search?</h3>
+                        <h3 className="font-mono text-base font-bold text-[var(--fg)] mb-3">What is Depth-First Search?</h3>
                         <p>
                             Depth-First Search (DFS) is a fundamental graph traversal algorithm that explores
                             as <strong>far as possible</strong> along each branch before backtracking. It uses a
                             <strong> stack (LIFO)</strong> data structure — either explicitly or via recursion — to
                             track which node to visit next.
                         </p>
-                        <p style={{ marginTop: 8 }}>
+                        <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
                             Unlike BFS which expands level by level, DFS dives deep into one direction first. This
                             means it <strong>does not guarantee the shortest path</strong>, but it often uses
                             significantly less memory than BFS on wide graphs. DFS is the backbone of many advanced
                             algorithms including topological sorting, cycle detection, and strongly connected components.
                         </p>
-                        <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-                        <ol style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">How It Works</h4>
+                        <ol className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li>Push the start node onto a stack and mark it as visited</li>
                             <li>Pop the top node from the stack</li>
                             <li>If it's the target, stop and reconstruct the path</li>
@@ -238,27 +238,27 @@ export default function DFSGridVisualizer() {
                             <li>Repeat steps 2–4 until the target is found or the stack is empty</li>
                             <li>If the stack empties without finding the target, no path exists</li>
                         </ol>
-                        <h4 style={{ margin: '16px 0 8px' }}>DFS vs BFS</h4>
-                        <ul style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">DFS vs BFS</h4>
+                        <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li><strong>DFS</strong> uses a stack, explores depth-first, and may find longer paths</li>
                             <li><strong>BFS</strong> uses a queue, explores breadth-first, and guarantees shortest paths</li>
                             <li>DFS uses <strong>O(depth)</strong> memory vs BFS's <strong>O(branching factor^depth)</strong></li>
                             <li>DFS is preferred for maze generation, topological sort, and connectivity checks</li>
                         </ul>
-                        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-                        <ul style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Key Characteristics</h4>
+                        <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li><strong>Complete:</strong> Yes, for finite graphs (will find a path if one exists)</li>
                             <li><strong>Optimal:</strong> No — does not guarantee the shortest path</li>
                             <li><strong>Memory-efficient:</strong> Uses less memory than BFS on deep/wide graphs</li>
                             <li><strong>Backtracking:</strong> Naturally backtracks when hitting dead ends</li>
                         </ul>
-                        <p style={{ marginTop: 12 }}>
+                        <p className="mt-3 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Time Complexity:</strong> O(V + E) where V = vertices and E = edges
                         </p>
-                        <p style={{ marginTop: 4 }}>
+                        <p className="mt-1 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Space Complexity:</strong> O(V) in the worst case for the stack and visited set
                         </p>
-                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
+                        <p className="mt-3 text-xs text-[var(--fg-muted)] leading-relaxed">
                             <strong>Real-world uses:</strong> Maze generation, puzzle solving (Sudoku backtracking),
                             topological ordering of build dependencies, detecting cycles in graphs, and finding
                             connected components in networks.
@@ -278,7 +278,6 @@ export default function DFSGridVisualizer() {
                                 border: `1px solid ${'var(--border)'}`,
                                 borderLeft: `3px solid ${'var(--color-swapping)'}`,
                                 borderRadius: '0px',
-                                fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: '12px',
                                 color: 'var(--fg-muted)'
                             }}>
@@ -336,7 +335,6 @@ export default function DFSGridVisualizer() {
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                                 cursor: running ? 'default' : 'pointer',
-                                                fontFamily: "'JetBrains Mono', monospace",
                                                 fontSize: 9,
                                                 fontWeight: 700,
                                                 color: (state === 'wall' || state === 'start' || state === 'end' || state === 'current' || state === 'path')
@@ -399,7 +397,6 @@ export default function DFSGridVisualizer() {
                                         border: `1px solid ${step.phase === 'found' ? 'var(--color-sorted)' : 'var(--accent)'}`,
                                         borderLeft: `3px solid ${step.phase === 'found' ? 'var(--color-sorted)' : 'var(--accent)'}`,
                                         borderRadius: '0px',
-                                        fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600,
                                         fontSize: 15,
                                         color: 'var(--fg)',

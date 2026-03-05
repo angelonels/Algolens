@@ -11,7 +11,6 @@ const algorithms = [
   { label: '[Math] Euclidean GCD', path: '/gcd' },
   { label: '[Matrix] Matrix Traversal', path: '/matrix-traversal' },
   { label: '[Graph] Dijkstra\'s Path', path: '/dijkstra' },
-  { label: '[Race] Algorithm Race', path: '/race' },
   { label: '[Graph] BFS Grid Search', path: '/bfs' },
   { label: '[Graph] DFS Grid Search', path: '/dfs' },
   { label: '[ML] K-Means Clustering', path: '/kmeans' },
@@ -28,7 +27,7 @@ export default function Navbar() {
   const isHome = location.pathname === '/'
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-[52px] px-8 flex items-center justify-between border-b border-[var(--border)] backdrop-blur-xl bg-[var(--bg)]/80 supports-[backdrop-filter]:bg-[var(--bg)]/80">
+    <nav className="fixed top-0 left-0 right-0 z-50 h-14 px-6 sm:px-10 lg:px-14 flex items-center justify-between border-b border-[var(--border)] backdrop-blur-xl bg-[var(--bg)]/80 supports-[backdrop-filter]:bg-[var(--bg)]/80">
       {/* Left: Logo */}
       <Link to="/" className="no-underline">
         <span className="font-mono text-lg font-bold tracking-tight text-[var(--fg)]">
@@ -37,7 +36,7 @@ export default function Navbar() {
       </Link>
 
       {/* Right: Controls */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {/* Back to Index */}
         {!isHome && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -64,7 +63,7 @@ export default function Navbar() {
         <select
           value={location.pathname}
           onChange={e => navigate(e.target.value)}
-          className="font-mono text-xs font-medium px-2.5 py-1.5 border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] cursor-pointer min-w-[160px] hover:border-[var(--border-strong)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/15 outline-none transition-all"
+          className="font-mono text-xs font-medium px-3 py-2 border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] cursor-pointer min-w-[200px] hover:border-[var(--border-strong)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/15 outline-none transition-all"
         >
           <option value="/" disabled={isHome}>Select algorithm…</option>
           {algorithms.map(a => (

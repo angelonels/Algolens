@@ -178,10 +178,9 @@ export default function KMeansVisualizer() {
         message: ''
     }
 
-    const isFinalStep = currentStep === steps.length - 1 && !running
+    const isFinalStep = steps.length > 0 && currentStep === steps.length - 1 && !running
 
     const labelStyle = {
-        fontFamily: "'JetBrains Mono', monospace",
         fontWeight: 600,
         fontSize: '12px',
         textTransform: 'uppercase',
@@ -194,39 +193,39 @@ export default function KMeansVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is K-Means Clustering?</h3>
+                        <h3 className="font-mono text-base font-bold text-[var(--fg)] mb-3">What is K-Means Clustering?</h3>
                         <p>
                             K-Means is one of the most popular <strong>unsupervised machine learning</strong> algorithms.
                             Given a set of data points, it partitions them into <strong>k clusters</strong> where each
                             point belongs to the cluster with the nearest <strong>centroid</strong> (center of mass).
                         </p>
-                        <p style={{ marginTop: 8 }}>
+                        <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
                             The algorithm alternates between two steps — <strong>assigning</strong> points to the
                             nearest centroid and <strong>updating</strong> centroids to the mean of their assigned
                             points — until convergence. Despite its simplicity, K-Means is remarkably effective
                             and forms the foundation of many clustering applications.
                         </p>
-                        <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-                        <ol style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">How It Works</h4>
+                        <ol className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li>Choose k random points as initial centroids</li>
                             <li><strong>Assignment step:</strong> Assign each point to its nearest centroid (using Euclidean distance)</li>
                             <li><strong>Update step:</strong> Move each centroid to the mean position of all points assigned to it</li>
                             <li>Repeat steps 2–3 until centroids stop moving (convergence)</li>
                         </ol>
-                        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-                        <ul style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Key Characteristics</h4>
+                        <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li><strong>Unsupervised:</strong> No labeled training data required</li>
                             <li><strong>Iterative:</strong> Guaranteed to converge, but may find local minima</li>
                             <li><strong>Sensitive to initialization:</strong> Different starting centroids can yield different results</li>
                             <li><strong>Requires choosing k:</strong> The number of clusters must be specified in advance</li>
                         </ul>
-                        <p style={{ marginTop: 12 }}>
+                        <p className="mt-3 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Time Complexity:</strong> O(n · k · i) where n = points, k = clusters, i = iterations
                         </p>
-                        <p style={{ marginTop: 4 }}>
+                        <p className="mt-1 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Space Complexity:</strong> O(n + k) for storing assignments and centroids
                         </p>
-                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
+                        <p className="mt-3 text-xs text-[var(--fg-muted)] leading-relaxed">
                             <strong>Real-world uses:</strong> Customer segmentation, image compression (color quantization),
                             anomaly detection, document clustering, recommendation systems, and market analysis.
                         </p>
@@ -244,7 +243,6 @@ export default function KMeansVisualizer() {
                                 onChange={e => { setK(Number(e.target.value)); reset() }}
                                 disabled={running}
                                 style={{
-                                    fontFamily: "'JetBrains Mono', monospace",
                                     fontSize: 13,
                                     padding: '4px 8px',
                                     border: `1px solid ${'var(--border)'}`,
@@ -326,7 +324,6 @@ export default function KMeansVisualizer() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontFamily: "'JetBrains Mono', monospace",
                                         fontSize: 10,
                                         fontWeight: 800,
                                         color: '#fff',
@@ -353,7 +350,6 @@ export default function KMeansVisualizer() {
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: 6,
-                                    fontFamily: "'JetBrains Mono', monospace",
                                     fontSize: 11,
                                     fontWeight: 600,
                                     textTransform: 'uppercase',
@@ -419,7 +415,6 @@ export default function KMeansVisualizer() {
                                         border: `1px solid ${'var(--color-sorted)'}`,
                                         borderLeft: `3px solid ${'var(--color-sorted)'}`,
                                         borderRadius: '0px',
-                                        fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600,
                                         fontSize: 15,
                                         color: 'var(--fg)',

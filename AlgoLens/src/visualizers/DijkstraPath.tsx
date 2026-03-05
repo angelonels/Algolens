@@ -150,29 +150,29 @@ export default function DijkstraVisualizer() {
         { color: 'var(--surface)', label: 'Unvisited' }
     ]
 
-    const isFinalStep = currentStep === steps.length - 1 && !running
+    const isFinalStep = steps.length > 0 && currentStep === steps.length - 1 && !running
 
     return (
         <PageContainer title="Dijkstra's Shortest Path">
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Dijkstra's Algorithm?</h3>
+                        <h3 className="font-mono text-base font-bold text-[var(--fg)] mb-3">What is Dijkstra's Algorithm?</h3>
                         <p>
                             Dijkstra's algorithm, conceived by computer scientist Edsger Dijkstra in 1956, is a
                             greedy algorithm that finds the <strong>shortest path</strong> from a single source node to all
                             other nodes in a weighted graph. It is one of the most important algorithms in computer
                             science and is widely used in networking, mapping, and routing applications.
                         </p>
-                        <p style={{ marginTop: 8 }}>
+                        <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
                             The algorithm maintains a set of nodes whose shortest distance from the source is already
                             known. At each step, it selects the unvisited node with the smallest known distance,
                             marks it as visited, and updates the distances to all of its neighbors. This greedy
                             approach — always expanding the closest node — guarantees optimal results as long as all
                             edge weights are <strong>non-negative</strong>.
                         </p>
-                        <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-                        <ol style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">How It Works</h4>
+                        <ol className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li>Initialize the source node's distance to 0 and all other nodes to ∞ (infinity)</li>
                             <li>Add all nodes to a priority queue (min-heap) based on their current distance</li>
                             <li>Extract the node with the smallest distance from the priority queue</li>
@@ -181,16 +181,16 @@ export default function DijkstraVisualizer() {
                             <li>Mark the current node as visited and repeat from step 3</li>
                             <li>Continue until all reachable nodes have been visited</li>
                         </ol>
-                        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-                        <ul style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Key Characteristics</h4>
+                        <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li><strong>Greedy:</strong> Always selects the closest unvisited node — once a node is visited, its shortest distance is finalized</li>
                             <li><strong>Non-negative weights only:</strong> Negative edge weights can cause incorrect results — use Bellman-Ford instead</li>
                             <li><strong>Priority queue-based:</strong> Efficient implementations use a min-heap for O((V + E) log V) performance</li>
                             <li><strong>Single-source:</strong> Computes shortest paths from one source to all other nodes in the graph</li>
                         </ul>
-                        <p style={{ marginTop: 12 }}><strong>Time Complexity:</strong> O((V + E) log V) with a binary heap priority queue</p>
-                        <p style={{ marginTop: 4 }}><strong>Space Complexity:</strong> O(V) for the distance array and priority queue</p>
-                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
+                        <p className="mt-3 text-sm text-[var(--fg-muted)] leading-relaxed"><strong>Time Complexity:</strong> O((V + E) log V) with a binary heap priority queue</p>
+                        <p className="mt-1 text-sm text-[var(--fg-muted)] leading-relaxed"><strong>Space Complexity:</strong> O(V) for the distance array and priority queue</p>
+                        <p className="mt-3 text-xs text-[var(--fg-muted)] leading-relaxed">
                             <strong>Real-world uses:</strong> Google Maps routing, network packet routing (OSPF protocol),
                             flight booking systems (cheapest route), robot path planning, and any scenario involving
                             weighted shortest paths. For graphs with negative edges, Bellman-Ford is used instead;
@@ -203,9 +203,9 @@ export default function DijkstraVisualizer() {
                 <SplitRight>
                     <VisualizationContainer>
                         <div style={{ marginBottom: 20 }}>
-                            <label style={{ marginRight: 12, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--fg-muted)' }}>Start Node</label>
+                            <label style={{ marginRight: 12, fontWeight: 600, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--fg-muted)' }}>Start Node</label>
                             <select value={startNode} onChange={(e) => { setStartNode(e.target.value); reset() }} disabled={running}
-                                style={{ padding: '8px 16px', fontSize: 14, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, borderRadius: '0px', border: `1px solid ${'var(--border)'}`, background: 'var(--surface)' }}>
+                                style={{ padding: '8px 16px', fontSize: 14, fontWeight: 600, borderRadius: '0px', border: `1px solid ${'var(--border)'}`, background: 'var(--surface)' }}>
                                 {graph.nodes.map(n => <option key={n.id} value={n.id}>{n.id}</option>)}
                             </select>
                         </div>
@@ -255,13 +255,13 @@ export default function DijkstraVisualizer() {
                         <AnimatePresence>
                             {isFinalStep && finalDistances && (
                                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ marginTop: 24 }}>
-                                    <h3 style={{ marginBottom: 12, fontFamily: "'JetBrains Mono', monospace", fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--fg)' }}>Shortest Distances from {startNode}</h3>
+                                    <h3 style={{ marginBottom: 12, fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--fg)' }}>Shortest Distances from {startNode}</h3>
                                     <div style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
                                         {graph.nodes.map(node => (
                                             <motion.div key={node.id} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: graph.nodes.indexOf(node) * 0.08 }}
                                                 style={{ padding: '10px 18px', background: 'var(--surface)', border: `1px solid ${node.id === startNode ? 'var(--accent)' : 'var(--color-sorted)'}`, borderTop: `3px solid ${node.id === startNode ? 'var(--accent)' : 'var(--color-sorted)'}`, borderRadius: '0px', textAlign: 'center' }}>
-                                                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--fg-muted)' }}>To {node.id}</div>
-                                                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 22, fontWeight: 700, color: 'var(--fg)' }}>{finalDistances[node.id]}</div>
+                                                <div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--fg-muted)' }}>To {node.id}</div>
+                                                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--fg)' }}>{finalDistances[node.id]}</div>
                                             </motion.div>
                                         ))}
                                     </div>

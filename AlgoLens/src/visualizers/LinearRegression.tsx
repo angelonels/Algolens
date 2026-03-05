@@ -344,48 +344,48 @@ export default function LinearRegressionVisualizer() {
         ctx.fillText(costs[costs.length - 1].toFixed(4), COST_W - 12, 14)
     }, [currentStep, steps])
 
-    const isFinalStep = currentStep === steps.length - 1 && !running
+    const isFinalStep = steps.length > 0 && currentStep === steps.length - 1 && !running
 
     return (
         <PageContainer title="Linear Regression">
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Linear Regression?</h3>
+                        <h3 className="font-mono text-base font-bold text-[var(--fg)] mb-3">What is Linear Regression?</h3>
                         <p>
                             Linear Regression is a foundational <strong>supervised learning</strong> algorithm that
                             models the relationship between a dependent variable y and one or more independent
                             variables X by fitting a <strong>straight line</strong> (y = mx + b) that minimizes
                             the sum of squared errors between predicted and actual values.
                         </p>
-                        <p style={{ marginTop: 8 }}>
+                        <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
                             This visualization uses <strong>gradient descent</strong> to iteratively adjust the
                             slope (m) and intercept (b) to minimize the <strong>Mean Squared Error (MSE)</strong>.
                             Watch the regression line rotate and shift into position as the cost function decreases,
                             and observe the <strong>residual lines</strong> (prediction errors) shrink with each epoch.
                         </p>
-                        <h4 style={{ margin: '16px 0 8px' }}>How Gradient Descent Works</h4>
-                        <ol style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">How Gradient Descent Works</h4>
+                        <ol className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li>Initialize slope and intercept to zero</li>
                             <li>Compute predictions ŷ = mx + b for all points</li>
                             <li>Calculate the cost (MSE) and its gradients ∂C/∂m and ∂C/∂b</li>
                             <li>Update parameters: m ← m − α·∂C/∂m, b ← b − α·∂C/∂b</li>
                             <li>Repeat until convergence (gradients ≈ 0)</li>
                         </ol>
-                        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-                        <ul style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Key Characteristics</h4>
+                        <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li><strong>Parametric:</strong> Assumes a linear relationship between X and y</li>
                             <li><strong>Closed-form solution:</strong> Also solvable via Normal Equation (X<sup>T</sup>X)<sup>−1</sup>X<sup>T</sup>y</li>
                             <li><strong>Learning rate α:</strong> Controls step size — too large diverges, too small is slow</li>
                             <li><strong>Cost landscape:</strong> MSE is convex, so gradient descent finds the global minimum</li>
                         </ul>
-                        <p style={{ marginTop: 12 }}>
+                        <p className="mt-3 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Time Complexity:</strong> O(n · epochs) for gradient descent
                         </p>
-                        <p style={{ marginTop: 4 }}>
+                        <p className="mt-1 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Space Complexity:</strong> O(n) to store the dataset
                         </p>
-                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
+                        <p className="mt-3 text-xs text-[var(--fg-muted)] leading-relaxed">
                             <strong>Real-world uses:</strong> House price prediction, stock forecasting, trend analysis,
                             scientific modeling, and as a building block for more complex models like neural networks.
                         </p>
@@ -443,7 +443,6 @@ export default function LinearRegressionVisualizer() {
                                         padding: '4px 10px',
                                         background: 'var(--surface)',
                                         border: `1px solid ${'var(--border)'}`,
-                                        fontFamily: "'JetBrains Mono', monospace",
                                         fontSize: 10,
                                         fontWeight: 600,
                                         textTransform: 'uppercase',
@@ -480,7 +479,7 @@ export default function LinearRegressionVisualizer() {
                         {/* Toggle */}
                         <div style={{
                             display: 'flex', gap: 12, justifyContent: 'center', margin: '8px 0',
-                            fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--fg-muted)'
+                            fontSize: 11, color: 'var(--fg-muted)'
                         }}>
                             <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
                                 <input
@@ -533,7 +532,6 @@ export default function LinearRegressionVisualizer() {
                                         border: `1px solid ${'var(--color-sorted)'}`,
                                         borderLeft: `3px solid ${'var(--color-sorted)'}`,
                                         borderRadius: '0px',
-                                        fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600,
                                         fontSize: 14,
                                         color: 'var(--fg)',

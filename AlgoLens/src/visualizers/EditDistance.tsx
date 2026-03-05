@@ -168,12 +168,11 @@ export default function EditDistanceVisualizer() {
 
     const step = steps[currentStep] || null
 
-    const isFinalStep = currentStep === steps.length - 1 && !running
+    const isFinalStep = steps.length > 0 && currentStep === steps.length - 1 && !running
 
     const m = word1.length, n = word2.length
 
     const labelStyle = {
-        fontFamily: "'JetBrains Mono', monospace",
         fontWeight: 600,
         fontSize: '12px',
         textTransform: 'uppercase',
@@ -182,7 +181,6 @@ export default function EditDistanceVisualizer() {
     }
 
     const inputStyle = {
-        fontFamily: "'JetBrains Mono', monospace",
         fontSize: 14,
         padding: '6px 10px',
         border: `1px solid ${'var(--border)'}`,
@@ -211,7 +209,7 @@ export default function EditDistanceVisualizer() {
             if (op === 'insert') return { background: '#dbeafe', color: 'var(--fg)' }
             return { background: '#f3f4f6', color: 'var(--fg)' }
         }
-        return { background: 'var(--surface)', color: '#ccc' }
+        return { background: 'var(--surface)', color: 'var(--fg-muted)' }
     }
 
     const opColors = [
@@ -231,7 +229,7 @@ export default function EditDistanceVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Edit Distance?</h3>
+                        <h3 className="font-mono text-base font-bold text-[var(--fg)] mb-3">What is Edit Distance?</h3>
                         <p>
                             Edit Distance (also known as <strong>Levenshtein Distance</strong>) measures the minimum
                             number of single-character operations required to transform one string into another.
@@ -239,34 +237,34 @@ export default function EditDistanceVisualizer() {
                             (<a href="https://leetcode.com/problems/edit-distance/" target="_blank" rel="noopener noreferrer"
                                 style={{ color: 'var(--accent)' }}>LeetCode #72</a>).
                         </p>
-                        <p style={{ marginTop: 8 }}>
+                        <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
                             The three allowed operations are: <strong>Insert</strong> a character,
                             <strong> Delete</strong> a character, or <strong>Replace</strong> a character.
                             The DP table builds up solutions to larger subproblems from smaller ones — each cell
                             dp[i][j] represents the edit distance between the first i characters of word1 and
                             the first j characters of word2.
                         </p>
-                        <h4 style={{ margin: '16px 0 8px' }}>The Recurrence</h4>
-                        <ul style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">The Recurrence</h4>
+                        <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li>If characters match: <strong>dp[i][j] = dp[i−1][j−1]</strong> (no cost)</li>
                             <li>Otherwise: <strong>dp[i][j] = 1 + min(</strong></li>
                             <li style={{ marginLeft: 20 }}>dp[i−1][j] → <strong>Delete</strong> from word1</li>
                             <li style={{ marginLeft: 20 }}>dp[i][j−1] → <strong>Insert</strong> into word1</li>
                             <li style={{ marginLeft: 20 }}>dp[i−1][j−1] → <strong>Replace</strong> in word1<strong>)</strong></li>
                         </ul>
-                        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-                        <ul style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Key Characteristics</h4>
+                        <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li><strong>Optimal Substructure:</strong> Optimal solution builds on optimal sub-solutions</li>
                             <li><strong>Overlapping Subproblems:</strong> Same subproblems recur, making DP efficient</li>
                             <li><strong>Bottom-up DP:</strong> Fill table row by row, avoiding recursion overhead</li>
                         </ul>
-                        <p style={{ marginTop: 12 }}>
+                        <p className="mt-3 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Time Complexity:</strong> O(m × n) where m, n are the string lengths
                         </p>
-                        <p style={{ marginTop: 4 }}>
+                        <p className="mt-1 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Space Complexity:</strong> O(m × n) for the DP table (optimizable to O(min(m,n)))
                         </p>
-                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
+                        <p className="mt-3 text-xs text-[var(--fg-muted)] leading-relaxed">
                             <strong>Real-world uses:</strong> Spell checkers, DNA sequence alignment, diff tools (git diff),
                             fuzzy string matching, autocorrect, and natural language processing.
                         </p>
@@ -308,7 +306,6 @@ export default function EditDistanceVisualizer() {
                                     onClick={() => { setWord1(p.word1); setWord2(p.word2); reset() }}
                                     disabled={running}
                                     style={{
-                                        fontFamily: "'JetBrains Mono', monospace",
                                         fontSize: 10,
                                         padding: '4px 8px',
                                         border: `1px solid ${'var(--border)'}`,
@@ -343,7 +340,7 @@ export default function EditDistanceVisualizer() {
                         }}>
                             <table style={{
                                 borderCollapse: 'collapse',
-                                fontFamily: "'JetBrains Mono', monospace"
+
                             }}>
                                 <thead>
                                     <tr>
@@ -415,7 +412,6 @@ export default function EditDistanceVisualizer() {
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: 5,
-                                    fontFamily: "'JetBrains Mono', monospace",
                                     fontSize: 10,
                                     fontWeight: 600,
                                     textTransform: 'uppercase',
@@ -472,7 +468,6 @@ export default function EditDistanceVisualizer() {
                                         border: `1px solid ${'var(--color-sorted)'}`,
                                         borderLeft: `3px solid ${'var(--color-sorted)'}`,
                                         borderRadius: '0px',
-                                        fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600,
                                         fontSize: 15,
                                         color: 'var(--fg)',

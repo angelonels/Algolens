@@ -398,14 +398,13 @@ export default function DecisionTreeVisualizer() {
         })
     }, [currentStep, points, step, dataBounds])
 
-    const isFinalStep = currentStep === steps.length - 1 && !running
+    const isFinalStep = steps.length > 0 && currentStep === steps.length - 1 && !running
 
     // Build mini tree view
     const treeNodes = Object.values(step.tree)
     const maxTreeDepth = treeNodes.length > 0 ? Math.max(...treeNodes.map(n => n.depth)) : 0
 
     const labelStyle = {
-        fontFamily: "'JetBrains Mono', monospace",
         fontWeight: 600, fontSize: '12px',
         textTransform: 'uppercase', letterSpacing: '0.05em',
         color: 'var(--fg-muted)'
@@ -416,47 +415,47 @@ export default function DecisionTreeVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is a Decision Tree?</h3>
+                        <h3 className="font-mono text-base font-bold text-[var(--fg)] mb-3">What is a Decision Tree?</h3>
                         <p>
                             A Decision Tree is a <strong>supervised learning</strong> algorithm that creates a
                             tree-like model of decisions by recursively <strong>partitioning the feature space</strong>.
                             At each internal node, it selects the feature and threshold that best separates the
                             classes, measured by the <strong>Gini impurity</strong> criterion.
                         </p>
-                        <p style={{ marginTop: 8 }}>
+                        <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
                             This visualization shows a 2D classification problem with 3 classes. Watch as the tree
                             recursively splits the feature space with <strong>axis-aligned boundaries</strong>,
                             creating rectangular decision regions. Each split is color-coded by depth — deeper
                             splits use thinner, dashed lines.
                         </p>
-                        <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-                        <ol style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">How It Works</h4>
+                        <ol className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li>Start with all data at the root node</li>
                             <li>Find the feature and threshold that minimizes Gini impurity</li>
                             <li>Split the data into left (feature &lt; threshold) and right branches</li>
                             <li>Recursively apply to each branch until stopping criteria are met</li>
                             <li>Assign the majority class as the leaf prediction</li>
                         </ol>
-                        <h4 style={{ margin: '16px 0 8px' }}>Gini Impurity</h4>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Gini Impurity</h4>
                         <p>
                             Gini = 1 − Σ(p<sub>i</sub>²) measures how "impure" a node is. A Gini of 0 means
                             all samples belong to one class (pure). The best split minimizes the weighted Gini
                             across both child nodes.
                         </p>
-                        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-                        <ul style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Key Characteristics</h4>
+                        <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li><strong>Non-parametric:</strong> Makes no assumptions about data distribution</li>
                             <li><strong>Interpretable:</strong> Decisions can be traced through the tree</li>
                             <li><strong>Prone to overfitting:</strong> Can memorize noise without pruning/depth limits</li>
                             <li><strong>Axis-aligned:</strong> Splits are perpendicular to feature axes</li>
                         </ul>
-                        <p style={{ marginTop: 12 }}>
+                        <p className="mt-3 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Time Complexity:</strong> O(n · features · n·log(n)) per split
                         </p>
-                        <p style={{ marginTop: 4 }}>
+                        <p className="mt-1 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Space Complexity:</strong> O(tree depth) for recursion stack
                         </p>
-                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
+                        <p className="mt-3 text-xs text-[var(--fg-muted)] leading-relaxed">
                             <strong>Real-world uses:</strong> Medical diagnosis, fraud detection, customer segmentation,
                             and forms the basis of Random Forests and Gradient Boosted Trees (XGBoost, LightGBM).
                         </p>
@@ -475,7 +474,6 @@ export default function DecisionTreeVisualizer() {
                                     onChange={e => { setMaxDepth(Number(e.target.value)); reset() }}
                                     disabled={running}
                                     style={{
-                                        fontFamily: "'JetBrains Mono', monospace",
                                         fontSize: 13, padding: '4px 8px',
                                         border: `1px solid ${'var(--border)'}`,
                                         borderRadius: '0px', background: 'var(--surface)', cursor: 'pointer'
@@ -520,7 +518,7 @@ export default function DecisionTreeVisualizer() {
                                 }}
                             >
                                 <div style={{
-                                    fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
+                                    fontSize: 10,
                                     fontWeight: 600, textTransform: 'uppercase',
                                     letterSpacing: '0.05em', color: 'var(--fg-muted)', marginBottom: 8
                                 }}>
@@ -540,7 +538,6 @@ export default function DecisionTreeVisualizer() {
                                             style={{
                                                 paddingLeft: node.depth * 18 + 4,
                                                 padding: `2px 6px 2px ${node.depth * 18 + 6}px`,
-                                                fontFamily: "'JetBrains Mono', monospace",
                                                 fontSize: 10,
                                                 color: 'var(--fg)',
                                                 borderRadius: '2px',
@@ -570,7 +567,7 @@ export default function DecisionTreeVisualizer() {
                         {/* Legend */}
                         <div style={{
                             display: 'flex', gap: 16, justifyContent: 'center', margin: '8px 0',
-                            fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600,
+                            fontSize: 11, fontWeight: 600,
                             textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--fg-muted)'
                         }}>
                             {['Class 0 ●', 'Class 1 ◆', 'Class 2 ▲'].map((label, i) => (
@@ -626,7 +623,6 @@ export default function DecisionTreeVisualizer() {
                                         border: `1px solid ${'var(--color-sorted)'}`,
                                         borderLeft: `3px solid ${'var(--color-sorted)'}`,
                                         borderRadius: '0px',
-                                        fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600, fontSize: 14, color: 'var(--fg)',
                                         display: 'inline-block'
                                     }}

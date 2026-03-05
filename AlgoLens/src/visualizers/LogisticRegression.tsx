@@ -155,14 +155,14 @@ function ParamSlider({ label, value, min, max, step, onChange, unit = '', disabl
                 marginBottom: 4
             }}>
                 <label style={{
-                    fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
+                    fontSize: 10,
                     fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em',
                     color: 'var(--fg-muted)'
                 }}>
                     {label}
                 </label>
                 <span style={{
-                    fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
+                    fontSize: 12,
                     fontWeight: 700, color: 'var(--fg)'
                 }}>
                     {typeof value === 'number' && value < 1 ? value.toFixed(2) : value}{unit}
@@ -227,7 +227,7 @@ function DataPoint({ cx, cy, label, isCorrect, isActive, delay = 0 }) {
                 <motion.path
                     d={path}
                     fill={baseColor}
-                    stroke="#fff"
+                    stroke="var(--surface)"
                     strokeWidth={1.5}
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -272,7 +272,7 @@ function DataPoint({ cx, cy, label, isCorrect, isActive, delay = 0 }) {
             <motion.circle
                 cx={cx} cy={cy} r={5}
                 fill={baseColor}
-                stroke="#fff"
+                stroke="var(--surface)"
                 strokeWidth={1.5}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -472,7 +472,7 @@ export default function LogisticRegressionVisualizer() {
         }
     }, [dataCount, noiseLevel])
 
-    const isFinalStep = currentStep === steps.length - 1 && !running
+    const isFinalStep = steps.length > 0 && currentStep === steps.length - 1 && !running
     const isTraining = running || currentStep >= 0
 
     // ── Decision boundary position ──
@@ -498,7 +498,7 @@ export default function LogisticRegressionVisualizer() {
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Logistic Regression?</h3>
+                        <h3 className="font-mono text-base font-bold text-[var(--fg)] mb-3">What is Logistic Regression?</h3>
                         <p>
                             Logistic Regression is a fundamental <strong>classification</strong> algorithm that
                             predicts the probability of a data point belonging to one of two classes. Despite its
@@ -506,20 +506,20 @@ export default function LogisticRegressionVisualizer() {
                             probabilities by applying the <strong>sigmoid function</strong> to a linear combination
                             of features.
                         </p>
-                        <p style={{ marginTop: 8 }}>
+                        <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
                             This visualization shows 1D binary classification: given a feature x, the model learns a
                             <strong> decision boundary</strong> that separates Class 0 (●) from Class 1 (◆).
                             Watch the sigmoid curve steepen and shift as gradient descent optimizes the
                             <strong> binary cross-entropy</strong> loss function.
                         </p>
-                        <h4 style={{ margin: '16px 0 8px' }}>The Sigmoid Function</h4>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">The Sigmoid Function</h4>
                         <p>
                             σ(z) = 1 / (1 + e<sup>−z</sup>) maps any real number to the range (0, 1),
                             making it perfect for modeling probabilities. The decision boundary is at
                             σ(z) = 0.5, which occurs when z = wx + b = 0, i.e., x = −b/w.
                         </p>
-                        <h4 style={{ margin: '16px 0 8px' }}>How It Learns</h4>
-                        <ol style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">How It Learns</h4>
+                        <ol className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li>Initialize weights w and bias b to zero</li>
                             <li>Compute ŷ = σ(wx + b) for each point</li>
                             <li>Calculate binary cross-entropy: −[y·log(ŷ) + (1−y)·log(1−ŷ)]</li>
@@ -527,20 +527,20 @@ export default function LogisticRegressionVisualizer() {
                             <li>Update: w ← w − α·∂L/∂w, b ← b − α·∂L/∂b</li>
                             <li>Repeat until convergence</li>
                         </ol>
-                        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-                        <ul style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Key Characteristics</h4>
+                        <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li><strong>Linear decision boundary:</strong> Separates classes with a hyperplane</li>
                             <li><strong>Probabilistic:</strong> Outputs calibrated probabilities, not just class labels</li>
                             <li><strong>Convex loss:</strong> Binary cross-entropy is convex → guaranteed global minimum</li>
                             <li><strong>Interpretable:</strong> Weights directly indicate feature importance</li>
                         </ul>
-                        <p style={{ marginTop: 12 }}>
+                        <p className="mt-3 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Time Complexity:</strong> O(n · epochs · features)
                         </p>
-                        <p style={{ marginTop: 4 }}>
+                        <p className="mt-1 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Space Complexity:</strong> O(features) for model parameters
                         </p>
-                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
+                        <p className="mt-3 text-xs text-[var(--fg-muted)] leading-relaxed">
                             <strong>Real-world uses:</strong> Spam detection, medical diagnosis (disease/no disease),
                             credit scoring, churn prediction, and as the output layer of neural networks.
                         </p>
@@ -610,7 +610,7 @@ export default function LogisticRegressionVisualizer() {
                         >
                             <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
                                 {/* Background */}
-                                <rect x={0} y={0} width={W} height={H} fill="#fafaf8" />
+                                <rect x={0} y={0} width={W} height={H} fill="var(--surface)" />
 
                                 {/* Probability heatmap */}
                                 <AnimatePresence>
@@ -647,8 +647,8 @@ export default function LogisticRegressionVisualizer() {
                                             x={PAD + (i / 4) * (W - 2 * PAD)}
                                             y={H - PAD + 16}
                                             textAnchor="middle"
-                                            fill="#666"
-                                            fontFamily="'JetBrains Mono', monospace"
+                                            fill="var(--fg-muted)"
+                                            fontFamily="var(--font-mono)"
                                             fontSize={10}
                                         >
                                             {xVal.toFixed(1)}
@@ -686,8 +686,8 @@ export default function LogisticRegressionVisualizer() {
                                     <motion.text
                                         x={boundaryX} y={PAD - 8}
                                         textAnchor="middle"
-                                        fill="#0a0a0a"
-                                        fontFamily="'JetBrains Mono', monospace"
+                                        fill="var(--fg)"
+                                        fontFamily="var(--font-mono)"
                                         fontSize={10} fontWeight="bold"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
@@ -794,7 +794,6 @@ export default function LogisticRegressionVisualizer() {
                                                 padding: '5px 10px',
                                                 background: accent ? 'rgba(22,163,74,0.06)' : 'var(--surface)',
                                                 border: `1px solid ${accent ? 'var(--color-sorted)' : 'var(--border)'}`,
-                                                fontFamily: "'JetBrains Mono', monospace",
                                                 fontSize: 10, fontWeight: 600,
                                                 textTransform: 'uppercase', letterSpacing: '0.04em',
                                                 color: 'var(--fg-muted)',
@@ -825,10 +824,10 @@ export default function LogisticRegressionVisualizer() {
                                     }}
                                 >
                                     <svg width={SIG_W} height={SIG_H} viewBox={`0 0 ${SIG_W} ${SIG_H}`}>
-                                        <rect width={SIG_W} height={SIG_H} fill="#fafaf8" />
+                                        <rect width={SIG_W} height={SIG_H} fill="var(--surface)" />
 
                                         {/* Label */}
-                                        <text x={30} y={16} fill="#666" fontFamily="'JetBrains Mono', monospace"
+                                        <text x={30} y={16} fill="var(--fg-muted)" fontFamily="var(--font-mono)"
                                             fontSize={9} fontWeight="bold">
                                             SIGMOID: σ(wx + b)
                                         </text>
@@ -840,13 +839,13 @@ export default function LogisticRegressionVisualizer() {
                                             stroke="#d4d0c8" strokeWidth={1} strokeDasharray="4 4"
                                         />
                                         <text x={26} y={28 + (SIG_H - 48) * 0.5 + 3}
-                                            fill="#999" fontFamily="'JetBrains Mono', monospace"
+                                            fill="var(--fg-muted)" fontFamily="var(--font-mono)"
                                             fontSize={9} textAnchor="end">0.5</text>
                                         <text x={26} y={32}
-                                            fill="#999" fontFamily="'JetBrains Mono', monospace"
+                                            fill="var(--fg-muted)" fontFamily="var(--font-mono)"
                                             fontSize={9} textAnchor="end">1.0</text>
                                         <text x={26} y={28 + (SIG_H - 48) + 4}
-                                            fill="#999" fontFamily="'JetBrains Mono', monospace"
+                                            fill="var(--fg-muted)" fontFamily="var(--font-mono)"
                                             fontSize={9} textAnchor="end">0.0</text>
 
                                         {/* Gradient fill under curve */}
@@ -892,7 +891,7 @@ export default function LogisticRegressionVisualizer() {
                                                 return (
                                                     <motion.circle
                                                         cx={bpx} cy={halfY} r={5}
-                                                        fill="#0a0a0a" stroke="#fff" strokeWidth={2}
+                                                        fill="var(--fg)" stroke="var(--surface)" strokeWidth={2}
                                                         initial={{ scale: 0 }}
                                                         animate={{ scale: [1, 1.3, 1] }}
                                                         transition={{
@@ -922,17 +921,17 @@ export default function LogisticRegressionVisualizer() {
                                     }}
                                 >
                                     <svg width={COST_W} height={COST_H} viewBox={`0 0 ${COST_W} ${COST_H}`}>
-                                        <rect width={COST_W} height={COST_H} fill="#fafaf8" />
+                                        <rect width={COST_W} height={COST_H} fill="var(--surface)" />
 
                                         {/* Label */}
-                                        <text x={30} y={14} fill="#666" fontFamily="'JetBrains Mono', monospace"
+                                        <text x={30} y={14} fill="var(--fg-muted)" fontFamily="var(--font-mono)"
                                             fontSize={9} fontWeight="bold">
                                             COST (CROSS-ENTROPY)
                                         </text>
 
                                         {/* Current cost value */}
-                                        <text x={COST_W - 12} y={14} fill="#0a0a0a"
-                                            fontFamily="'JetBrains Mono', monospace"
+                                        <text x={COST_W - 12} y={14} fill="var(--fg)"
+                                            fontFamily="var(--font-mono)"
                                             fontSize={10} fontWeight="bold" textAnchor="end">
                                             {step.cost.toFixed(4)}
                                         </text>
@@ -994,7 +993,7 @@ export default function LogisticRegressionVisualizer() {
                                                 {/* Dot */}
                                                 <motion.circle
                                                     cx={costDot.x} cy={costDot.y} r={4}
-                                                    fill="#e63312" stroke="#fff" strokeWidth={1.5}
+                                                    fill="#e63312" stroke="var(--surface)" strokeWidth={1.5}
                                                     initial={{ scale: 0 }}
                                                     animate={{ scale: 1 }}
                                                     transition={{
@@ -1011,7 +1010,7 @@ export default function LogisticRegressionVisualizer() {
                         {/* ═══ LEGEND ═══ */}
                         <div style={{
                             display: 'flex', gap: 20, justifyContent: 'center', margin: '10px 0',
-                            fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600,
+                            fontSize: 11, fontWeight: 600,
                             textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--fg-muted)'
                         }}>
                             <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -1078,7 +1077,6 @@ export default function LogisticRegressionVisualizer() {
                                         background: 'rgba(22,163,74,0.04)',
                                         border: `1px solid ${'var(--color-sorted)'}`,
                                         borderLeft: `4px solid ${'var(--color-sorted)'}`,
-                                        fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600, fontSize: 14, color: 'var(--fg)',
                                         display: 'inline-block'
                                     }}

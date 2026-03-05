@@ -206,28 +206,28 @@ export default function BFSGridVisualizer() {
         { color: 'var(--color-active)', label: 'Path' }
     ]
 
-    const isFinalStep = currentStep === steps.length - 1 && !running
+    const isFinalStep = steps.length > 0 && currentStep === steps.length - 1 && !running
 
     return (
         <PageContainer title="BFS Grid Search">
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>
-                        <h3 style={{ marginBottom: 12, color: 'var(--fg)' }}>What is Breadth-First Search?</h3>
+                        <h3 className="font-mono text-base font-bold text-[var(--fg)] mb-3">What is Breadth-First Search?</h3>
                         <p>
                             Breadth-First Search (BFS) is a fundamental graph traversal algorithm that explores
                             nodes level by level, visiting <strong>all neighbors</strong> at the current depth before
                             moving to nodes at the next depth level. It uses a <strong>queue (FIFO)</strong> data
                             structure to track which node to visit next.
                         </p>
-                        <p style={{ marginTop: 8 }}>
+                        <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
                             On an unweighted grid or graph, BFS guarantees finding the <strong>shortest path</strong> between
                             two points because it explores all paths of length k before any path of length k+1. This
                             property makes it invaluable for pathfinding problems, network broadcasting, and level-order
                             traversals of trees.
                         </p>
-                        <h4 style={{ margin: '16px 0 8px' }}>How It Works</h4>
-                        <ol style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">How It Works</h4>
+                        <ol className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li>Start from the source node, mark it as visited, and add it to a queue</li>
                             <li>Dequeue the front node from the queue</li>
                             <li>Explore all unvisited neighbors of the dequeued node</li>
@@ -235,26 +235,26 @@ export default function BFSGridVisualizer() {
                             <li>Repeat steps 2–4 until the target is found or the queue is empty</li>
                             <li>If the target is found, reconstruct the path by tracing parent pointers back to the source</li>
                         </ol>
-                        <h4 style={{ margin: '16px 0 8px' }}>BFS vs DFS</h4>
-                        <ul style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">BFS vs DFS</h4>
+                        <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li><strong>BFS</strong> uses a queue, explores level by level, and finds shortest paths in unweighted graphs</li>
                             <li><strong>DFS</strong> uses a stack (or recursion), explores as deep as possible first, and uses less memory on wide graphs</li>
                             <li>For shortest path on unweighted graphs, <strong>BFS is always preferred</strong></li>
                         </ul>
-                        <h4 style={{ margin: '16px 0 8px' }}>Key Characteristics</h4>
-                        <ul style={{ paddingLeft: 20, margin: 0 }}>
+                        <h4 className="font-mono text-sm font-bold text-[var(--fg)] mt-4 mb-2">Key Characteristics</h4>
+                        <ul className="pl-5 text-sm text-[var(--fg-muted)] leading-relaxed space-y-1">
                             <li><strong>Complete:</strong> Will always find a solution if one exists (given finite graph)</li>
                             <li><strong>Optimal:</strong> Guarantees shortest path on unweighted graphs</li>
                             <li><strong>Memory-intensive:</strong> Stores all nodes at the current frontier in memory</li>
                             <li><strong>Works on:</strong> Both directed and undirected graphs, trees, grids</li>
                         </ul>
-                        <p style={{ marginTop: 12 }}>
+                        <p className="mt-3 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Time Complexity:</strong> O(V + E) where V = vertices (cells) and E = edges (connections)
                         </p>
-                        <p style={{ marginTop: 4 }}>
+                        <p className="mt-1 text-sm text-[var(--fg-muted)] leading-relaxed">
                             <strong>Space Complexity:</strong> O(V) — the queue and visited set can hold up to all vertices
                         </p>
-                        <p style={{ marginTop: 12, color: 'var(--fg-muted)', fontSize: '0.9em' }}>
+                        <p className="mt-3 text-xs text-[var(--fg-muted)] leading-relaxed">
                             <strong>Real-world uses:</strong> GPS navigation (shortest route), social network friend suggestions
                             (people within k connections), web crawlers, network broadcasting, and puzzle solving (like
                             finding the fewest moves in a maze).
@@ -274,7 +274,6 @@ export default function BFSGridVisualizer() {
                                 border: `1px solid ${'var(--border)'}`,
                                 borderLeft: `3px solid ${'var(--color-comparing)'}`,
                                 borderRadius: '0px',
-                                fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: '12px',
                                 color: 'var(--fg-muted)'
                             }}>
@@ -332,7 +331,6 @@ export default function BFSGridVisualizer() {
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                                 cursor: running ? 'default' : 'pointer',
-                                                fontFamily: "'JetBrains Mono', monospace",
                                                 fontSize: 9,
                                                 fontWeight: 700,
                                                 color: (state === 'wall' || state === 'start' || state === 'end' || state === 'current' || state === 'path')
@@ -395,7 +393,6 @@ export default function BFSGridVisualizer() {
                                         border: `1px solid ${step.phase === 'found' ? 'var(--color-sorted)' : 'var(--accent)'}`,
                                         borderLeft: `3px solid ${step.phase === 'found' ? 'var(--color-sorted)' : 'var(--accent)'}`,
                                         borderRadius: '0px',
-                                        fontFamily: "'JetBrains Mono', monospace",
                                         fontWeight: 600,
                                         fontSize: 15,
                                         color: 'var(--fg)',
