@@ -56,7 +56,6 @@ function computeGDSteps(points, lr = 0.05, maxEpochs = 60) {
 
     for (let epoch = 1; epoch <= maxEpochs; epoch++) {
         const predictions = points.map(p => m * p.x + b)
-        const cost = points.reduce((s, p, i) => s + (p.y - predictions[i]) ** 2, 0) / n
         const dm = (-2 / n) * points.reduce((s, p, i) => s + p.x * (p.y - predictions[i]), 0)
         const db = (-2 / n) * points.reduce((s, p, i) => s + (p.y - predictions[i]), 0)
 
@@ -206,7 +205,7 @@ export default function LinearRegressionVisualizer() {
         }
 
         // Data points with glow
-        points.forEach((p, i) => {
+        points.forEach((p) => {
             const px = toCanvasX(p.x)
             const py = toCanvasY(p.y)
 

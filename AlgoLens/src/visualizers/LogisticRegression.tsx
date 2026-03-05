@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
-import { motion, AnimatePresence, useSpring, useTransform } from 'framer-motion'
+import { useState, useEffect, useMemo, useCallback } from 'react'
+import { motion, AnimatePresence, useSpring } from 'framer-motion'
 import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
     SpeedControl, StepCounter, StatusMessage, ControlButton,
@@ -398,7 +398,6 @@ export default function LogisticRegressionVisualizer() {
     const costFillPath = useMemo(() => {
         if (!costPath) return ''
         const costs = steps.slice(0, currentStep + 1).map(s => s.cost)
-        const maxCost = Math.max(...steps.map(s => s.cost)) * 1.1 || 1
         const cPad = 30
         const plotW = COST_W - cPad - 10
         const plotH = COST_H - 40
@@ -473,7 +472,7 @@ export default function LogisticRegressionVisualizer() {
     }, [dataCount, noiseLevel])
 
     const isFinalStep = steps.length > 0 && currentStep === steps.length - 1 && !running
-    const isTraining = running || currentStep >= 0
+    const _isTraining = running || currentStep >= 0
 
     // ── Decision boundary position ──
     const boundaryX = currentStep >= 0 && step.w !== 0 ? toX(-step.b / step.w) : null

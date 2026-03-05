@@ -57,7 +57,7 @@ export default function BinarySearchVisualizer() {
             : `${array[mid]} > ${target} → search left (${low}..${mid - 1})`
       })
       if (found) break
-      array[mid] < target ? (low = mid + 1) : (high = mid - 1)
+      if (array[mid] < target) { low = mid + 1 } else { high = mid - 1 }
     }
     if (s.length === 0 || !s[s.length - 1].found) {
       s.push({ low: -1, mid: -1, high: -1, found: false, message: `${target} not found in array` })

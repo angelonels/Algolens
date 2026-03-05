@@ -313,7 +313,7 @@ export default function DecisionTreeVisualizer() {
 
         // Split lines with depth-based styling
         if (currentStep >= 0) {
-            step.splits.forEach((s, idx) => {
+            step.splits.forEach((s) => {
                 const depthColors = ['#0a0a0a', '#e63312', '#2563eb', '#16a34a', '#9333ea']
                 const color = depthColors[s.depth % depthColors.length]
                 const lineWidth = Math.max(1, 3 - s.depth * 0.5)
@@ -402,7 +402,7 @@ export default function DecisionTreeVisualizer() {
 
     // Build mini tree view
     const treeNodes = Object.values(step.tree)
-    const maxTreeDepth = treeNodes.length > 0 ? Math.max(...treeNodes.map(n => n.depth)) : 0
+    // maxTreeDepth removed — not currently used
 
     const labelStyle = {
         fontWeight: 600, fontSize: '12px',
