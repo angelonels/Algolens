@@ -3,21 +3,28 @@ import { motion } from 'framer-motion'
 import { useTheme } from '../context/ThemeContext'
 
 const algorithms = [
+  // Dynamic Programming
+  { label: '[DP] Edit Distance', path: '/edit-distance' },
+  // Graph & Pathfinding
+  { label: '[Graph] BFS Grid Search', path: '/bfs' },
+  { label: '[Graph] DFS Grid Search', path: '/dfs' },
+  { label: '[Graph] Dijkstra\'s Path', path: '/dijkstra' },
+  // Math
+  { label: '[Math] Euclidean GCD', path: '/gcd' },
+  // Matrix
+  { label: '[Matrix] Matrix Traversal', path: '/matrix-traversal' },
+  // Machine Learning
+  { label: '[ML] Decision Tree', path: '/decision-tree' },
+  { label: '[ML] K-Means Clustering', path: '/kmeans' },
+  { label: '[ML] Linear Regression', path: '/linear-regression' },
+  { label: '[ML] Logistic Regression', path: '/logistic-regression' },
+  // Search
   { label: '[Search] Binary Search', path: '/binary-search' },
+  // Sorting
   { label: '[Sort] Bubble Sort', path: '/bubble-sort' },
   { label: '[Sort] Insertion Sort', path: '/insertion-sort' },
   { label: '[Sort] Merge Sort', path: '/merge-sort' },
   { label: '[Sort] Quick Sort', path: '/quick-sort' },
-  { label: '[Math] Euclidean GCD', path: '/gcd' },
-  { label: '[Matrix] Matrix Traversal', path: '/matrix-traversal' },
-  { label: '[Graph] Dijkstra\'s Path', path: '/dijkstra' },
-  { label: '[Graph] BFS Grid Search', path: '/bfs' },
-  { label: '[Graph] DFS Grid Search', path: '/dfs' },
-  { label: '[ML] K-Means Clustering', path: '/kmeans' },
-  { label: '[DP] Edit Distance', path: '/edit-distance' },
-  { label: '[ML] Linear Regression', path: '/linear-regression' },
-  { label: '[ML] Logistic Regression', path: '/logistic-regression' },
-  { label: '[ML] Decision Tree', path: '/decision-tree' },
 ]
 
 export default function Navbar() {
