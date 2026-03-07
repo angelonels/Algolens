@@ -15,6 +15,7 @@ export const SPRING = {
     snappy: { type: 'spring', stiffness: 300, damping: 25 } as Transition,
     bouncy: { type: 'spring', stiffness: 400, damping: 15 } as Transition,
     gentle: { type: 'spring', stiffness: 200, damping: 20 } as Transition,
+    smooth: { type: 'spring', stiffness: 250, damping: 30 } as Transition,
 }
 
 // ── Easing ──
@@ -40,10 +41,17 @@ export const VARIANTS: Record<string, Variants> = {
         animate: { opacity: 1, y: 0, scale: 1 },
         exit: { opacity: 0, scale: 0.97 },
     },
+    scaleIn: {
+        initial: { opacity: 0, scale: 0.9 },
+        animate: { opacity: 1, scale: 1 },
+        exit: { opacity: 0, scale: 0.9 },
+    },
 }
 
 // ── Stagger Presets ──
 export const STAGGER = {
     fast: { staggerChildren: 0.03, delayChildren: 0.1 },
     normal: { staggerChildren: 0.06, delayChildren: 0.15 },
+    slow: { staggerChildren: 0.1, delayChildren: 0.2 },
 }
+
