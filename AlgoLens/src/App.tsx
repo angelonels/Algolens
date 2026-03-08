@@ -5,6 +5,7 @@ import { PAGE_TRANSITION } from './utils/animationConfig'
 import Navbar from './components/Navbar'
 import KeyboardShortcuts from './components/KeyboardShortcuts'
 import Home from './components/Home'
+import NotFound from './components/NotFound'
 
 import BinarySearch from './visualizers/BinarySearch'
 import BubbleSort from './visualizers/BubbleSort'
@@ -66,6 +67,7 @@ function AnimatedRoutes() {
         {routes.map(r => (
           <Route key={r.path} path={r.path} element={<PageWrap>{r.element}</PageWrap>} />
         ))}
+        <Route path="*" element={<PageWrap><NotFound /></PageWrap>} />
       </Routes>
     </AnimatePresence>
   )
