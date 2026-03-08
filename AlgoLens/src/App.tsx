@@ -4,6 +4,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import { PAGE_TRANSITION } from './utils/animationConfig'
 import Navbar from './components/Navbar'
 import KeyboardShortcuts from './components/KeyboardShortcuts'
+import ScrollToTop from './components/ScrollToTop'
 import Home from './components/Home'
 import NotFound from './components/NotFound'
 
@@ -78,6 +79,7 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <ThemeProvider>
+      <ScrollToTop />
       <Navbar />
       <KeyboardShortcuts />
       <AnimatedRoutes />
