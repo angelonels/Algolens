@@ -13,6 +13,7 @@ import InsertionSort from './visualizers/InsertionSort'
 import MergeSort from './visualizers/MergeSort'
 import QuickSort from './visualizers/QuickSort'
 import SelectionSort from './visualizers/SelectionSort'
+import HeapSort from './visualizers/HeapSort'
 import EuclideanGCD from './visualizers/EuclideanGCD'
 import MatrixTraversal from './visualizers/MatrixTraversal'
 import DijkstraPath from './visualizers/DijkstraPath'
@@ -46,6 +47,7 @@ const routes = [
   { path: '/merge-sort', element: <MergeSort /> },
   { path: '/quick-sort', element: <QuickSort /> },
   { path: '/selection-sort', element: <SelectionSort /> },
+  { path: '/heap-sort', element: <HeapSort /> },
   { path: '/gcd', element: <EuclideanGCD /> },
   { path: '/matrix-traversal', element: <MatrixTraversal /> },
   { path: '/dijkstra', element: <DijkstraPath /> },
