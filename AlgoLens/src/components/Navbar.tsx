@@ -25,6 +25,7 @@ const algorithms = [
   { label: '[Sort] Insertion Sort', path: '/insertion-sort' },
   { label: '[Sort] Merge Sort', path: '/merge-sort' },
   { label: '[Sort] Quick Sort', path: '/quick-sort' },
+  { label: '[Sort] Selection Sort', path: '/selection-sort' },
 ]
 
 export default function Navbar() {
