@@ -27,6 +27,7 @@ const algorithms = [
   { label: '[Sort] Quick Sort', path: '/quick-sort' },
   { label: '[Sort] Selection Sort', path: '/selection-sort' },
   { label: '[Sort] Heap Sort', path: '/heap-sort' },
+  { label: '[Sort] Counting Sort', path: '/counting-sort' },
 ]
 
 export default function Navbar() {
