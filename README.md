@@ -10,15 +10,17 @@ No installs. No textbooks. Just pick an algorithm, hit play, and watch.
 
 ## 🎬 What Can You Visualize?
 
-AlgoLens currently has **15 algorithm visualizers** across four categories:
+AlgoLens currently has **17 algorithm visualizers** across five categories:
 
 ### Sorting
 | Algorithm | What It Shows |
 |-----------|--------------|
 | **Bubble Sort** | Bars swap next to each other until everything's in order |
 | **Insertion Sort** | Pulls out a value and slides it into the right spot |
+| **Selection Sort** | Scans for the minimum element and swaps it into place |
 | **Merge Sort** | Splits the array in half, sorts each half, then merges them back |
 | **Quick Sort** | Picks a pivot, partitions around it, repeat |
+| **Heap Sort** | Builds a max heap, then extracts elements one by one |
 
 ### Searching & Pathfinding
 | Algorithm | What It Shows |
@@ -32,7 +34,7 @@ AlgoLens currently has **15 algorithm visualizers** across four categories:
 | Algorithm | What It Shows |
 |-----------|--------------|
 | **Euclidean GCD** | Finds the greatest common divisor using the modulo trick |
-| **Matrix Traversal** | Walks through a matrix in a spiral pattern |
+| **Matrix Traversal** | Walks through a matrix in row-major, column-major, and diagonal patterns |
 | **Edit Distance (DP)** | Shows how to transform one string into another with minimum edits |
 
 ### Machine Learning
@@ -47,12 +49,16 @@ AlgoLens currently has **15 algorithm visualizers** across four categories:
 
 ## ✨ Features
 
-- ⏩ **Speed control** — Slow, normal, fast, or turbo. You decide the pace.
+- ⏩ **Speed control** — 0.5x, 1x, 2x, or 4x. You decide the pace.
 - ⏸️ **Pause & resume** — Stop the animation anytime to study what's happening.
 - 📊 **Step counter** — See exactly which step the algorithm is on.
 - 🐍 **Python code snippets** — Each visualizer includes the algorithm's Python code with a copy button.
 - 🎨 **Color-coded legend** — Every color means something. No guessing.
 - 💫 **Smooth animations** — Built with Framer Motion for buttery transitions.
+- 🌙 **Dark mode** — Toggle between light and dark themes.
+- ⌨️ **Keyboard shortcuts** — Quick navigation without reaching for the mouse.
+- 🔍 **Search & filter** — Find algorithms by name, category, or description.
+- 🚫 **404 page** — Styled fallback for unmatched routes.
 
 ---
 
@@ -61,8 +67,10 @@ AlgoLens currently has **15 algorithm visualizers** across four categories:
 | Tool | What It Does |
 |------|-------------|
 | [React 19](https://react.dev) | UI framework |
+| [TypeScript](https://www.typescriptlang.org) | Type-safe JavaScript |
 | [Vite](https://vitejs.dev) | Dev server & bundler (super fast) |
-| [React Router](https://reactrouter.com) | Navigation between pages |
+| [Tailwind CSS v4](https://tailwindcss.com) | Utility-first styling |
+| [React Router](https://reactrouter.com) | Client-side navigation |
 | [Framer Motion](https://www.framer.com/motion/) | Animations & transitions |
 | [Google Fonts](https://fonts.google.com) | Inter + JetBrains Mono typefaces |
 
@@ -74,21 +82,27 @@ AlgoLens currently has **15 algorithm visualizers** across four categories:
 AlgoLens/
 └── src/
     ├── components/
-    │   ├── Home.jsx              ← Landing page with the algorithm grid
-    │   ├── Navbar.jsx             ← Top navigation bar
+    │   ├── Home.tsx               ← Landing page with the algorithm grid
+    │   ├── Navbar.tsx              ← Top navigation bar
+    │   ├── KeyboardShortcuts.tsx   ← Global keyboard shortcut handler
+    │   ├── NotFound.tsx            ← 404 page
+    │   ├── ScrollToTop.tsx         ← Scrolls to top on route change
     │   └── ui/
-    │       └── AnimationComponents.jsx  ← Reusable UI pieces (buttons, etc.)
-    ├── visualizers/               ← One file per algorithm
-    │   ├── BubbleSort.jsx
-    │   ├── BinarySearch.jsx
-    │   ├── MergeSort.jsx
-    │   ├── ... (15 total)
-    │   └── DecisionTree.jsx
+    │       └── shared.tsx          ← Reusable UI pieces (buttons, legends, etc.)
+    ├── context/
+    │   └── ThemeContext.tsx        ← Dark/light theme provider
+    ├── visualizers/                ← One file per algorithm (17 total)
+    │   ├── BubbleSort.tsx
+    │   ├── SelectionSort.tsx
+    │   ├── HeapSort.tsx
+    │   ├── BinarySearch.tsx
+    │   ├── ... and more
+    │   └── DecisionTree.tsx
     ├── utils/
-    │   └── animationConfig.js     ← Colors, animation timings, shared styles
-    ├── App.jsx                    ← Routes & app shell
-    ├── main.jsx                   ← Entry point
-    └── index.css                  ← Global styles & CSS variables
+    │   └── animationConfig.ts      ← Spring physics, speed presets, variants
+    ├── App.tsx                     ← Routes & app shell
+    ├── main.tsx                    ← Entry point
+    └── index.css                   ← Global styles & CSS variables
 ```
 
 ---
@@ -99,8 +113,8 @@ AlgoLens/
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/your-username/AlgoLens.git
-cd AlgoLens
+git clone https://github.com/angelonels/Algolens.git
+cd Algolens
 
 # 2. Move into the app folder
 cd AlgoLens
