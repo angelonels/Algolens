@@ -19,6 +19,7 @@ const algorithms: Algorithm[] = [
   { name: 'Selection Sort', path: '/selection-sort', tag: 'Sort', desc: 'O(n²) — Find minimum and swap into position' },
   { name: 'Heap Sort', path: '/heap-sort', tag: 'Sort', desc: 'O(n log n) — Binary heap extraction sort' },
   { name: 'Counting Sort', path: '/counting-sort', tag: 'Sort', desc: 'O(n+k) — Non-comparison count-based sort' },
+  { name: 'Radix Sort', path: '/radix-sort', tag: 'Sort', desc: 'O(d×n) — Non-comparison digit-by-digit sort' },
   { name: 'Euclidean GCD', path: '/gcd', tag: 'Math', desc: 'O(log min(a,b)) — Greatest common divisor' },
   { name: 'Matrix Traversal', path: '/matrix-traversal', tag: 'Matrix', desc: 'Row-major, column-major, and diagonal walks' },
   { name: "Dijkstra's Path", path: '/dijkstra', tag: 'Graph', desc: 'O((V+E) log V) — Shortest path in weighted graphs' },
