@@ -9,26 +9,26 @@ const algorithms = [
   { label: '[Graph] BFS Grid Search', path: '/bfs' },
   { label: '[Graph] DFS Grid Search', path: '/dfs' },
   { label: '[Graph] Dijkstra\'s Path', path: '/dijkstra' },
-  // Math
-  { label: '[Math] Euclidean GCD', path: '/gcd' },
-  // Matrix
-  { label: '[Matrix] Matrix Traversal', path: '/matrix-traversal' },
   // Machine Learning
   { label: '[ML] Decision Tree', path: '/decision-tree' },
   { label: '[ML] K-Means Clustering', path: '/kmeans' },
   { label: '[ML] Linear Regression', path: '/linear-regression' },
   { label: '[ML] Logistic Regression', path: '/logistic-regression' },
+  // Math
+  { label: '[Math] Euclidean GCD', path: '/gcd' },
+  // Matrix
+  { label: '[Matrix] Matrix Traversal', path: '/matrix-traversal' },
   // Search
   { label: '[Search] Binary Search', path: '/binary-search' },
   // Sorting
   { label: '[Sort] Bubble Sort', path: '/bubble-sort' },
+  { label: '[Sort] Counting Sort', path: '/counting-sort' },
+  { label: '[Sort] Heap Sort', path: '/heap-sort' },
   { label: '[Sort] Insertion Sort', path: '/insertion-sort' },
   { label: '[Sort] Merge Sort', path: '/merge-sort' },
   { label: '[Sort] Quick Sort', path: '/quick-sort' },
-  { label: '[Sort] Selection Sort', path: '/selection-sort' },
-  { label: '[Sort] Heap Sort', path: '/heap-sort' },
-  { label: '[Sort] Counting Sort', path: '/counting-sort' },
   { label: '[Sort] Radix Sort', path: '/radix-sort' },
+  { label: '[Sort] Selection Sort', path: '/selection-sort' },
 ]
 
 export default function Navbar() {
