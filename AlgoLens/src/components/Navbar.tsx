@@ -74,6 +74,8 @@ export default function Navbar() {
         <select
           value={location.pathname}
           onChange={e => navigate(e.target.value)}
+          aria-label="Choose an algorithm to visualize"
+          title="Choose an algorithm to visualize"
           className="font-mono text-xs font-medium px-3 py-2 border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] cursor-pointer min-w-[200px] hover:border-[var(--border-strong)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/15 outline-none transition-all"
         >
           <option value="/" disabled={isHome}>Select algorithm…</option>
