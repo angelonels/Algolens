@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeProvider } from './context/ThemeContext'
-import { PAGE_TRANSITION } from './utils/animationConfig'
+import { PAGE_TRANSITION, EASE_OUT } from './utils/animationConfig'
 import Navbar from './components/Navbar'
 import KeyboardShortcuts from './components/KeyboardShortcuts'
 import ScrollToTop from './components/ScrollToTop'
@@ -37,6 +37,9 @@ function PageWrap({ children }: { children: ReactNode }) {
       animate={PAGE_TRANSITION.animate}
       exit={PAGE_TRANSITION.exit}
       transition={PAGE_TRANSITION.transition}
+      style={{
+        willChange: 'transform, opacity, filter',
+      }}
     >
       {children}
     </motion.div>
