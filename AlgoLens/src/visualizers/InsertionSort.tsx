@@ -6,16 +6,8 @@ import {
   CodeBlock, PageContainer, ExplanationBox, VisualizationContainer,
   ControlsRow, SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { INSERTION_SORT_CODE } from '../data/algorithmCodes'
 
-const CODE = `def insertion_sort(arr):
-    for i in range(1, len(arr)):
-        key = arr[i]
-        j = i - 1
-        while j >= 0 and arr[j] > key:
-            arr[j + 1] = arr[j]
-            j -= 1
-        arr[j + 1] = key
-    return arr`
 
 interface Step {
   snapshot: number[]
@@ -104,7 +96,7 @@ export default function InsertionSortVisualizer() {
               <p><strong>Space:</strong> O(1) | <strong>Stable:</strong> Yes | <strong>Adaptive:</strong> Yes</p>
             </div>
           </ExplanationBox>
-          <CodeBlock code={CODE} />
+          <CodeBlock codes={INSERTION_SORT_CODE} />
         </SplitLeft>
         <SplitRight>
           <VisualizationContainer>

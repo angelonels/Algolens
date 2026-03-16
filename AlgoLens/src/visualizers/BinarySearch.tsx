@@ -16,18 +16,8 @@ import {
   SplitLeft,
   SplitRight
 } from '../components/ui/shared'
+import { BINARY_SEARCH_CODE } from '../data/algorithmCodes'
 
-const binarySearchPythonCode = `def binary_search(arr, target):
-    low, high = 0, len(arr) - 1
-    while low <= high:
-        mid = (low + high) // 2
-        if arr[mid] == target:
-            return mid
-        elif arr[mid] < target:
-            low = mid + 1
-        else:
-            high = mid - 1
-    return -1`
 
 export default function BinarySearchVisualizer() {
   const [array] = useState(Array.from({ length: 16 }, (_, i) => i + 1))
@@ -166,7 +156,7 @@ export default function BinarySearchVisualizer() {
             </p>
           </ExplanationBox>
 
-          <CodeBlock code={binarySearchPythonCode} />
+          <CodeBlock codes={BINARY_SEARCH_CODE} />
         </SplitLeft>
         <SplitRight>
           <VisualizationContainer>

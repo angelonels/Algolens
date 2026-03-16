@@ -6,14 +6,8 @@ import {
   CodeBlock, PageContainer, ExplanationBox, VisualizationContainer,
   ControlsRow, SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { BUBBLE_SORT_CODE } from '../data/algorithmCodes'
 
-const CODE = `def bubble_sort(arr):
-    n = len(arr)
-    for i in range(n):
-        for j in range(0, n - i - 1):
-            if arr[j] > arr[j + 1]:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]
-    return arr`
 
 interface Step {
   array: number[]
@@ -101,7 +95,7 @@ export default function BubbleSortVisualizer() {
               <p><strong>Space:</strong> O(1) | <strong>Stable:</strong> Yes</p>
             </div>
           </ExplanationBox>
-          <CodeBlock code={CODE} />
+          <CodeBlock codes={BUBBLE_SORT_CODE} />
         </SplitLeft>
         <SplitRight>
           <VisualizationContainer>

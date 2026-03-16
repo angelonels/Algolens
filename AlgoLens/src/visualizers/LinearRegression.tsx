@@ -6,24 +6,8 @@ import {
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { LINEAR_REGRESSION_CODE } from '../data/algorithmCodes'
 
-const lrPythonCode = `import numpy as np
-
-def linear_regression_gd(X, y, lr=0.01, epochs=100):
-    m, b = 0.0, 0.0
-    n = len(X)
-    history = []
-    
-    for epoch in range(epochs):
-        y_pred = m * X + b
-        cost = (1/n) * np.sum((y - y_pred) ** 2)
-        dm = (-2/n) * np.sum(X * (y - y_pred))
-        db = (-2/n) * np.sum(y - y_pred)
-        m -= lr * dm
-        b -= lr * db
-        history.append((m, b, cost))
-    
-    return m, b, history`
 
 // ── Data Generation ──
 function generateData(n = 30) {
@@ -390,7 +374,7 @@ export default function LinearRegressionVisualizer() {
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={lrPythonCode} />
+                    <CodeBlock codes={LINEAR_REGRESSION_CODE} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>

@@ -6,25 +6,8 @@ import {
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { DIJKSTRA_CODE } from '../data/algorithmCodes'
 
-const dijkstraPythonCode = `import heapq
-
-def dijkstra(graph, start):
-    distances = {node: float('inf') for node in graph}
-    distances[start] = 0
-    pq = [(0, start)]
-    visited = set()
-    
-    while pq:
-        curr_dist, curr = heapq.heappop(pq)
-        if curr in visited: continue
-        visited.add(curr)
-        for neighbor, weight in graph[curr]:
-            distance = curr_dist + weight
-            if distance < distances[neighbor]:
-                distances[neighbor] = distance
-                heapq.heappush(pq, (distance, neighbor))
-    return distances`
 
 const initialGraph = {
     nodes: [
@@ -198,7 +181,7 @@ export default function DijkstraVisualizer() {
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={dijkstraPythonCode} />
+                    <CodeBlock codes={DIJKSTRA_CODE} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>

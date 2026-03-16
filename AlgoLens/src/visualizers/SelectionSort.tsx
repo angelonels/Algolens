@@ -6,16 +6,8 @@ import {
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer,
     ControlsRow, SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { SELECTION_SORT_CODE } from '../data/algorithmCodes'
 
-const CODE = `def selection_sort(arr):
-    n = len(arr)
-    for i in range(n):
-        min_idx = i
-        for j in range(i + 1, n):
-            if arr[j] < arr[min_idx]:
-                min_idx = j
-        arr[i], arr[min_idx] = arr[min_idx], arr[i]
-    return arr`
 
 interface Step {
     array: number[]
@@ -153,7 +145,7 @@ export default function SelectionSortVisualizer() {
                             <p><strong>Space:</strong> O(1) | <strong>Stable:</strong> No</p>
                         </div>
                     </ExplanationBox>
-                    <CodeBlock code={CODE} />
+                    <CodeBlock codes={SELECTION_SORT_CODE} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>

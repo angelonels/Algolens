@@ -6,26 +6,8 @@ import {
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { DFS_CODE } from '../data/algorithmCodes'
 
-const dfsPythonCode = `def dfs(grid, start, end):
-    rows, cols = len(grid), len(grid[0])
-    stack = [(start, [start])]
-    visited = set()
-    
-    while stack:
-        (r, c), path = stack.pop()
-        if (r, c) in visited:
-            continue
-        visited.add((r, c))
-        if (r, c) == end:
-            return path
-        for dr, dc in [(0,1),(1,0),(0,-1),(-1,0)]:
-            nr, nc = r + dr, c + dc
-            if (0 <= nr < rows and 0 <= nc < cols
-                and (nr, nc) not in visited
-                and grid[nr][nc] != 1):
-                stack.append(((nr, nc), path + [(nr, nc)]))
-    return None  # no path found`
 
 const ROWS = 15
 const COLS = 15
@@ -265,7 +247,7 @@ export default function DFSGridVisualizer() {
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={dfsPythonCode} />
+                    <CodeBlock codes={DFS_CODE} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>

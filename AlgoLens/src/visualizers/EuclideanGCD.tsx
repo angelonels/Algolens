@@ -15,11 +15,8 @@ import {
   SplitLeft,
   SplitRight
 } from '../components/ui/shared'
+import { EUCLIDEAN_GCD_CODE } from '../data/algorithmCodes'
 
-const gcdPythonCode = `def gcd(a, b):
-    while b != 0:
-        a, b = b, a % b
-    return a`
 
 export default function GCDVisualizer() {
   const [a, setA] = useState(252)
@@ -180,7 +177,7 @@ export default function GCDVisualizer() {
             </p>
           </ExplanationBox>
 
-          <CodeBlock code={gcdPythonCode} />
+          <CodeBlock codes={EUCLIDEAN_GCD_CODE} />
         </SplitLeft>
         <SplitRight>
           <VisualizationContainer>

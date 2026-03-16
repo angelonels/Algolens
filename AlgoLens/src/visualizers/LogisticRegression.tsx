@@ -6,31 +6,8 @@ import {
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { LOGISTIC_REGRESSION_CODE } from '../data/algorithmCodes'
 
-const logregPythonCode = `import numpy as np
-
-def sigmoid(z):
-    return 1 / (1 + np.exp(-z))
-
-def logistic_regression(X, y, lr=0.1, epochs=100):
-    w, b = 0.0, 0.0
-    n = len(X)
-    history = []
-    
-    for epoch in range(epochs):
-        z = w * X + b
-        y_pred = sigmoid(z)
-        # Binary cross-entropy loss
-        cost = -(1/n) * np.sum(
-            y * np.log(y_pred + 1e-8) +
-            (1 - y) * np.log(1 - y_pred + 1e-8))
-        dw = (1/n) * np.sum((y_pred - y) * X)
-        db = (1/n) * np.sum(y_pred - y)
-        w -= lr * dw
-        b -= lr * db
-        history.append((w, b, cost))
-    
-    return w, b, history`
 
 // ═══ Constants ═══
 const W = 480, H = 320, PAD = 44
@@ -545,7 +522,7 @@ export default function LogisticRegressionVisualizer() {
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={logregPythonCode} />
+                    <CodeBlock codes={LOGISTIC_REGRESSION_CODE} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>

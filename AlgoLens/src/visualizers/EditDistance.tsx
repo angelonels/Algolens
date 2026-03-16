@@ -6,27 +6,8 @@ import {
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { EDIT_DISTANCE_CODE } from '../data/algorithmCodes'
 
-const editDistPythonCode = `def edit_distance(word1, word2):
-    m, n = len(word1), len(word2)
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
-    
-    for i in range(m + 1):
-        dp[i][0] = i  # delete all chars
-    for j in range(n + 1):
-        dp[0][j] = j  # insert all chars
-    
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            if word1[i-1] == word2[j-1]:
-                dp[i][j] = dp[i-1][j-1]  # match
-            else:
-                dp[i][j] = 1 + min(
-                    dp[i-1][j],    # delete
-                    dp[i][j-1],    # insert
-                    dp[i-1][j-1]   # replace
-                )
-    return dp[m][n]`
 
 function computeEditDistSteps(word1, word2) {
     const m = word1.length, n = word2.length
@@ -270,7 +251,7 @@ export default function EditDistanceVisualizer() {
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={editDistPythonCode} />
+                    <CodeBlock codes={EDIT_DISTANCE_CODE} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>

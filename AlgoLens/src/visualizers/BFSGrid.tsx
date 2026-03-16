@@ -6,26 +6,8 @@ import {
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { BFS_CODE } from '../data/algorithmCodes'
 
-const bfsPythonCode = `from collections import deque
-
-def bfs(grid, start, end):
-    rows, cols = len(grid), len(grid[0])
-    queue = deque([(start, [start])])
-    visited = {start}
-    
-    while queue:
-        (r, c), path = queue.popleft()
-        if (r, c) == end:
-            return path
-        for dr, dc in [(0,1),(1,0),(0,-1),(-1,0)]:
-            nr, nc = r + dr, c + dc
-            if (0 <= nr < rows and 0 <= nc < cols
-                and (nr, nc) not in visited
-                and grid[nr][nc] != 1):
-                visited.add((nr, nc))
-                queue.append(((nr, nc), path + [(nr, nc)]))
-    return None  # no path found`
 
 const ROWS = 15
 const COLS = 15
@@ -261,7 +243,7 @@ export default function BFSGridVisualizer() {
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={bfsPythonCode} />
+                    <CodeBlock codes={BFS_CODE} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>

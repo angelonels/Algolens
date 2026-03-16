@@ -6,37 +6,8 @@ import {
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { KMEANS_CODE } from '../data/algorithmCodes'
 
-const kmeansPythonCode = `import random
-import math
-
-def k_means(points, k, max_iters=100):
-    # Initialize centroids randomly from data points
-    centroids = random.sample(points, k)
-    
-    for _ in range(max_iters):
-        # Assign each point to nearest centroid
-        clusters = [[] for _ in range(k)]
-        for point in points:
-            dists = [math.dist(point, c) for c in centroids]
-            closest = dists.index(min(dists))
-            clusters[closest].append(point)
-        
-        # Update centroids to mean of assigned points
-        new_centroids = []
-        for cluster in clusters:
-            if cluster:
-                cx = sum(p[0] for p in cluster) / len(cluster)
-                cy = sum(p[1] for p in cluster) / len(cluster)
-                new_centroids.append((cx, cy))
-            else:
-                new_centroids.append(random.choice(points))
-        
-        if new_centroids == centroids:
-            break  # converged
-        centroids = new_centroids
-    
-    return centroids, clusters`
 
 const CLUSTER_COLORS = ['#e63312', '#2563eb', '#16a34a', '#9333ea', '#f59e0b']
 const CLUSTER_BG = ['#fee2e2', '#dbeafe', '#dcfce7', '#f3e8ff', '#fef3c7']
@@ -231,7 +202,7 @@ export default function KMeansVisualizer() {
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={kmeansPythonCode} />
+                    <CodeBlock codes={KMEANS_CODE} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>

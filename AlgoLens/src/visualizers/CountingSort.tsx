@@ -6,22 +6,8 @@ import {
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer,
     ControlsRow, SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { COUNTING_SORT_CODE } from '../data/algorithmCodes'
 
-const CODE = `def counting_sort(arr):
-    if not arr:
-        return arr
-    max_val = max(arr)
-    count = [0] * (max_val + 1)
-
-    # Count occurrences
-    for num in arr:
-        count[num] += 1
-
-    # Build sorted array
-    sorted_arr = []
-    for i in range(len(count)):
-        sorted_arr.extend([i] * count[i])
-    return sorted_arr`
 
 interface Step {
     inputArray: number[]
@@ -140,7 +126,7 @@ export default function CountingSortVisualizer() {
                             <p><strong>Note:</strong> Only works with non-negative integers</p>
                         </div>
                     </ExplanationBox>
-                    <CodeBlock code={CODE} />
+                    <CodeBlock codes={COUNTING_SORT_CODE} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>

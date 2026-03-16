@@ -6,39 +6,8 @@ import {
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
+import { DECISION_TREE_CODE } from '../data/algorithmCodes'
 
-const dtPythonCode = `class DecisionTree:
-    def __init__(self, max_depth=4):
-        self.max_depth = max_depth
-    
-    def gini(self, groups, classes):
-        total = sum(len(g) for g in groups)
-        score = 0.0
-        for group in groups:
-            if len(group) == 0: continue
-            s = 0.0
-            for c in classes:
-                p = [r[-1] for r in group].count(c) / len(group)
-                s += p * p
-            score += (1 - s) * len(group) / total
-        return score
-    
-    def split(self, data, feature, value):
-        left = [r for r in data if r[feature] < value]
-        right = [r for r in data if r[feature] >= value]
-        return left, right
-    
-    def best_split(self, data):
-        classes = list(set(r[-1] for r in data))
-        best = {'gini': 1.0}
-        for feat in range(len(data[0]) - 1):
-            for row in data:
-                left, right = self.split(data, feat, row[feat])
-                g = self.gini([left, right], classes)
-                if g < best['gini']:
-                    best = {'feature': feat, 'value': row[feat],
-                            'gini': g, 'groups': (left, right)}
-        return best`
 
 const CLASS_COLORS = ['#2563eb', '#e63312', '#16a34a']
 const CLASS_BG = ['rgba(37,99,235,0.08)', 'rgba(230,51,18,0.08)', 'rgba(22,163,74,0.08)']
@@ -461,7 +430,7 @@ export default function DecisionTreeVisualizer() {
                         </p>
                     </ExplanationBox>
 
-                    <CodeBlock code={dtPythonCode} />
+                    <CodeBlock codes={DECISION_TREE_CODE} />
                 </SplitLeft>
                 <SplitRight>
                     <VisualizationContainer>
