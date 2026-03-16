@@ -6,6 +6,7 @@ import { SPEED_PRESETS, type SpeedKey, EASE_OUT, SPRING } from '../../utils/anim
 interface SpeedControlProps {
     speed: SpeedKey
     onSpeedChange: (speed: SpeedKey) => void
+    disabled?: boolean
 }
 
 interface StepCounterProps {
@@ -15,7 +16,7 @@ interface StepCounterProps {
 
 interface StatusProps {
     message: string
-    type?: 'info' | 'success' | 'warning' | 'compare' | 'swap'
+    type?: 'info' | 'success' | 'warning' | 'compare' | 'swap' | 'error'
 }
 
 interface ButtonProps {
@@ -36,7 +37,7 @@ interface CodeBlockProps {
 }
 
 // ── Speed Control ──
-export function SpeedControl({ speed, onSpeedChange }: SpeedControlProps) {
+export function SpeedControl({ speed, onSpeedChange, disabled }: SpeedControlProps) {
     return (
         <div className="flex items-center gap-2.5">
             <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[var(--fg-muted)]">
@@ -45,7 +46,8 @@ export function SpeedControl({ speed, onSpeedChange }: SpeedControlProps) {
             <select
                 value={speed}
                 onChange={e => onSpeedChange(e.target.value as SpeedKey)}
-                className="font-mono text-xs font-medium px-3 py-2 bg-[var(--surface)] text-[var(--fg)] border border-[var(--border)] cursor-pointer hover:border-[var(--border-strong)] transition-colors focus:outline-none focus:border-[var(--accent)]"
+                disabled={disabled}
+                className="font-mono text-xs font-medium px-3 py-2 bg-[var(--surface)] text-[var(--fg)] border border-[var(--border)] cursor-pointer hover:border-[var(--border-strong)] transition-colors focus:outline-none focus:border-[var(--accent)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {Object.keys(SPEED_PRESETS).map(key => (
                     <option key={key} value={key}>{key}</option>
@@ -278,9 +280,14 @@ export function CodeBlock({ code }: CodeBlockProps) {
 }
 
 // ── Layout Components ──
-export function PageContainer({ children }: { children: ReactNode }) {
+export function PageContainer({ children, title }: { children: ReactNode; title?: string }) {
     return (
         <div className="pt-20 pb-12 px-6 sm:px-10 lg:px-14 max-w-[1440px] mx-auto min-h-screen">
+            {title && (
+                <h1 className="font-mono text-xl font-bold tracking-tight text-[var(--fg)] mb-6 uppercase">
+                    {title}
+                </h1>
+            )}
             {children}
         </div>
     )

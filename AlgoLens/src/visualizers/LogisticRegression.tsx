@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence, useSpring } from 'framer-motion'
-import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
+import { SPEED_PRESETS, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
 import {
     SpeedControl, StepCounter, StatusMessage, ControlButton,
     CodeBlock, PageContainer, ExplanationBox, VisualizationContainer, ControlsRow,
