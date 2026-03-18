@@ -417,3 +417,22 @@
 .bar-idle {
   animation: bar-breathe 3s ease-in-out infinite;
 }
+
+/* ══════════════════════════════════════════════
+   Page Entrance Animation
+   ══════════════════════════════════════════════ */
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: fade-in-up 0.4s var(--ease-out) both;
+}
