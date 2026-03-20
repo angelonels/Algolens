@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { STAGGER, EASE_OUT, STAGGER_TEXT, createTiltHandlers } from '../utils/animationConfig'
@@ -66,6 +66,19 @@ function StaggerText({ text, className }: { text: string; className?: string }) 
 export default function Home() {
   const [activeFilter, setActiveFilter] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
+  const searchRef = useRef<HTMLInputElement>(null)
+
+  // Cmd/Ctrl + K to focus search
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        searchRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
 
   const tilt = useMemo(() => createTiltHandlers(8), [])
 
@@ -212,14 +225,18 @@ export default function Home() {
           </LayoutGroup>
         </div>
 
-        <div className="relative">
-          <input
-            type="text" value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Search algorithms…"
-            className="font-mono text-xs font-medium py-2 pl-9 pr-4 border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] w-[240px] outline-none transition-all focus:border-[var(--border-strong)] focus:shadow-[3px_3px_0px_var(--accent)] focus:-translate-x-0.5 focus:-translate-y-0.5"
-          />
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[var(--fg-muted)] pointer-events-none">⌕</span>
+        <div className="relative flex items-center gap-2">
+          <div className="relative">
+            <input
+              ref={searchRef}
+              type="text" value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search algorithms…"
+              className="font-mono text-xs font-medium py-2 pl-9 pr-4 border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] w-[240px] outline-none transition-all focus:border-[var(--border-strong)] focus:shadow-[3px_3px_0px_var(--accent)] focus:-translate-x-0.5 focus:-translate-y-0.5"
+            />
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[var(--fg-muted)] pointer-events-none">⌕</span>
+          </div>
+          <kbd className="hidden sm:inline-flex items-center gap-0.5 font-mono text-[10px] text-[var(--fg-muted)] border border-[var(--border)] px-1.5 py-1 rounded opacity-60">⌘K</kbd>
         </div>
       </motion.div>
 
@@ -331,10 +348,13 @@ export default function Home() {
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.4 }}
-        className="mt-16 pt-8 border-t border-[var(--border)] text-center"
+        className="mt-16 pt-8 border-t border-[var(--border)] text-center flex flex-col gap-1"
       >
         <span className="font-mono text-[11px] font-medium text-[var(--fg-muted)] uppercase tracking-wider">
           AlgoLens — Interactive Algorithm Visualizer
+        </span>
+        <span className="font-mono text-[10px] text-[var(--fg-muted)] opacity-50">
+          Built with React + Vite · © {new Date().getFullYear()}
         </span>
       </motion.div>
     </div>
