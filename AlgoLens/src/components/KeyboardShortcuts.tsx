@@ -6,7 +6,8 @@ import { EASE_OUT } from '../utils/animationConfig'
 
 const ALGO_ROUTES = [
     '/binary-search', '/bubble-sort', '/insertion-sort', '/merge-sort',
-    '/quick-sort', '/gcd', '/matrix-traversal', '/dijkstra', '/bfs',
+    '/quick-sort', '/selection-sort', '/heap-sort', '/counting-sort',
+    '/radix-sort', '/gcd', '/matrix-traversal', '/dijkstra', '/bfs',
     '/dfs', '/kmeans', '/edit-distance', '/linear-regression',
     '/logistic-regression', '/decision-tree',
 ]
@@ -22,6 +23,7 @@ const SHORTCUTS: Shortcut[] = [
     { keys: ['R'], label: 'Random algorithm' },
     { keys: ['H'], label: 'Go home' },
     { keys: ['D'], label: 'Toggle dark mode' },
+    { keys: ['⌘', 'K'], label: 'Focus search' },
     { keys: ['?'], label: 'Toggle this panel' },
 ]
 
