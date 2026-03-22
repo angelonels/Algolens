@@ -11,11 +11,11 @@ export function getStoredLanguage(): CodeLanguage {
   try {
     const v = localStorage.getItem(STORAGE_KEY)
     if (v && ['python','javascript','cpp','java'].includes(v)) return v as CodeLanguage
-  } catch {}
+  } catch { /* localStorage unavailable */ }
   return 'python'
 }
 export function setStoredLanguage(lang: CodeLanguage) {
-  try { localStorage.setItem(STORAGE_KEY, lang) } catch {}
+  try { localStorage.setItem(STORAGE_KEY, lang) } catch { /* localStorage unavailable */ }
 }
 
 export const BUBBLE_SORT_CODE: AlgorithmCodes = {
