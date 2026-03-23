@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { STAGGER, EASE_OUT, STAGGER_TEXT, createTiltHandlers } from '../utils/animationConfig'
@@ -64,6 +65,7 @@ function StaggerText({ text, className }: { text: string; className?: string }) 
 }
 
 export default function Home() {
+  useDocumentTitle()
   const [activeFilter, setActiveFilter] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)

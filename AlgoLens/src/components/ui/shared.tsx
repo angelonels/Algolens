@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, type ReactNode } from 'react'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { type CodeLanguage, type AlgorithmCodes, LANGUAGES, getStoredLanguage, setStoredLanguage } from '../../data/algorithmCodes'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SPEED_PRESETS, type SpeedKey, EASE_OUT, SPRING } from '../../utils/animationConfig'
@@ -318,6 +319,7 @@ export function CodeBlock({ code, codes }: CodeBlockProps) {
 
 // ── Layout Components ──
 export function PageContainer({ children, title }: { children: ReactNode; title?: string }) {
+    useDocumentTitle(title)
     return (
         <div className="pt-20 pb-12 px-6 sm:px-10 lg:px-14 max-w-[1440px] mx-auto min-h-screen">
             {title && (
