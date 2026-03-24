@@ -75,7 +75,7 @@ export default function InsertionSortVisualizer() {
   const isFinal = steps.length > 0 && currentStep === steps.length - 1 && !sorting
 
   return (
-    <PageContainer>
+    <PageContainer title="Insertion Sort">
       <SplitLayout>
         <SplitLeft>
           <ExplanationBox>

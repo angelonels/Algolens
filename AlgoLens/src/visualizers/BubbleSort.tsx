@@ -74,7 +74,7 @@ export default function BubbleSortVisualizer() {
   const isFinal = steps.length > 0 && currentStep === steps.length - 1 && !sorting
 
   return (
-    <PageContainer>
+    <PageContainer title="Bubble Sort">
       <SplitLayout>
         <SplitLeft>
           <ExplanationBox>

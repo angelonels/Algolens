@@ -124,7 +124,7 @@ export default function SelectionSortVisualizer() {
     const isFinal = steps.length > 0 && currentStep === steps.length - 1 && !sorting
 
     return (
-        <PageContainer>
+        <PageContainer title="Selection Sort">
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>

@@ -138,7 +138,7 @@ export default function HeapSortVisualizer() {
     const isFinal = steps.length > 0 && currentStep === steps.length - 1 && !sorting
 
     return (
-        <PageContainer>
+        <PageContainer title="Heap Sort">
             <SplitLayout>
                 <SplitLeft>
                     <ExplanationBox>

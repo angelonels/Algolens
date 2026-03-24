@@ -85,7 +85,7 @@ export default function MergeSortVisualizer() {
   const isFinal = steps.length > 0 && currentStep === steps.length - 1 && !sorting
 
   return (
-    <PageContainer>
+    <PageContainer title="Merge Sort">
       <SplitLayout>
         <SplitLeft>
           <ExplanationBox>
