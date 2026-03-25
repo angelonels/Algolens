@@ -1,32 +1,14 @@
+import { Suspense } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeProvider } from './context/ThemeContext'
 import { PAGE_TRANSITION } from './utils/animationConfig'
+import { ALGORITHMS } from './data/algorithmRegistry'
 import Navbar from './components/Navbar'
 import KeyboardShortcuts from './components/KeyboardShortcuts'
 import ScrollToTop from './components/ScrollToTop'
 import Home from './components/Home'
 import NotFound from './components/NotFound'
-
-import BinarySearch from './visualizers/BinarySearch'
-import BubbleSort from './visualizers/BubbleSort'
-import InsertionSort from './visualizers/InsertionSort'
-import MergeSort from './visualizers/MergeSort'
-import QuickSort from './visualizers/QuickSort'
-import SelectionSort from './visualizers/SelectionSort'
-import HeapSort from './visualizers/HeapSort'
-import CountingSort from './visualizers/CountingSort'
-import RadixSort from './visualizers/RadixSort'
-import EuclideanGCD from './visualizers/EuclideanGCD'
-import MatrixTraversal from './visualizers/MatrixTraversal'
-import DijkstraPath from './visualizers/DijkstraPath'
-import BFSGrid from './visualizers/BFSGrid'
-import DFSGrid from './visualizers/DFSGrid'
-import KMeans from './visualizers/KMeans'
-import EditDistance from './visualizers/EditDistance'
-import LinearRegression from './visualizers/LinearRegression'
-import LogisticRegression from './visualizers/LogisticRegression'
-import DecisionTree from './visualizers/DecisionTree'
 
 import type { ReactNode } from 'react'
 
@@ -46,36 +28,24 @@ function PageWrap({ children }: { children: ReactNode }) {
   )
 }
 
-const routes = [
-  { path: '/binary-search', element: <BinarySearch /> },
-  { path: '/bubble-sort', element: <BubbleSort /> },
-  { path: '/insertion-sort', element: <InsertionSort /> },
-  { path: '/merge-sort', element: <MergeSort /> },
-  { path: '/quick-sort', element: <QuickSort /> },
-  { path: '/selection-sort', element: <SelectionSort /> },
-  { path: '/heap-sort', element: <HeapSort /> },
-  { path: '/counting-sort', element: <CountingSort /> },
-  { path: '/radix-sort', element: <RadixSort /> },
-  { path: '/gcd', element: <EuclideanGCD /> },
-  { path: '/matrix-traversal', element: <MatrixTraversal /> },
-  { path: '/dijkstra', element: <DijkstraPath /> },
-  { path: '/bfs', element: <BFSGrid /> },
-  { path: '/dfs', element: <DFSGrid /> },
-  { path: '/kmeans', element: <KMeans /> },
-  { path: '/edit-distance', element: <EditDistance /> },
-  { path: '/linear-regression', element: <LinearRegression /> },
-  { path: '/logistic-regression', element: <LogisticRegression /> },
-  { path: '/decision-tree', element: <DecisionTree /> },
-]
-
 function AnimatedRoutes() {
   const location = useLocation()
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageWrap><Home /></PageWrap>} />
-        {routes.map(r => (
-          <Route key={r.path} path={r.path} element={<PageWrap>{r.element}</PageWrap>} />
+        {ALGORITHMS.map(({ path, component: Component }) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              <PageWrap>
+                <Suspense fallback={null}>
+                  <Component />
+                </Suspense>
+              </PageWrap>
+            }
+          />
         ))}
         <Route path="*" element={<PageWrap><NotFound /></PageWrap>} />
       </Routes>

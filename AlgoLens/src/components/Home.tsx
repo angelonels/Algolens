@@ -3,42 +3,10 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { STAGGER, EASE_OUT, STAGGER_TEXT, createTiltHandlers } from '../utils/animationConfig'
+import { ALGORITHMS, TAG_COLORS, CATEGORIES } from '../data/algorithmRegistry'
 
-interface Algorithm {
-  name: string
-  path: string
-  tag: string
-  desc: string
-}
-
-const algorithms: Algorithm[] = [
-  { name: 'Binary Search', path: '/binary-search', tag: 'Search', desc: 'O(log n) — Divide and conquer on sorted arrays' },
-  { name: 'Bubble Sort', path: '/bubble-sort', tag: 'Sort', desc: 'O(n²) — Adjacent pair comparison and swap' },
-  { name: 'Insertion Sort', path: '/insertion-sort', tag: 'Sort', desc: 'O(n²) — Build sorted array one element at a time' },
-  { name: 'Merge Sort', path: '/merge-sort', tag: 'Sort', desc: 'O(n log n) — Recursive divide, merge sorted halves' },
-  { name: 'Quick Sort', path: '/quick-sort', tag: 'Sort', desc: 'O(n log n) — Partition around pivot element' },
-  { name: 'Selection Sort', path: '/selection-sort', tag: 'Sort', desc: 'O(n²) — Find minimum and swap into position' },
-  { name: 'Heap Sort', path: '/heap-sort', tag: 'Sort', desc: 'O(n log n) — Binary heap extraction sort' },
-  { name: 'Counting Sort', path: '/counting-sort', tag: 'Sort', desc: 'O(n+k) — Non-comparison count-based sort' },
-  { name: 'Radix Sort', path: '/radix-sort', tag: 'Sort', desc: 'O(d×n) — Non-comparison digit-by-digit sort' },
-  { name: 'Euclidean GCD', path: '/gcd', tag: 'Math', desc: 'O(log min(a,b)) — Greatest common divisor' },
-  { name: 'Matrix Traversal', path: '/matrix-traversal', tag: 'Matrix', desc: 'Row-major, column-major, and diagonal walks' },
-  { name: "Dijkstra's Path", path: '/dijkstra', tag: 'Graph', desc: 'O((V+E) log V) — Shortest path in weighted graphs' },
-  { name: 'BFS Grid Search', path: '/bfs', tag: 'Graph', desc: 'O(V+E) — Layer-by-layer shortest path on grids' },
-  { name: 'DFS Grid Search', path: '/dfs', tag: 'Graph', desc: 'O(V+E) — Stack-based depth-first exploration with backtracking' },
-  { name: 'K-Means Clustering', path: '/kmeans', tag: 'ML', desc: 'O(nki) — Unsupervised partitioning into k clusters' },
-  { name: 'Edit Distance (DP)', path: '/edit-distance', tag: 'DP', desc: 'O(mn) — Minimum operations to transform one string into another' },
-  { name: 'Linear Regression', path: '/linear-regression', tag: 'ML', desc: 'Gradient descent fitting — watch the regression line converge' },
-  { name: 'Logistic Regression', path: '/logistic-regression', tag: 'ML', desc: 'Sigmoid decision boundary with binary classification' },
-  { name: 'Decision Tree', path: '/decision-tree', tag: 'ML', desc: 'Recursive feature-space partitioning with Gini splits' },
-]
-
-const TAG_COLORS: Record<string, string> = {
-  Sort: '#e63312', Search: '#2563eb', Graph: '#0891b2', Math: '#d97706',
-  Matrix: '#7c3aed', DP: '#ea580c', ML: '#16a34a',
-}
-
-const categories = ['All', ...Array.from(new Set(algorithms.map(a => a.tag)))]
+const algorithms = ALGORITHMS
+const categories = CATEGORIES
 
 // Staggered word reveal for hero text
 function StaggerText({ text, className }: { text: string; className?: string }) {

@@ -3,14 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from '../context/ThemeContext'
 import { EASE_OUT } from '../utils/animationConfig'
-
-const ALGO_ROUTES = [
-    '/binary-search', '/bubble-sort', '/insertion-sort', '/merge-sort',
-    '/quick-sort', '/selection-sort', '/heap-sort', '/counting-sort',
-    '/radix-sort', '/gcd', '/matrix-traversal', '/dijkstra', '/bfs',
-    '/dfs', '/kmeans', '/edit-distance', '/linear-regression',
-    '/logistic-regression', '/decision-tree',
-]
+import { ALGO_ROUTES } from '../data/algorithmRegistry'
 
 interface Shortcut {
     keys: string[]
