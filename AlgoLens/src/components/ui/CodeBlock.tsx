@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { type CodeLanguage, type AlgorithmCodes, LANGUAGES, getStoredLanguage, setStoredLanguage } from '../../data/algorithmCodes'
+import { type CodeLanguage, type AlgorithmCodes, LANGUAGES, getStoredLanguage, setStoredLanguage } from '../../data/languageConfig'
 import { motion, AnimatePresence } from 'framer-motion'
 import { EASE_OUT } from '../../utils/animationConfig'
 
