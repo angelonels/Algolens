@@ -7,6 +7,8 @@ import {
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
 import { BFS_CODE } from '../data/algorithmCodes'
+import { bfsWithSteps } from '../algorithms/bfsGrid'
+
 
 
 const ROWS = 15
@@ -14,79 +16,7 @@ const COLS = 15
 const START = [0, 0]
 const END = [ROWS - 1, COLS - 1]
 
-const key = (r, c) => `${r}-${c}`
-
-function bfsWithSteps(walls, start, end) {
-    const wallSet = new Set(walls.map(([r, c]) => key(r, c)))
-    const visited = new Set()
-    const parent = {}
-    const queue = [[start[0], start[1]]]
-    visited.add(key(start[0], start[1]))
-
-    const steps = []
-    const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]]
-
-    steps.push({
-        frontier: [[start[0], start[1]]],
-        visited: new Set(visited),
-        current: null,
-        phase: 'init',
-        message: `Starting BFS from (${start[0]}, ${start[1]})`
-    })
-
-    while (queue.length > 0) {
-        const [r, c] = queue.shift()
-
-        steps.push({
-            frontier: queue.map(q => [q[0], q[1]]),
-            visited: new Set(visited),
-            current: [r, c],
-            phase: 'explore',
-            message: `Exploring (${r}, ${c}) — queue size: ${queue.length}`
-        })
-
-        if (r === end[0] && c === end[1]) {
-            // Reconstruct path
-            const path = []
-            let cur = key(r, c)
-            while (cur) {
-                const [pr, pc] = cur.split('-').map(Number)
-                path.unshift([pr, pc])
-                cur = parent[cur]
-            }
-
-            steps.push({
-                frontier: [],
-                visited: new Set(visited),
-                current: [r, c],
-                path,
-                phase: 'found',
-                message: `Path found — ${path.length} steps`
-            })
-            return steps
-        }
-
-        for (const [dr, dc] of dirs) {
-            const nr = r + dr, nc = c + dc
-            const nk = key(nr, nc)
-            if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && !visited.has(nk) && !wallSet.has(nk)) {
-                visited.add(nk)
-                parent[nk] = key(r, c)
-                queue.push([nr, nc])
-            }
-        }
-    }
-
-    steps.push({
-        frontier: [],
-        visited: new Set(visited),
-        current: null,
-        phase: 'no-path',
-        message: 'No path exists — end node is unreachable'
-    })
-
-    return steps
-}
+const key = (r: number, c: number) => `${r}-${c}`
 
 export default function BFSGridVisualizer() {
     const [walls, setWalls] = useState([])
@@ -108,7 +38,7 @@ export default function BFSGridVisualizer() {
     }, [running])
 
     const startBFS = () => {
-        const s = bfsWithSteps(walls, START, END)
+        const s = bfsWithSteps(walls, START, END, ROWS, COLS)
         setSteps(s)
         setCurrentStep(0)
         setRunning(true)

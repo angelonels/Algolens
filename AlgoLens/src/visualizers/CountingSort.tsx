@@ -7,84 +7,19 @@ import {
     ControlsRow, SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
 import { COUNTING_SORT_CODE } from '../data/algorithmCodes'
+import { computeCountingSortSteps, type CountingSortStep } from '../algorithms/countingSort'
 
-
-interface Step {
-    inputArray: number[]
-    countArray: number[]
-    outputArray: number[]
-    highlightInput: number   // index in input being counted
-    highlightCount: number   // index in count array being incremented
-    highlightOutput: number  // index in output being filled
-    phase: 'count' | 'build' | 'done'
-    message: string
-}
 
 const INIT = [4, 2, 7, 1, 3, 7, 2, 5, 1, 6]
 
 export default function CountingSortVisualizer() {
-    const [steps, setSteps] = useState<Step[]>([])
+    const [steps, setSteps] = useState<CountingSortStep[]>([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [sorting, setSorting] = useState(false)
     const [speed, setSpeed] = useState<SpeedKey>('1x')
     const [isPaused, setIsPaused] = useState(false)
 
-    const computeSteps = (): Step[] => {
-        const arr = [...INIT]
-        const s: Step[] = []
-        const maxVal = Math.max(...arr)
-        const count = new Array(maxVal + 1).fill(0)
-        const output: number[] = []
-
-        // Initial state
-        s.push({
-            inputArray: [...arr], countArray: [...count], outputArray: [],
-            highlightInput: -1, highlightCount: -1, highlightOutput: -1,
-            phase: 'count',
-            message: `Starting Counting Sort — max value is ${maxVal}, creating count array of size ${maxVal + 1}`
-        })
-
-        // Counting phase
-        for (let i = 0; i < arr.length; i++) {
-            count[arr[i]]++
-            s.push({
-                inputArray: [...arr], countArray: [...count], outputArray: [],
-                highlightInput: i, highlightCount: arr[i], highlightOutput: -1,
-                phase: 'count',
-                message: `Counting ${arr[i]} → count[${arr[i]}] = ${count[arr[i]]}`
-            })
-        }
-
-        s.push({
-            inputArray: [...arr], countArray: [...count], outputArray: [],
-            highlightInput: -1, highlightCount: -1, highlightOutput: -1,
-            phase: 'count',
-            message: 'Counting complete — now building sorted output'
-        })
-
-        // Build phase
-        for (let i = 0; i <= maxVal; i++) {
-            for (let j = 0; j < count[i]; j++) {
-                output.push(i)
-                s.push({
-                    inputArray: [...arr], countArray: [...count], outputArray: [...output],
-                    highlightInput: -1, highlightCount: i, highlightOutput: output.length - 1,
-                    phase: 'build',
-                    message: `Placing ${i} at output position ${output.length - 1}`
-                })
-            }
-        }
-
-        s.push({
-            inputArray: [...arr], countArray: [...count], outputArray: [...output],
-            highlightInput: -1, highlightCount: -1, highlightOutput: -1,
-            phase: 'done',
-            message: 'Array is sorted!'
-        })
-        return s
-    }
-
-    const startSort = () => { setSteps(computeSteps()); setCurrentStep(0); setSorting(true); setIsPaused(false) }
+    const startSort = () => { setSteps(computeCountingSortSteps(INIT)); setCurrentStep(0); setSorting(true); setIsPaused(false) }
     const reset = () => { setSteps([]); setCurrentStep(-1); setSorting(false); setIsPaused(false) }
 
     useEffect(() => {

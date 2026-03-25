@@ -16,6 +16,8 @@ import {
   SplitRight
 } from '../components/ui/shared'
 import { EUCLIDEAN_GCD_CODE } from '../data/algorithmCodes'
+import { computeGCDSteps } from '../algorithms/euclideanGCD'
+
 
 
 export default function GCDVisualizer() {
@@ -28,44 +30,7 @@ export default function GCDVisualizer() {
   const [isPaused, setIsPaused] = useState(false)
   const [result, setResult] = useState(null)
 
-  const computeSteps = () => {
-    let x = a, y = b
-    const s = []
-
-    s.push({
-      x, y, r: null,
-      phase: 'start',
-      message: `Starting with gcd(${x}, ${y})`
-    })
-
-    while (y !== 0) {
-      const r = x % y
-      s.push({
-        x, y, r,
-        phase: 'compute',
-        message: `${x} % ${y} = ${r}`
-      })
-
-      const oldX = x, oldY = y
-      x = y
-      y = r
-
-      s.push({
-        x, y, r: null,
-        phase: 'update',
-        oldX, oldY,
-        message: `gcd(${oldX}, ${oldY}) → gcd(${x}, ${y})`
-      })
-    }
-
-    s.push({
-      x, y: 0, r: null,
-      phase: 'done',
-      message: `GCD = ${x}`
-    })
-
-    return s
-  }
+  const computeSteps = () => computeGCDSteps(a, b)
 
   const start = () => {
     setResult(null)

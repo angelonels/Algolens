@@ -7,89 +7,19 @@ import {
     ControlsRow, SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
 import { SELECTION_SORT_CODE } from '../data/algorithmCodes'
+import { computeSelectionSortSteps, type SelectionSortStep } from '../algorithms/selectionSort'
 
-
-interface Step {
-    array: number[]
-    current: number        // position being filled (i)
-    scanning: number       // element being compared (j)
-    minIdx: number         // current minimum index
-    swapIndices: number[]  // the two indices being swapped (empty if no swap this step)
-    sortedCount: number
-    pass: number
-    phase: 'scan' | 'swap' | 'done'
-    message: string
-}
 
 const INIT = [64, 25, 12, 22, 11, 90, 34, 45]
 
 export default function SelectionSortVisualizer() {
-    const [steps, setSteps] = useState<Step[]>([])
+    const [steps, setSteps] = useState<SelectionSortStep[]>([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [sorting, setSorting] = useState(false)
     const [speed, setSpeed] = useState<SpeedKey>('1x')
     const [isPaused, setIsPaused] = useState(false)
 
-    const computeSteps = (): Step[] => {
-        const arr = [...INIT]
-        const s: Step[] = []
-        const n = arr.length
-
-        for (let i = 0; i < n - 1; i++) {
-            let minIdx = i
-
-            // Show the start of the pass — selecting position i
-            s.push({
-                array: [...arr], current: i, scanning: i, minIdx: i,
-                swapIndices: [], sortedCount: i, pass: i + 1, phase: 'scan',
-                message: `Pass ${i + 1}: Finding minimum from index ${i}`
-            })
-
-            for (let j = i + 1; j < n; j++) {
-                const isNewMin = arr[j] < arr[minIdx]
-                if (isNewMin) {
-                    minIdx = j
-                }
-                s.push({
-                    array: [...arr], current: i, scanning: j, minIdx,
-                    swapIndices: [], sortedCount: i, pass: i + 1, phase: 'scan',
-                    message: isNewMin
-                        ? `${arr[j]} < ${arr[minIdx === j ? i : minIdx]} → new minimum found at index ${j}`
-                        : `${arr[j]} ≥ ${arr[minIdx]} → minimum unchanged`
-                })
-            }
-
-            // Swap step
-            if (minIdx !== i) {
-                s.push({
-                    array: [...arr], current: i, scanning: -1, minIdx,
-                    swapIndices: [i, minIdx], sortedCount: i, pass: i + 1, phase: 'swap',
-                    message: `Swapping ${arr[i]} ↔ ${arr[minIdx]} (placing minimum at index ${i})`
-                });
-                [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]]
-                s.push({
-                    array: [...arr], current: i, scanning: -1, minIdx: i,
-                    swapIndices: [i, minIdx], sortedCount: i + 1, pass: i + 1, phase: 'swap',
-                    message: `Swapped — ${arr[i]} is now in position ${i}`
-                })
-            } else {
-                s.push({
-                    array: [...arr], current: i, scanning: -1, minIdx: i,
-                    swapIndices: [], sortedCount: i + 1, pass: i + 1, phase: 'scan',
-                    message: `${arr[i]} is already in the correct position`
-                })
-            }
-        }
-
-        s.push({
-            array: [...arr], current: -1, scanning: -1, minIdx: -1,
-            swapIndices: [], sortedCount: n, pass: n - 1, phase: 'done',
-            message: 'Array is sorted!'
-        })
-        return s
-    }
-
-    const startSort = () => { setSteps(computeSteps()); setCurrentStep(0); setSorting(true); setIsPaused(false) }
+    const startSort = () => { setSteps(computeSelectionSortSteps(INIT)); setCurrentStep(0); setSorting(true); setIsPaused(false) }
     const reset = () => { setSteps([]); setCurrentStep(-1); setSorting(false); setIsPaused(false) }
 
     useEffect(() => {

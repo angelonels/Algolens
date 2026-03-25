@@ -7,6 +7,7 @@ import {
     ControlsRow, SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
 import { RADIX_SORT_CODE } from '../data/algorithmCodes'
+import { computeRadixSortSteps, type RadixSortStep } from '../algorithms/radixSort'
 
 
 // Bucket colors — ten distinct hues for digits 0–9
@@ -15,94 +16,16 @@ const BUCKET_COLORS = [
     '#0891b2', '#ea580c', '#db2777', '#65a30d', '#6366f1',
 ]
 
-interface Step {
-    array: number[]
-    buckets: number[][]    // 10 buckets holding values
-    digitPlace: number     // 1, 10, 100…
-    digitLabel: string     // "ones", "tens", "hundreds"
-    highlightIdx: number   // array index being processed
-    highlightDigit: number // which digit (0–9)
-    phase: 'distribute' | 'collect' | 'done'
-    message: string
-}
-
 const INIT = [170, 45, 75, 90, 802, 24, 2, 66]
 
-function getDigitLabel(exp: number): string {
-    if (exp === 1) return 'ones'
-    if (exp === 10) return 'tens'
-    if (exp === 100) return 'hundreds'
-    if (exp === 1000) return 'thousands'
-    return `10^${Math.log10(exp)}`
-}
-
 export default function RadixSortVisualizer() {
-    const [steps, setSteps] = useState<Step[]>([])
+    const [steps, setSteps] = useState<RadixSortStep[]>([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [sorting, setSorting] = useState(false)
     const [speed, setSpeed] = useState<SpeedKey>('1x')
     const [isPaused, setIsPaused] = useState(false)
 
-    const computeSteps = (): Step[] => {
-        const arr = [...INIT]
-        const s: Step[] = []
-        const maxVal = Math.max(...arr)
-
-        s.push({
-            array: [...arr], buckets: Array.from({ length: 10 }, () => []),
-            digitPlace: 1, digitLabel: 'ones', highlightIdx: -1, highlightDigit: -1,
-            phase: 'distribute',
-            message: `Starting Radix Sort — max value is ${maxVal} (${String(maxVal).length} digits)`
-        })
-
-        let exp = 1
-        while (Math.floor(maxVal / exp) > 0) {
-            const buckets: number[][] = Array.from({ length: 10 }, () => [])
-            const label = getDigitLabel(exp)
-
-            // Distribute into buckets
-            for (let i = 0; i < arr.length; i++) {
-                const digit = Math.floor(arr[i] / exp) % 10
-                buckets[digit].push(arr[i])
-                s.push({
-                    array: [...arr], buckets: buckets.map(b => [...b]),
-                    digitPlace: exp, digitLabel: label,
-                    highlightIdx: i, highlightDigit: digit,
-                    phase: 'distribute',
-                    message: `${arr[i]} → ${label} digit is ${digit} → bucket ${digit}`
-                })
-            }
-
-            // Collect from buckets
-            let idx = 0
-            for (let d = 0; d < 10; d++) {
-                for (const val of buckets[d]) {
-                    arr[idx] = val
-                    idx++
-                }
-            }
-
-            s.push({
-                array: [...arr], buckets: buckets.map(b => [...b]),
-                digitPlace: exp, digitLabel: label,
-                highlightIdx: -1, highlightDigit: -1,
-                phase: 'collect',
-                message: `Collected from buckets by ${label} digit → [${arr.join(', ')}]`
-            })
-
-            exp *= 10
-        }
-
-        s.push({
-            array: [...arr], buckets: Array.from({ length: 10 }, () => []),
-            digitPlace: 0, digitLabel: '', highlightIdx: -1, highlightDigit: -1,
-            phase: 'done',
-            message: 'Array is sorted!'
-        })
-        return s
-    }
-
-    const startSort = () => { setSteps(computeSteps()); setCurrentStep(0); setSorting(true); setIsPaused(false) }
+    const startSort = () => { setSteps(computeRadixSortSteps(INIT)); setCurrentStep(0); setSorting(true); setIsPaused(false) }
     const reset = () => { setSteps([]); setCurrentStep(-1); setSorting(false); setIsPaused(false) }
 
     useEffect(() => {

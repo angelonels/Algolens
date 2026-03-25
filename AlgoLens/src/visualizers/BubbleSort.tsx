@@ -7,47 +7,19 @@ import {
   ControlsRow, SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
 import { BUBBLE_SORT_CODE } from '../data/algorithmCodes'
+import { computeBubbleSortSteps, type BubbleSortStep } from '../algorithms/bubbleSort'
 
-
-interface Step {
-  array: number[]
-  compare: number[]
-  swap: boolean
-  swapping: boolean
-  sortedCount: number
-  pass: number
-  message: string
-}
 
 const INIT = [64, 34, 25, 12, 22, 11, 90, 45]
 
 export default function BubbleSortVisualizer() {
-  const [steps, setSteps] = useState<Step[]>([])
+  const [steps, setSteps] = useState<BubbleSortStep[]>([])
   const [currentStep, setCurrentStep] = useState(-1)
   const [sorting, setSorting] = useState(false)
   const [speed, setSpeed] = useState<SpeedKey>('1x')
   const [isPaused, setIsPaused] = useState(false)
 
-  const computeSteps = (): Step[] => {
-    const arr = [...INIT]
-    const s: Step[] = []
-    const n = arr.length
-
-    for (let i = 0; i < n; i++) {
-      for (let j = 0; j < n - i - 1; j++) {
-        const isSwap = arr[j] > arr[j + 1]
-        s.push({ array: [...arr], compare: [j, j + 1], swap: false, swapping: isSwap, sortedCount: i, pass: i + 1, message: `Comparing ${arr[j]} and ${arr[j + 1]}${isSwap ? ' → swap' : ' → no swap'}` })
-        if (isSwap) {
-          [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
-          s.push({ array: [...arr], compare: [j, j + 1], swap: true, swapping: false, sortedCount: i, pass: i + 1, message: `Swapped ${arr[j + 1]} ↔ ${arr[j]}` })
-        }
-      }
-    }
-    s.push({ array: [...arr], compare: [], swap: false, swapping: false, sortedCount: n, pass: n, message: 'Array is sorted' })
-    return s
-  }
-
-  const startSort = () => { setSteps(computeSteps()); setCurrentStep(0); setSorting(true); setIsPaused(false) }
+  const startSort = () => { setSteps(computeBubbleSortSteps(INIT)); setCurrentStep(0); setSorting(true); setIsPaused(false) }
   const reset = () => { setSteps([]); setCurrentStep(-1); setSorting(false); setIsPaused(false) }
 
   useEffect(() => {

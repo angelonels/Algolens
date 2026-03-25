@@ -7,47 +7,19 @@ import {
   ControlsRow, SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
 import { INSERTION_SORT_CODE } from '../data/algorithmCodes'
+import { computeInsertionSortSteps, type InsertionSortStep } from '../algorithms/insertionSort'
 
-
-interface Step {
-  snapshot: number[]
-  keyIndex: number
-  keyValue: number | null
-  phase: string
-  insertedIndex: number
-  comparingIndex: number
-  shiftIndex?: number
-  sortedCount: number
-  message: string
-}
 
 const INIT = [64, 25, 12, 22, 11, 45, 34]
 
 export default function InsertionSortVisualizer() {
-  const [steps, setSteps] = useState<Step[]>([])
+  const [steps, setSteps] = useState<InsertionSortStep[]>([])
   const [currentStep, setCurrentStep] = useState(-1)
   const [sorting, setSorting] = useState(false)
   const [speed, setSpeed] = useState<SpeedKey>('1x')
   const [isPaused, setIsPaused] = useState(false)
 
-  const computeSteps = (): Step[] => {
-    const arr = [...INIT]; const s: Step[] = []
-    for (let i = 1; i < arr.length; i++) {
-      const key = arr[i]; let j = i - 1
-      s.push({ snapshot: [...arr], keyIndex: i, keyValue: key, phase: 'extract', insertedIndex: -1, comparingIndex: -1, sortedCount: i, message: `Extracting key: ${key} from index ${i}` })
-      while (j >= 0 && arr[j] > key) {
-        s.push({ snapshot: [...arr], keyIndex: i, keyValue: key, phase: 'compare', insertedIndex: -1, comparingIndex: j, shiftIndex: j + 1, sortedCount: i, message: `${arr[j]} > ${key} → shifting right` })
-        arr[j + 1] = arr[j]; j--
-        s.push({ snapshot: [...arr], keyIndex: i, keyValue: key, phase: 'shift', insertedIndex: -1, comparingIndex: j, sortedCount: i, message: `Shifted. Looking at position ${j >= 0 ? j : 'start'}` })
-      }
-      arr[j + 1] = key
-      s.push({ snapshot: [...arr], keyIndex: -1, keyValue: key, phase: 'insert', insertedIndex: j + 1, comparingIndex: -1, sortedCount: i + 1, message: `Inserted ${key} at position ${j + 1}` })
-    }
-    s.push({ snapshot: [...arr], keyIndex: -1, keyValue: null, phase: 'done', insertedIndex: -1, comparingIndex: -1, sortedCount: arr.length, message: 'Array is sorted' })
-    return s
-  }
-
-  const startSort = () => { setSteps(computeSteps()); setCurrentStep(0); setSorting(true); setIsPaused(false) }
+  const startSort = () => { setSteps(computeInsertionSortSteps(INIT)); setCurrentStep(0); setSorting(true); setIsPaused(false) }
   const reset = () => { setSteps([]); setCurrentStep(-1); setSorting(false); setIsPaused(false) }
 
   useEffect(() => {
@@ -57,7 +29,7 @@ export default function InsertionSortVisualizer() {
     } else if (sorting && currentStep === steps.length - 1) setSorting(false)
   }, [currentStep, sorting, steps, speed, isPaused])
 
-  const step = steps[currentStep] ?? { snapshot: INIT, keyIndex: -1, keyValue: null, phase: 'idle', insertedIndex: -1, comparingIndex: -1, sortedCount: 0, message: '' } as Step
+  const step = steps[currentStep] ?? { snapshot: INIT, keyIndex: -1, keyValue: null, phase: 'idle', insertedIndex: -1, comparingIndex: -1, sortedCount: 0, message: '' } as InsertionSortStep
   const maxVal = Math.max(...INIT)
 
   const getColor = (i: number) => {

@@ -7,6 +7,8 @@ import {
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
 import { DIJKSTRA_CODE } from '../data/algorithmCodes'
+import { dijkstraWithSteps } from '../algorithms/dijkstra'
+
 
 
 const initialGraph = {
@@ -24,55 +26,6 @@ const initialGraph = {
     ]
 }
 
-function buildAdjacencyList(edges) {
-    const adj = {}
-    edges.forEach(({ from, to, weight }) => {
-        if (!adj[from]) adj[from] = []
-        if (!adj[to]) adj[to] = []
-        adj[from].push({ node: to, weight })
-        adj[to].push({ node: from, weight })
-    })
-    return adj
-}
-
-function dijkstraWithSteps(nodes, edges, startId) {
-    const adj = buildAdjacencyList(edges)
-    const nodeIds = nodes.map(n => n.id)
-    const distances = {}, previous = {}
-    const visited = new Set()
-    nodeIds.forEach(id => { distances[id] = Infinity; previous[id] = null })
-    distances[startId] = 0
-    const steps = [], pq = [{ node: startId, dist: 0 }]
-
-    steps.push({ type: 'init', distances: { ...distances }, visited: new Set(visited), current: null, exploring: null, edge: null, message: `Starting from ${startId}. All distances = ∞ except ${startId} = 0` })
-
-    while (pq.length > 0) {
-        pq.sort((a, b) => a.dist - b.dist)
-        const { node: current, dist: currDist } = pq.shift()
-        if (visited.has(current)) continue
-
-        steps.push({ type: 'visit', distances: { ...distances }, visited: new Set(visited), current, exploring: null, edge: null, message: `Visiting ${current} (distance: ${currDist})` })
-        visited.add(current)
-
-        for (const { node: neighbor, weight } of (adj[current] || [])) {
-            if (visited.has(neighbor)) continue
-            const newDist = currDist + weight
-            const improved = newDist < distances[neighbor]
-
-            steps.push({ type: 'explore', distances: { ...distances }, visited: new Set(visited), current, exploring: neighbor, edge: { from: current, to: neighbor }, message: `${current} → ${neighbor}: ${currDist} + ${weight} = ${newDist}${improved ? ' ✓' : ' ✗'}` })
-
-            if (improved) {
-                distances[neighbor] = newDist
-                previous[neighbor] = current
-                pq.push({ node: neighbor, dist: newDist })
-                steps.push({ type: 'update', distances: { ...distances }, visited: new Set(visited), current, exploring: neighbor, edge: { from: current, to: neighbor }, message: `Updated d(${neighbor}) = ${newDist}` })
-            }
-        }
-    }
-
-    steps.push({ type: 'complete', distances: { ...distances }, visited: new Set(visited), current: null, exploring: null, edge: null, message: 'All shortest paths found' })
-    return { steps, distances, previous }
-}
 
 export default function DijkstraVisualizer() {
     const [graph] = useState(initialGraph)
@@ -86,8 +39,9 @@ export default function DijkstraVisualizer() {
     const svgRef = useRef(null)
 
     const startAlgorithm = () => {
-        const { steps: s, distances } = dijkstraWithSteps(graph.nodes, graph.edges, startNode)
-        setSteps(s); setCurrentStep(0); setRunning(true); setIsPaused(false); setFinalDistances(distances)
+        const s = dijkstraWithSteps(graph.nodes, graph.edges, startNode)
+        const lastStep = s[s.length - 1]
+        setSteps(s); setCurrentStep(0); setRunning(true); setIsPaused(false); setFinalDistances(lastStep?.distances ?? null)
     }
 
     const reset = () => { setSteps([]); setCurrentStep(-1); setRunning(false); setFinalDistances(null); setIsPaused(false) }

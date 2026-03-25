@@ -17,6 +17,8 @@ import {
   SplitRight
 } from '../components/ui/shared'
 import { BINARY_SEARCH_CODE } from '../data/algorithmCodes'
+import { computeBinarySearchSteps } from '../algorithms/binarySearch'
+
 
 
 export default function BinarySearchVisualizer() {
@@ -29,31 +31,7 @@ export default function BinarySearchVisualizer() {
   const [speed, setSpeed] = useState('1x' as SpeedKey)
   const [isPaused, setIsPaused] = useState(false)
 
-  const computeSteps = () => {
-    let low = 0, high = array.length - 1
-    const s = []
-    while (low <= high) {
-      const mid = Math.floor((low + high) / 2)
-      const found = array[mid] === target
-      s.push({
-        low,
-        mid,
-        high,
-        found,
-        message: found
-          ? `Found ${target} at index ${mid}`
-          : array[mid] < target
-            ? `${array[mid]} < ${target} → search right (${mid + 1}..${high})`
-            : `${array[mid]} > ${target} → search left (${low}..${mid - 1})`
-      })
-      if (found) break
-      if (array[mid] < target) { low = mid + 1 } else { high = mid - 1 }
-    }
-    if (s.length === 0 || !s[s.length - 1].found) {
-      s.push({ low: -1, mid: -1, high: -1, found: false, message: `${target} not found in array` })
-    }
-    return s
-  }
+  const computeSteps = () => computeBinarySearchSteps(array, target)
 
   const startSearch = () => {
     setResult(null)
