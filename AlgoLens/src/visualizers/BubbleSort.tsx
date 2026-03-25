@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SPEED_PRESETS, SPRING, EASE_OUT, type SpeedKey } from '../utils/animationConfig'
+import { SPRING, EASE_OUT } from '../utils/animationConfig'
 import {
   SpeedControl, StepCounter, StatusMessage, ControlButton, Legend,
   CodeBlock, PageContainer, ExplanationBox, VisualizationContainer,
@@ -8,26 +7,15 @@ import {
 } from '../components/ui/shared'
 import { BUBBLE_SORT_CODE } from '../data/algorithmCodes'
 import { computeBubbleSortSteps, type BubbleSortStep } from '../algorithms/bubbleSort'
+import { useAlgorithmPlayback } from '../hooks/useAlgorithmPlayback'
 
 
 const INIT = [64, 34, 25, 12, 22, 11, 90, 45]
 
 export default function BubbleSortVisualizer() {
-  const [steps, setSteps] = useState<BubbleSortStep[]>([])
-  const [currentStep, setCurrentStep] = useState(-1)
-  const [sorting, setSorting] = useState(false)
-  const [speed, setSpeed] = useState<SpeedKey>('1x')
-  const [isPaused, setIsPaused] = useState(false)
+  const [{ steps, currentStep, isRunning, isPaused, speed, isFinalStep }, { start, reset, togglePause, setSpeed }] = useAlgorithmPlayback<BubbleSortStep>()
 
-  const startSort = () => { setSteps(computeBubbleSortSteps(INIT)); setCurrentStep(0); setSorting(true); setIsPaused(false) }
-  const reset = () => { setSteps([]); setCurrentStep(-1); setSorting(false); setIsPaused(false) }
-
-  useEffect(() => {
-    if (sorting && !isPaused && currentStep >= 0 && currentStep < steps.length - 1) {
-      const t = setTimeout(() => setCurrentStep(c => c + 1), SPEED_PRESETS[speed])
-      return () => clearTimeout(t)
-    } else if (sorting && currentStep === steps.length - 1) setSorting(false)
-  }, [currentStep, sorting, steps, speed, isPaused])
+  const startSort = () => start(computeBubbleSortSteps(INIT))
 
   const step = steps[currentStep] ?? { array: INIT, compare: [] as number[], swap: false, swapping: false, sortedCount: 0, pass: 0, message: '' }
   const maxVal = Math.max(...INIT)
@@ -42,8 +30,6 @@ export default function BubbleSortVisualizer() {
     }
     return 'var(--el-default)'
   }
-
-  const isFinal = steps.length > 0 && currentStep === steps.length - 1 && !sorting
 
   return (
     <PageContainer title="Bubble Sort">
@@ -71,14 +57,14 @@ export default function BubbleSortVisualizer() {
         </SplitLeft>
         <SplitRight>
           <VisualizationContainer>
-            {sorting && (
+            {isRunning && (
               <div className="font-mono text-xs font-semibold uppercase tracking-wider text-[var(--fg-muted)] mb-4 px-3 py-1.5 bg-[var(--surface)] border border-[var(--border)] inline-block">
                 Pass {step.pass} / {INIT.length}
               </div>
             )}
             <AnimatePresence mode="wait">
               {currentStep >= 0 && step.message && (
-                <StatusMessage key={currentStep} message={step.message} type={step.swap ? 'swap' : step.swapping ? 'warning' : isFinal ? 'success' : 'compare'} />
+                <StatusMessage key={currentStep} message={step.message} type={step.swap ? 'swap' : step.swapping ? 'warning' : isFinalStep ? 'success' : 'compare'} />
               )}
             </AnimatePresence>
 
@@ -104,14 +90,14 @@ export default function BubbleSortVisualizer() {
 
             <ControlsRow>
               <SpeedControl speed={speed} onSpeedChange={setSpeed} />
-              {sorting && <StepCounter current={currentStep + 1} total={steps.length} />}
-              <ControlButton onClick={startSort} disabled={sorting && !isPaused}>{sorting ? 'Sorting…' : 'Start Sort'}</ControlButton>
-              {sorting && <ControlButton onClick={() => setIsPaused(!isPaused)} variant="success">{isPaused ? 'Resume' : 'Pause'}</ControlButton>}
+              {isRunning && <StepCounter current={currentStep + 1} total={steps.length} />}
+              <ControlButton onClick={startSort} disabled={isRunning && !isPaused}>{isRunning ? 'Sorting…' : 'Start Sort'}</ControlButton>
+              {isRunning && <ControlButton onClick={togglePause} variant="success">{isPaused ? 'Resume' : 'Pause'}</ControlButton>}
               <ControlButton onClick={reset} variant="danger">Reset</ControlButton>
             </ControlsRow>
 
             <AnimatePresence>
-              {isFinal && (
+              {isFinalStep && (
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2, ease: EASE_OUT }}
                   className="mt-6 px-5 py-3 bg-[var(--surface)] border border-[var(--color-sorted)] border-l-[3px] font-mono font-semibold text-[15px] text-[var(--fg)] inline-block"
                 >
