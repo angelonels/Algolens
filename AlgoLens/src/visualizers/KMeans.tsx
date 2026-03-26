@@ -14,8 +14,17 @@ const CLUSTER_BG = ['#fee2e2', '#dbeafe', '#dcfce7', '#f3e8ff', '#fef3c7']
 const CANVAS_W = 460
 const CANVAS_H = 380
 
-function generatePoints(n = 60) {
-    const points = []
+interface KMeansStep {
+    points: number[][]
+    centroids: number[][]
+    assignments: number[]
+    phase: string
+    iteration: number
+    message: string
+}
+
+function generatePoints(n = 60): number[][] {
+    const points: number[][] = []
     // Generate clusters of points for more interesting results
     const centers = [
         [0.25, 0.3], [0.75, 0.25], [0.5, 0.75], [0.2, 0.7], [0.8, 0.7]
@@ -31,12 +40,12 @@ function generatePoints(n = 60) {
     return points
 }
 
-function dist(a, b) {
+function dist(a: number[], b: number[]) {
     return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
 }
 
-function computeKMeansSteps(points, k, maxIter = 20) {
-    const steps = []
+function computeKMeansSteps(points: number[][], k: number, maxIter = 20): KMeansStep[] {
+    const steps: KMeansStep[] = []
     // Pick k random points as initial centroids
     const shuffled = [...points].sort(() => Math.random() - 0.5)
     let centroids = shuffled.slice(0, k).map(p => [...p])
@@ -103,10 +112,10 @@ function computeKMeansSteps(points, k, maxIter = 20) {
 export default function KMeansVisualizer() {
     const [k, setK] = useState(3)
     const [points, setPoints] = useState(() => generatePoints())
-    const [steps, setSteps] = useState([])
+    const [steps, setSteps] = useState<KMeansStep[]>([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [running, setRunning] = useState(false)
-    const [speed, setSpeed] = useState(SPEED_PRESETS.slow)
+    const [speed, setSpeed] = useState<SpeedKey>('0.5x')
     const [isPaused, setIsPaused] = useState(false)
 
     const startKMeans = () => {
@@ -154,7 +163,7 @@ export default function KMeansVisualizer() {
     const labelStyle = {
         fontWeight: 600,
         fontSize: '12px',
-        textTransform: 'uppercase',
+        textTransform: 'uppercase' as const,
         letterSpacing: '0.05em',
         color: 'var(--fg-muted)'
     }
@@ -323,7 +332,7 @@ export default function KMeansVisualizer() {
                                     gap: 6,
                                     fontSize: 11,
                                     fontWeight: 600,
-                                    textTransform: 'uppercase',
+                                    textTransform: 'uppercase' as const,
                                     letterSpacing: '0.04em',
                                     color: 'var(--fg-muted)'
                                 }}>

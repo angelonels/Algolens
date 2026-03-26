@@ -7,7 +7,7 @@ import {
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
 import { BFS_CODE } from '../data/algorithmCodes'
-import { bfsWithSteps } from '../algorithms/bfsGrid'
+import { bfsWithSteps, type BFSStep } from '../algorithms/bfsGrid'
 
 
 
@@ -19,15 +19,15 @@ const END = [ROWS - 1, COLS - 1]
 const key = (r: number, c: number) => `${r}-${c}`
 
 export default function BFSGridVisualizer() {
-    const [walls, setWalls] = useState([])
-    const [steps, setSteps] = useState([])
+    const [walls, setWalls] = useState<number[][]>([])
+    const [steps, setSteps] = useState<BFSStep[]>([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [running, setRunning] = useState(false)
-    const [speed, setSpeed] = useState(SPEED_PRESETS.fast)
+    const [speed, setSpeed] = useState<SpeedKey>('2x')
     const [isPaused, setIsPaused] = useState(false)
     const [isDrawing, setIsDrawing] = useState(false)
 
-    const toggleWall = useCallback((r, c) => {
+    const toggleWall = useCallback((r: number, c: number) => {
         if (running) return
         if ((r === START[0] && c === START[1]) || (r === END[0] && c === END[1])) return
         setWalls(prev => {
@@ -59,7 +59,7 @@ export default function BFSGridVisualizer() {
 
     const generateMaze = () => {
         reset()
-        const newWalls = []
+        const newWalls: number[][] = []
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
                 if ((r === START[0] && c === START[1]) || (r === END[0] && c === END[1])) continue
@@ -86,7 +86,7 @@ export default function BFSGridVisualizer() {
 
     const wallSet = new Set(walls.map(([r, c]) => key(r, c)))
 
-    const getCellState = (r, c) => {
+    const getCellState = (r: number, c: number) => {
         const k = key(r, c)
         if (r === START[0] && c === START[1]) return 'start'
         if (r === END[0] && c === END[1]) return 'end'
@@ -312,7 +312,7 @@ export default function BFSGridVisualizer() {
                                     }}
                                 >
                                     {step.phase === 'found'
-                                        ? `✓ Shortest path: ${step.path.length} steps — ${step.visited.size} cells explored`
+                                        ? `✓ Shortest path: ${step.path?.length ?? 0} steps — ${step.visited.size} cells explored`
                                         : '✗ No path exists between start and end'}
                                 </motion.div>
                             )}

@@ -7,7 +7,7 @@ import {
     SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
 import { DIJKSTRA_CODE } from '../data/algorithmCodes'
-import { dijkstraWithSteps } from '../algorithms/dijkstra'
+import { dijkstraWithSteps, type DijkstraStep, type DijkstraEdge } from '../algorithms/dijkstra'
 
 
 
@@ -30,13 +30,13 @@ const initialGraph = {
 export default function DijkstraVisualizer() {
     const [graph] = useState(initialGraph)
     const [startNode, setStartNode] = useState('A')
-    const [steps, setSteps] = useState([])
+    const [steps, setSteps] = useState<DijkstraStep[]>([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [running, setRunning] = useState(false)
     const [speed, setSpeed] = useState('1x' as SpeedKey)
     const [isPaused, setIsPaused] = useState(false)
-    const [finalDistances, setFinalDistances] = useState(null)
-    const svgRef = useRef(null)
+    const [finalDistances, setFinalDistances] = useState<Record<string, number> | null>(null)
+    const svgRef = useRef<SVGSVGElement>(null)
 
     const startAlgorithm = () => {
         const s = dijkstraWithSteps(graph.nodes, graph.edges, startNode)
@@ -56,26 +56,26 @@ export default function DijkstraVisualizer() {
 
     const currentState = steps[currentStep] || { distances: {}, visited: new Set(), current: null, exploring: null, edge: null, message: '' }
 
-    const getNodeColor = (nodeId) => {
+    const getNodeColor = (nodeId: string) => {
         if (currentState.current === nodeId) return 'var(--accent)'
         if (currentState.exploring === nodeId) return 'var(--color-active)'
         if (currentState.visited?.has(nodeId)) return 'var(--color-sorted)'
         return 'var(--surface)'
     }
 
-    const getEdgeColor = (edge) => {
+    const getEdgeColor = (edge: DijkstraEdge) => {
         if (currentState.edge && ((currentState.edge.from === edge.from && currentState.edge.to === edge.to) || (currentState.edge.from === edge.to && currentState.edge.to === edge.from))) {
             return currentState.type === 'update' ? 'var(--color-sorted)' : 'var(--color-active)'
         }
         return 'var(--border)'
     }
 
-    const getEdgeWidth = (edge) => {
+    const getEdgeWidth = (edge: DijkstraEdge) => {
         if (currentState.edge && ((currentState.edge.from === edge.from && currentState.edge.to === edge.to) || (currentState.edge.from === edge.to && currentState.edge.to === edge.from))) return 3
         return 1.5
     }
 
-    const getNodePosition = (nodeId) => {
+    const getNodePosition = (nodeId: string) => {
         const node = graph.nodes.find(n => n.id === nodeId)
         return node ? { x: node.x, y: node.y } : { x: 0, y: 0 }
     }

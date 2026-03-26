@@ -13,17 +13,23 @@ import { LOGISTIC_REGRESSION_CODE } from '../data/algorithmCodes'
 const W = 480, H = 320, PAD = 44
 const SIG_W = 480, SIG_H = 150
 const COST_W = 480, COST_H = 120
-const CLASS_COLORS = { 0: '#2563eb', 1: '#e63312' }
-const CLASS_GLOW = { 0: 'rgba(37,99,235,0.35)', 1: 'rgba(230,51,18,0.35)' }
+const CLASS_COLORS: Record<number, string> = { 0: '#2563eb', 1: '#e63312' }
+const CLASS_GLOW: Record<number, string> = { 0: 'rgba(37,99,235,0.35)', 1: 'rgba(230,51,18,0.35)' }
+
+interface LRPoint { x: number; y: number; label: number; id: string }
+interface LRStep {
+    w: number; b: number; cost: number; epoch: number; accuracy: number
+    dw: number; db: number; phase: string; message: string
+}
 
 // ═══ Sigmoid ═══
-function sigmoid(z) {
+function sigmoid(z: number) {
     return 1 / (1 + Math.exp(-Math.max(-500, Math.min(500, z))))
 }
 
 // ═══ Data Generation ═══
-function generateData(n = 40, noise = 1.5) {
-    const points = []
+function generateData(n = 40, noise = 1.5): LRPoint[] {
+    const points: LRPoint[] = []
     const sep = 2.5 + Math.random() * 1.5
     for (let i = 0; i < n; i++) {
         const label = i < n / 2 ? 0 : 1
@@ -36,15 +42,15 @@ function generateData(n = 40, noise = 1.5) {
 }
 
 // ═══ Gradient Descent ═══
-function computeLogRegSteps(points, lr = 0.3, maxEpochs = 50) {
+function computeLogRegSteps(points: LRPoint[], lr = 0.3, maxEpochs = 50): LRStep[] {
     let w = 0, b = 0
     const n = points.length
-    const steps = []
+    const steps: LRStep[] = []
 
-    const getAccuracy = (w, b) =>
+    const getAccuracy = (w: number, b: number) =>
         points.filter(p => (sigmoid(w * p.x + b) >= 0.5 ? 1 : 0) === p.label).length / n
 
-    const getCost = (w, b) =>
+    const getCost = (w: number, b: number) =>
         -points.reduce((s, p) => {
             const pred = sigmoid(w * p.x + b)
             return s + p.label * Math.log(pred + 1e-8) + (1 - p.label) * Math.log(1 - pred + 1e-8)
@@ -98,7 +104,7 @@ function computeLogRegSteps(points, lr = 0.3, maxEpochs = 50) {
 }
 
 // ═══ Confetti Particle ═══
-function ConfettiParticle({ delay, color }) {
+function ConfettiParticle({ delay, color }: { delay: number; color: string }) {
     const angle = Math.random() * Math.PI * 2
     const dist = 40 + Math.random() * 80
     const size = 3 + Math.random() * 5
@@ -124,7 +130,10 @@ function ConfettiParticle({ delay, color }) {
 }
 
 // ═══ Parameter Slider ═══
-function ParamSlider({ label, value, min, max, step, onChange, unit = '', disabled }) {
+function ParamSlider({ label, value, min, max, step, onChange, unit = '', disabled }: {
+    label: string; value: number; min: number; max: number; step: number
+    onChange: (v: number) => void; unit?: string; disabled?: boolean
+}) {
     return (
         <div style={{ flex: '1 1 140px', minWidth: 130 }}>
             <div style={{
@@ -133,7 +142,7 @@ function ParamSlider({ label, value, min, max, step, onChange, unit = '', disabl
             }}>
                 <label style={{
                     fontSize: 10,
-                    fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em',
+                    fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.06em',
                     color: 'var(--fg-muted)'
                 }}>
                     {label}
@@ -163,7 +172,9 @@ function ParamSlider({ label, value, min, max, step, onChange, unit = '', disabl
 }
 
 // ═══ Animated SVG Data Point ═══
-function DataPoint({ cx, cy, label, isCorrect, isActive, delay = 0 }) {
+function DataPoint({ cx, cy, label, isCorrect, isActive, delay = 0 }: {
+    cx: number; cy: number; label: number; isCorrect: boolean; isActive: boolean; delay?: number
+}) {
     const baseColor = CLASS_COLORS[label]
     const glowColor = CLASS_GLOW[label]
     const wrongColor = 'rgba(220, 38, 38, 0.6)'
@@ -264,7 +275,9 @@ function DataPoint({ cx, cy, label, isCorrect, isActive, delay = 0 }) {
 }
 
 // ═══ Probability Heatmap Column ═══
-function HeatmapColumn({ x, width, height, probability, yStart }) {
+function HeatmapColumn({ x, width, height, probability, yStart }: {
+    x: number; width: number; height: number; probability: number; yStart: number
+}) {
     return (
         <motion.rect
             x={x}
@@ -293,7 +306,7 @@ export default function LogisticRegressionVisualizer() {
 
     // ── State ──
     const [points, setPoints] = useState(() => generateData(40, 1.5))
-    const [steps, setSteps] = useState([])
+    const [steps, setSteps] = useState<LRStep[]>([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [running, setRunning] = useState(false)
     const [speed, setSpeed] = useState('1x' as SpeedKey)
@@ -309,8 +322,8 @@ export default function LogisticRegressionVisualizer() {
     const yMin = useMemo(() => Math.min(...points.map(p => p.y)) - 1, [points])
     const yMax = useMemo(() => Math.max(...points.map(p => p.y)) + 1, [points])
 
-    const toX = useCallback(x => PAD + ((x - xMin) / (xMax - xMin)) * (W - 2 * PAD), [xMin, xMax])
-    const toY = useCallback(y => H - PAD - ((y - yMin) / (yMax - yMin)) * (H - 2 * PAD), [yMin, yMax])
+    const toX = useCallback((x: number) => PAD + ((x - xMin) / (xMax - xMin)) * (W - 2 * PAD), [xMin, xMax])
+    const toY = useCallback((y: number) => H - PAD - ((y - yMin) / (yMax - yMin)) * (H - 2 * PAD), [yMin, yMax])
 
     const step = steps[currentStep] || { w: 0, b: 0, cost: 0, epoch: 0, accuracy: 0, dw: 0, db: 0, phase: 'idle', message: '' }
 

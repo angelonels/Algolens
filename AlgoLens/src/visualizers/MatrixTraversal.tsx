@@ -7,20 +7,20 @@ import {
   SplitLayout, SplitLeft, SplitRight
 } from '../components/ui/shared'
 import { MATRIX_TRAVERSAL_CODE } from '../data/algorithmCodes'
-import { computeSpiralSteps } from '../algorithms/matrixTraversal'
+import { computeSpiralSteps, type MatrixStep } from '../algorithms/matrixTraversal'
 
 
 
 export default function SpiralMatrixVisualizer() {
   const [N, setN] = useState(5)
-  const [matrix, setMatrix] = useState([])
-  const [steps, setSteps] = useState([])
+  const [matrix, setMatrix] = useState<number[][]>([])
+  const [steps, setSteps] = useState<MatrixStep[]>([])
   const [currentStep, setCurrentStep] = useState(-1)
   const [running, setRunning] = useState(false)
-  const [speed, setSpeed] = useState(SPEED_PRESETS.fast)
+  const [speed, setSpeed] = useState<SpeedKey>('2x')
   const [isPaused, setIsPaused] = useState(false)
-  const [result, setResult] = useState([])
-  const [visitedCells, setVisitedCells] = useState(new Set())
+  const [result, setResult] = useState<number[]>([])
+  const [visitedCells, setVisitedCells] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     const m = Array.from({ length: N }, (_, i) =>
@@ -69,7 +69,7 @@ export default function SpiralMatrixVisualizer() {
   ]
 
   const layerColors = ['var(--color-comparing)', 'var(--color-pivot)', '#ec4899', 'var(--color-exploring)', 'var(--color-sorted)']
-  const labelStyle = { fontWeight: 600, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--fg-muted)' }
+  const labelStyle = { fontWeight: 600, fontSize: '12px', textTransform: 'uppercase' as const, letterSpacing: '0.05em', color: 'var(--fg-muted)' }
 
   return (
     <PageContainer title="Spiral Matrix Traversal">
@@ -121,7 +121,7 @@ export default function SpiralMatrixVisualizer() {
               <input type="number" min="2" max="8" value={N}
                 onChange={e => setN(Math.max(2, Math.min(8, +e.target.value)))}
                 disabled={running}
-                style={{ width: 60, padding: '8px 12px', fontSize: 14, fontWeight: 600, textAlign: 'center', border: `1px solid ${'var(--border)'}`, borderRadius: '0px', background: 'var(--surface)' }} />
+                style={{ width: 60, padding: '8px 12px', fontSize: 14, fontWeight: 600, textAlign: 'center' as const, border: `1px solid ${'var(--border)'}`, borderRadius: '0px', background: 'var(--surface)' }} />
             </div>
 
             <AnimatePresence mode="wait">

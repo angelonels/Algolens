@@ -9,11 +9,23 @@ import {
 import { EDIT_DISTANCE_CODE } from '../data/algorithmCodes'
 
 
-function computeEditDistSteps(word1, word2) {
+interface EditDistStep {
+    dp: number[][]
+    ops: string[][]
+    current: number[] | null
+    filledCells: Set<string | null>
+    phase: string
+    message: string
+    comparing?: number[][]
+    operation?: string
+    editPath?: Set<string>
+}
+
+function computeEditDistSteps(word1: string, word2: string): EditDistStep[] {
     const m = word1.length, n = word2.length
     const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0))
     const ops = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(''))
-    const steps = []
+    const steps: EditDistStep[] = []
 
     // Base cases
     for (let i = 0; i <= m; i++) {
@@ -79,7 +91,7 @@ function computeEditDistSteps(word1, word2) {
     }
 
     // Backtrack to find the optimal edit path
-    const editPath = []
+    const editPath: number[][] = []
     let ci = m, cj = n
     while (ci > 0 || cj > 0) {
         editPath.push([ci, cj])
@@ -114,7 +126,7 @@ const PRESETS = [
 export default function EditDistanceVisualizer() {
     const [word1, setWord1] = useState('horse')
     const [word2, setWord2] = useState('ros')
-    const [steps, setSteps] = useState([])
+    const [steps, setSteps] = useState<EditDistStep[]>([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [running, setRunning] = useState(false)
     const [speed, setSpeed] = useState('1x' as SpeedKey)
@@ -156,7 +168,7 @@ export default function EditDistanceVisualizer() {
     const labelStyle = {
         fontWeight: 600,
         fontSize: '12px',
-        textTransform: 'uppercase',
+        textTransform: 'uppercase' as const,
         letterSpacing: '0.05em',
         color: 'var(--fg-muted)'
     }
@@ -171,7 +183,7 @@ export default function EditDistanceVisualizer() {
         width: 120
     }
 
-    const getCellStyle = (i, j) => {
+    const getCellStyle = (i: number, j: number) => {
         if (!step) return {}
         const k = `${i}-${j}`
         const isCurrent = step.current && step.current[0] === i && step.current[1] === j
@@ -395,7 +407,7 @@ export default function EditDistanceVisualizer() {
                                     gap: 5,
                                     fontSize: 10,
                                     fontWeight: 600,
-                                    textTransform: 'uppercase',
+                                    textTransform: 'uppercase' as const,
                                     letterSpacing: '0.04em',
                                     color: 'var(--fg-muted)'
                                 }}>

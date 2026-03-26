@@ -13,9 +13,28 @@ const CLASS_COLORS = ['#2563eb', '#e63312', '#16a34a']
 const CLASS_BG = ['rgba(37,99,235,0.08)', 'rgba(230,51,18,0.08)', 'rgba(22,163,74,0.08)']
 const W = 460, H = 340
 
+// ── Interfaces ──
+interface DTPoint { x: number; y: number; label: number }
+interface DTBounds { xMin: number; xMax: number; yMin: number; yMax: number }
+interface DTSplit { feature: string; value: number | null; bounds: DTBounds; depth: number }
+interface DTNode {
+    id: number; depth: number; parentId: number | null; side: string | null
+    leaf: boolean; prediction?: number; count: number; bounds: DTBounds
+    feature?: string; value?: number | null; gini?: number
+    leftId?: number; rightId?: number
+}
+interface DTStep {
+    tree: Record<number, DTNode>; splits: DTSplit[]; activeNode: number | null
+    phase: string; depth: number; message: string
+}
+interface BestSplit {
+    gini: number; feature: string | null; value: number | null
+    featureIdx?: number; left?: DTPoint[]; right?: DTPoint[]
+}
+
 // ── Data Generation ──
-function generateData(nPerClass = 25) {
-    const points = []
+function generateData(nPerClass = 25): DTPoint[] {
+    const points: DTPoint[] = []
     const configs = [
         { cx: 1.5, cy: 1.5, label: 0 },
         { cx: 3.5, cy: 3.5, label: 1 },
@@ -34,15 +53,15 @@ function generateData(nPerClass = 25) {
 }
 
 // ── Decision Tree Helpers ──
-function gini(groups, classes) {
+function gini(groups: DTPoint[][], classes: number[]) {
     const total = groups.reduce((s, g) => s + g.length, 0)
     if (total === 0) return 0
     let score = 0
-    groups.forEach(group => {
+    groups.forEach((group: DTPoint[]) => {
         if (group.length === 0) return
         let s = 0
-        classes.forEach(c => {
-            const p = group.filter(r => r.label === c).length / group.length
+        classes.forEach((c: number) => {
+            const p = group.filter((r: DTPoint) => r.label === c).length / group.length
             s += p * p
         })
         score += (1 - s) * (group.length / total)
@@ -50,16 +69,16 @@ function gini(groups, classes) {
     return score
 }
 
-function findBestSplit(data, classes) {
-    let best = { gini: 1, feature: null, value: null }
-    const features = ['x', 'y']
+function findBestSplit(data: DTPoint[], classes: number[]): BestSplit {
+    let best: BestSplit = { gini: 1, feature: null, value: null }
+    const features: (keyof Pick<DTPoint, 'x' | 'y'>)[] = ['x', 'y']
 
     features.forEach((feat, fi) => {
-        const vals = [...new Set(data.map(p => p[feat]))].sort((a, b) => a - b)
+        const vals = [...new Set(data.map((p: DTPoint) => p[feat]))].sort((a, b) => a - b)
         for (let i = 0; i < vals.length - 1; i++) {
             const threshold = (vals[i] + vals[i + 1]) / 2
-            const left = data.filter(p => p[feat] < threshold)
-            const right = data.filter(p => p[feat] >= threshold)
+            const left = data.filter((p: DTPoint) => p[feat] < threshold)
+            const right = data.filter((p: DTPoint) => p[feat] >= threshold)
             const g = gini([left, right], classes)
             if (g < best.gini) {
                 best = { gini: g, feature: feat, featureIdx: fi, value: threshold, left, right }
@@ -69,14 +88,14 @@ function findBestSplit(data, classes) {
     return best
 }
 
-function buildTreeSteps(data, maxDepth = 4) {
-    const classes = [...new Set(data.map(p => p.label))]
-    const steps = []
+function buildTreeSteps(data: DTPoint[], maxDepth = 4) {
+    const classes = [...new Set(data.map((p: DTPoint) => p.label))]
+    const steps: DTStep[] = []
     let nodeId = 0
 
     // Tree structure for rendering
-    const tree = {}
-    const splits = [] // accumulated split lines for the scatter plot
+    const tree: Record<number, DTNode> = {}
+    const splits: DTSplit[] = [] // accumulated split lines for the scatter plot
 
     steps.push({
         tree: {},
@@ -87,14 +106,14 @@ function buildTreeSteps(data, maxDepth = 4) {
         message: `Starting with ${data.length} data points, ${classes.length} classes`
     })
 
-    function recurse(nodeData, depth, parentId, side, bounds) {
+    function recurse(nodeData: DTPoint[], depth: number, parentId: number | null, side: string | null, bounds: DTBounds) {
         const id = nodeId++
-        const majorityClass = classes.reduce((best, c) => {
-            const count = nodeData.filter(p => p.label === c).length
+        const majorityClass = classes.reduce((best: { class: number; count: number }, c: number) => {
+            const count = nodeData.filter((p: DTPoint) => p.label === c).length
             return count > best.count ? { class: c, count } : best
         }, { class: 0, count: 0 }).class
 
-        const pure = nodeData.every(p => p.label === majorityClass)
+        const pure = nodeData.every((p: DTPoint) => p.label === majorityClass)
 
         if (pure || depth >= maxDepth || nodeData.length <= 2) {
             tree[id] = {
@@ -112,7 +131,7 @@ function buildTreeSteps(data, maxDepth = 4) {
                 depth,
                 message: pure
                     ? `Leaf node: all ${nodeData.length} points are class ${majorityClass} (pure)`
-                    : `Leaf node: majority class ${majorityClass} (${nodeData.filter(p => p.label === majorityClass).length}/${nodeData.length}), max depth reached`
+                    : `Leaf node: majority class ${majorityClass} (${nodeData.filter((p: DTPoint) => p.label === majorityClass).length}/${nodeData.length}), max depth reached`
             })
             return
         }
@@ -153,27 +172,27 @@ function buildTreeSteps(data, maxDepth = 4) {
             activeNode: id,
             phase: 'split',
             depth,
-            message: `Split on ${best.feature} < ${best.value.toFixed(2)} (gini=${best.gini.toFixed(3)}) → ${best.left.length} left, ${best.right.length} right`
+            message: `Split on ${best.feature} < ${best.value!.toFixed(2)} (gini=${best.gini.toFixed(3)}) → ${best.left!.length} left, ${best.right!.length} right`
         })
 
         const leftBounds = { ...bounds }
         const rightBounds = { ...bounds }
         if (best.feature === 'x') {
-            leftBounds.xMax = best.value
-            rightBounds.xMin = best.value
+            leftBounds.xMax = best.value!
+            rightBounds.xMin = best.value!
         } else {
-            leftBounds.yMax = best.value
-            rightBounds.yMin = best.value
+            leftBounds.yMax = best.value!
+            rightBounds.yMin = best.value!
         }
 
-        recurse(best.left, depth + 1, id, 'left', leftBounds)
-        recurse(best.right, depth + 1, id, 'right', rightBounds)
+        recurse(best.left!, depth + 1, id, 'left', leftBounds)
+        recurse(best.right!, depth + 1, id, 'right', rightBounds)
     }
 
-    const xMin = Math.min(...data.map(p => p.x)) - 0.5
-    const xMax = Math.max(...data.map(p => p.x)) + 0.5
-    const yMin = Math.min(...data.map(p => p.y)) - 0.5
-    const yMax = Math.max(...data.map(p => p.y)) + 0.5
+    const xMin = Math.min(...data.map((p: DTPoint) => p.x)) - 0.5
+    const xMax = Math.max(...data.map((p: DTPoint) => p.x)) + 0.5
+    const yMin = Math.min(...data.map((p: DTPoint) => p.y)) - 0.5
+    const yMax = Math.max(...data.map((p: DTPoint) => p.y)) + 0.5
 
     recurse(data, 0, null, null, { xMin, xMax, yMin, yMax })
 
@@ -183,7 +202,7 @@ function buildTreeSteps(data, maxDepth = 4) {
         activeNode: null,
         phase: 'done',
         depth: 0,
-        message: `✓ Tree complete — ${Object.keys(tree).length} nodes, ${Object.values(tree).filter(n => n.leaf).length} leaves`
+        message: `✓ Tree complete — ${Object.keys(tree).length} nodes, ${Object.values(tree).filter((n: DTNode) => n.leaf).length} leaves`
     })
 
     return { steps, bounds: { xMin, xMax, yMin, yMax } }
@@ -191,18 +210,18 @@ function buildTreeSteps(data, maxDepth = 4) {
 
 export default function DecisionTreeVisualizer() {
     const [points, setPoints] = useState(() => generateData())
-    const [steps, setSteps] = useState([])
+    const [steps, setSteps] = useState<DTStep[]>([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [running, setRunning] = useState(false)
-    const [speed, setSpeed] = useState(SPEED_PRESETS.slow)
+    const [speed, setSpeed] = useState<SpeedKey>('0.5x')
     const [isPaused, setIsPaused] = useState(false)
     const [maxDepth, setMaxDepth] = useState(4)
-    const [dataBounds, setDataBounds] = useState({ xMin: 0, xMax: 5, yMin: 0, yMax: 5 })
-    const canvasRef = useRef(null)
+    const [dataBounds, setDataBounds] = useState<DTBounds>({ xMin: 0, xMax: 5, yMin: 0, yMax: 5 })
+    const canvasRef = useRef<HTMLCanvasElement>(null)
     const PAD = 36
 
-    const toX = x => PAD + ((x - dataBounds.xMin) / (dataBounds.xMax - dataBounds.xMin)) * (W - 2 * PAD)
-    const toY = y => H - PAD - ((y - dataBounds.yMin) / (dataBounds.yMax - dataBounds.yMin)) * (H - 2 * PAD)
+    const toX = (x: number) => PAD + ((x - dataBounds.xMin) / (dataBounds.xMax - dataBounds.xMin)) * (W - 2 * PAD)
+    const toY = (y: number) => H - PAD - ((y - dataBounds.yMin) / (dataBounds.yMax - dataBounds.yMin)) * (H - 2 * PAD)
 
     const startTree = () => {
         const { steps: s, bounds } = buildTreeSteps(points, maxDepth)
@@ -233,6 +252,7 @@ export default function DecisionTreeVisualizer() {
         const canvas = canvasRef.current
         if (!canvas) return
         const ctx = canvas.getContext('2d')
+        if (!ctx) return
         const dpr = window.devicePixelRatio || 1
         canvas.width = W * dpr; canvas.height = H * dpr
         ctx.scale(dpr, dpr)
@@ -243,13 +263,13 @@ export default function DecisionTreeVisualizer() {
 
         // Leaf region shading
         if (currentStep >= 0) {
-            Object.values(step.tree).forEach(node => {
+            Object.values(step.tree).forEach((node: DTNode) => {
                 if (!node.leaf || !node.bounds) return
                 const x1 = toX(node.bounds.xMin)
                 const x2 = toX(node.bounds.xMax)
                 const y1 = toY(node.bounds.yMax) // canvas Y is inverted
                 const y2 = toY(node.bounds.yMin)
-                ctx.fillStyle = CLASS_BG[node.prediction] || 'rgba(0,0,0,0.03)'
+                ctx.fillStyle = CLASS_BG[node.prediction ?? 0] || 'rgba(0,0,0,0.03)'
                 ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
             })
         }
@@ -293,7 +313,7 @@ export default function DecisionTreeVisualizer() {
 
                 const b = s.bounds
                 if (s.feature === 'x') {
-                    const sx = toX(s.value)
+                    const sx = toX(s.value!)
                     const sy1 = toY(b.yMax)
                     const sy2 = toY(b.yMin)
                     ctx.beginPath(); ctx.moveTo(sx, sy1); ctx.lineTo(sx, sy2); ctx.stroke()
@@ -303,9 +323,9 @@ export default function DecisionTreeVisualizer() {
                     ctx.font = `bold ${10 - s.depth}px JetBrains Mono`
                     ctx.textAlign = 'center'
                     ctx.setLineDash([])
-                    ctx.fillText(`x<${s.value.toFixed(1)}`, sx, sy1 - 4)
+                    ctx.fillText(`x<${s.value!.toFixed(1)}`, sx, sy1 - 4)
                 } else {
-                    const sy = toY(s.value)
+                    const sy = toY(s.value!)
                     const sx1 = toX(b.xMin)
                     const sx2 = toX(b.xMax)
                     ctx.beginPath(); ctx.moveTo(sx1, sy); ctx.lineTo(sx2, sy); ctx.stroke()
@@ -314,7 +334,7 @@ export default function DecisionTreeVisualizer() {
                     ctx.font = `bold ${10 - s.depth}px JetBrains Mono`
                     ctx.textAlign = 'left'
                     ctx.setLineDash([])
-                    ctx.fillText(`y<${s.value.toFixed(1)}`, sx2 + 4, sy + 4)
+                    ctx.fillText(`y<${s.value!.toFixed(1)}`, sx2 + 4, sy + 4)
                 }
 
                 ctx.setLineDash([])
@@ -375,7 +395,7 @@ export default function DecisionTreeVisualizer() {
 
     const labelStyle = {
         fontWeight: 600, fontSize: '12px',
-        textTransform: 'uppercase', letterSpacing: '0.05em',
+        textTransform: 'uppercase' as const, letterSpacing: '0.05em',
         color: 'var(--fg-muted)'
     }
 
@@ -488,7 +508,7 @@ export default function DecisionTreeVisualizer() {
                             >
                                 <div style={{
                                     fontSize: 10,
-                                    fontWeight: 600, textTransform: 'uppercase',
+                                    fontWeight: 600, textTransform: 'uppercase' as const,
                                     letterSpacing: '0.05em', color: 'var(--fg-muted)', marginBottom: 8
                                 }}>
                                     Tree Structure
@@ -516,14 +536,14 @@ export default function DecisionTreeVisualizer() {
                                         >
                                             {node.leaf ? (
                                                 <span>
-                                                    <span style={{ color: CLASS_COLORS[node.prediction] }}>■</span>
+                                                    <span style={{ color: CLASS_COLORS[node.prediction ?? 0] }}>■</span>
                                                     {' '}Leaf → class {node.prediction} ({node.count} pts)
                                                 </span>
                                             ) : (
                                                 <span>
-                                                    ├ {node.feature} &lt; {node.value.toFixed(2)}{' '}
+                                                    ├ {node.feature} &lt; {node.value?.toFixed(2)}{' '}
                                                     <span style={{ color: 'var(--fg-muted)' }}>
-                                                        gini={node.gini.toFixed(3)}
+                                                        gini={node.gini?.toFixed(3)}
                                                     </span>
                                                 </span>
                                             )}
@@ -596,7 +616,7 @@ export default function DecisionTreeVisualizer() {
                                         display: 'inline-block'
                                     }}
                                 >
-                                    ✓ {Object.keys(step.tree).length} nodes, {Object.values(step.tree).filter(n => n.leaf).length} leaves, max depth {maxDepth}
+                                    ✓ {Object.keys(step.tree).length} nodes, {Object.values(step.tree).filter((n: DTNode) => n.leaf).length} leaves, max depth {maxDepth}
                                 </motion.div>
                             )}
                         </AnimatePresence>

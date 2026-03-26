@@ -10,10 +10,23 @@ import { LINEAR_REGRESSION_CODE } from '../data/algorithmCodes'
 
 
 // ── Data Generation ──
-function generateData(n = 30) {
+interface Point { x: number; y: number }
+
+interface GDStep {
+    m: number
+    b: number
+    cost: number
+    epoch: number
+    dm: number
+    db: number
+    phase: string
+    message: string
+}
+
+function generateData(n = 30): Point[] {
     const trueM = 1.5 + (Math.random() - 0.5) * 2
     const trueB = 0.5 + (Math.random() - 0.5) * 1
-    const points = []
+    const points: Point[] = []
     for (let i = 0; i < n; i++) {
         const x = Math.random() * 4 + 0.5
         const noise = (Math.random() - 0.5) * 2.5
@@ -24,10 +37,10 @@ function generateData(n = 30) {
 }
 
 // ── Gradient Descent Steps ──
-function computeGDSteps(points, lr = 0.05, maxEpochs = 60) {
+function computeGDSteps(points: Point[], lr = 0.05, maxEpochs = 60): GDStep[] {
     let m = 0, b = 0
     const n = points.length
-    const steps = []
+    const steps: GDStep[] = []
 
     steps.push({
         m, b,
@@ -76,14 +89,14 @@ const COST_W = 460, COST_H = 120
 
 export default function LinearRegressionVisualizer() {
     const [points, setPoints] = useState(() => generateData())
-    const [steps, setSteps] = useState([])
+    const [steps, setSteps] = useState<GDStep[]>([])
     const [currentStep, setCurrentStep] = useState(-1)
     const [running, setRunning] = useState(false)
-    const [speed, setSpeed] = useState(SPEED_PRESETS.fast)
+    const [speed, setSpeed] = useState<SpeedKey>('2x')
     const [isPaused, setIsPaused] = useState(false)
     const [showResiduals, setShowResiduals] = useState(true)
-    const canvasRef = useRef(null)
-    const costCanvasRef = useRef(null)
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    const costCanvasRef = useRef<HTMLCanvasElement>(null)
 
     // Data bounds
     const xMin = Math.min(...points.map(p => p.x)) - 0.5
@@ -91,8 +104,8 @@ export default function LinearRegressionVisualizer() {
     const yMin = Math.min(...points.map(p => p.y)) - 1
     const yMax = Math.max(...points.map(p => p.y)) + 1
 
-    const toCanvasX = x => PAD + ((x - xMin) / (xMax - xMin)) * (W - 2 * PAD)
-    const toCanvasY = y => H - PAD - ((y - yMin) / (yMax - yMin)) * (H - 2 * PAD)
+    const toCanvasX = (x: number) => PAD + ((x - xMin) / (xMax - xMin)) * (W - 2 * PAD)
+    const toCanvasY = (y: number) => H - PAD - ((y - yMin) / (yMax - yMin)) * (H - 2 * PAD)
 
     const startGD = () => {
         const s = computeGDSteps(points)
@@ -132,6 +145,7 @@ export default function LinearRegressionVisualizer() {
         const canvas = canvasRef.current
         if (!canvas) return
         const ctx = canvas.getContext('2d')
+        if (!ctx) return
         const dpr = window.devicePixelRatio || 1
         canvas.width = W * dpr
         canvas.height = H * dpr
@@ -249,6 +263,7 @@ export default function LinearRegressionVisualizer() {
         const canvas = costCanvasRef.current
         if (!canvas || currentStep < 0) return
         const ctx = canvas.getContext('2d')
+        if (!ctx) return
         const dpr = window.devicePixelRatio || 1
         canvas.width = COST_W * dpr
         canvas.height = COST_H * dpr

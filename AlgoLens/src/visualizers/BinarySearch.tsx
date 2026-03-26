@@ -17,17 +17,17 @@ import {
   SplitRight
 } from '../components/ui/shared'
 import { BINARY_SEARCH_CODE } from '../data/algorithmCodes'
-import { computeBinarySearchSteps } from '../algorithms/binarySearch'
+import { computeBinarySearchSteps, type BinarySearchStep } from '../algorithms/binarySearch'
 
 
 
 export default function BinarySearchVisualizer() {
   const [array] = useState(Array.from({ length: 16 }, (_, i) => i + 1))
   const [target, setTarget] = useState(11)
-  const [steps, setSteps] = useState([])
+  const [steps, setSteps] = useState<BinarySearchStep[]>([])
   const [currentStep, setCurrentStep] = useState(-1)
   const [searching, setSearching] = useState(false)
-  const [result, setResult] = useState(null)
+  const [result, setResult] = useState<number | null>(null)
   const [speed, setSpeed] = useState('1x' as SpeedKey)
   const [isPaused, setIsPaused] = useState(false)
 
@@ -65,7 +65,7 @@ export default function BinarySearchVisualizer() {
     }
   }, [currentStep, searching, steps, speed, isPaused])
 
-  const onChangeTarget = e => {
+  const onChangeTarget = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(e.target.value)
     setTarget(val)
     reset()
@@ -73,7 +73,7 @@ export default function BinarySearchVisualizer() {
 
   const step = steps[currentStep] || { low: 0, mid: -1, high: array.length - 1, found: false, message: '' }
 
-  const getElementState = (index) => {
+  const getElementState = (index: number) => {
     if (result === index) return 'found'
     if (step.mid === index) return 'current'
     if (index >= step.low && index <= step.high && step.low >= 0) return 'active'

@@ -16,19 +16,19 @@ import {
   SplitRight
 } from '../components/ui/shared'
 import { EUCLIDEAN_GCD_CODE } from '../data/algorithmCodes'
-import { computeGCDSteps } from '../algorithms/euclideanGCD'
+import { computeGCDSteps, type GCDStep } from '../algorithms/euclideanGCD'
 
 
 
 export default function GCDVisualizer() {
   const [a, setA] = useState(252)
   const [b, setB] = useState(105)
-  const [steps, setSteps] = useState([])
+  const [steps, setSteps] = useState<GCDStep[]>([])
   const [currentStep, setCurrentStep] = useState(-1)
   const [running, setRunning] = useState(false)
   const [speed, setSpeed] = useState('1x' as SpeedKey)
   const [isPaused, setIsPaused] = useState(false)
-  const [result, setResult] = useState(null)
+  const [result, setResult] = useState<number | null>(null)
 
   const computeSteps = () => computeGCDSteps(a, b)
 
@@ -72,7 +72,7 @@ export default function GCDVisualizer() {
     padding: '8px 12px',
     fontSize: 14,
     fontWeight: 600,
-    textAlign: 'center',
+    textAlign: 'center' as const,
     border: `1px solid ${'var(--border)'}`,
     borderRadius: '0px',
     background: 'var(--surface)'
@@ -82,7 +82,7 @@ export default function GCDVisualizer() {
     marginRight: 8,
     fontWeight: 600,
     fontSize: '12px',
-    textTransform: 'uppercase',
+    textTransform: 'uppercase' as const,
     letterSpacing: '0.05em',
     color: 'var(--fg-muted)'
   }
