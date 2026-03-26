@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from '../context/ThemeContext'
 import { NAVBAR_VARIANTS, EASE_OUT } from '../utils/animationConfig'
 import { getNavbarAlgorithms } from '../data/algorithmRegistry'
+import { ShareButton } from './ui/ShareButton'
 
 const algorithms = getNavbarAlgorithms()
 
@@ -72,6 +73,20 @@ export default function Navbar() {
             </motion.span>
           </AnimatePresence>
         </motion.button>
+
+        {/* Share Button (algorithm pages only) */}
+        <AnimatePresence>
+          {!isHome && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+            >
+              <ShareButton />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Algorithm Selector */}
         <select

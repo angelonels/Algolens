@@ -4,6 +4,8 @@ import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { STAGGER, EASE_OUT, STAGGER_TEXT, createTiltHandlers } from '../utils/animationConfig'
 import { ALGORITHMS, TAG_COLORS, CATEGORIES } from '../data/algorithmRegistry'
+import { useFavorites } from '../hooks/useFavorites'
+import Footer from './Footer'
 
 const algorithms = ALGORITHMS
 const categories = CATEGORIES
@@ -37,6 +39,7 @@ export default function Home() {
   const [activeFilter, setActiveFilter] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)
+  const { toggleFavorite, isFavorite, count: favCount } = useFavorites()
 
   // Cmd/Ctrl + K to focus search
   useEffect(() => {
@@ -54,7 +57,11 @@ export default function Home() {
 
   const filtered = useMemo(() => {
     let result = algorithms
-    if (activeFilter !== 'All') result = result.filter(a => a.tag === activeFilter)
+    if (activeFilter === '★ Favorites') {
+      result = result.filter(a => isFavorite(a.path))
+    } else if (activeFilter !== 'All') {
+      result = result.filter(a => a.tag === activeFilter)
+    }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
       result = result.filter(a =>
@@ -64,7 +71,13 @@ export default function Home() {
       )
     }
     return result
-  }, [activeFilter, searchQuery])
+  }, [activeFilter, searchQuery, isFavorite])
+
+  const filterCategories = useMemo(() => {
+    const cats = [...categories]
+    if (favCount > 0) cats.splice(1, 0, '★ Favorites')
+    return cats
+  }, [favCount])
 
   const handleCardEnter = useCallback((e: React.MouseEvent<HTMLDivElement>, tag: string) => {
     const c = TAG_COLORS[tag] ?? '#e63312'
@@ -153,9 +166,9 @@ export default function Home() {
       >
         <div className="flex gap-2 flex-wrap">
           <LayoutGroup>
-            {categories.map(cat => {
+            {filterCategories.map(cat => {
               const isActive = cat === activeFilter
-              const color = cat === 'All' ? 'var(--fg)' : (TAG_COLORS[cat] ?? 'var(--fg)')
+              const color = cat === 'All' ? 'var(--fg)' : cat === '★ Favorites' ? '#e6a700' : (TAG_COLORS[cat] ?? 'var(--fg)')
               return (
                 <motion.button
                   key={cat} layout
@@ -266,14 +279,26 @@ export default function Home() {
                   onMouseMove={e => handleCardEnter(e, algo.tag)}
                   onMouseLeave={handleCardLeave}
                 >
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1.5 flex-1 min-w-0">
                     <span className="font-mono text-[10px] font-bold uppercase tracking-widest" style={{ color: TAG_COLORS[algo.tag] ?? 'var(--accent)' }}>
                       {algo.tag}
                     </span>
                     <span className="font-mono text-base font-bold text-[var(--fg)]">{algo.name}</span>
                     <span className="text-[13px] text-[var(--fg-muted)] leading-snug mt-0.5">{algo.desc}</span>
                   </div>
-                  <span className="arrow font-mono text-xl text-[var(--border)] shrink-0 mt-2 transition-all">→</span>
+                  <div className="flex items-start gap-2 shrink-0 mt-1">
+                    <motion.button
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorite(algo.path) }}
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.85 }}
+                      className="text-base cursor-pointer bg-transparent border-none p-0 leading-none"
+                      aria-label={isFavorite(algo.path) ? 'Remove from favorites' : 'Add to favorites'}
+                      style={{ color: isFavorite(algo.path) ? '#e6a700' : 'var(--border)', transition: 'color 0.2s' }}
+                    >
+                      {isFavorite(algo.path) ? '★' : '☆'}
+                    </motion.button>
+                    <span className="arrow font-mono text-xl text-[var(--border)] transition-all">→</span>
+                  </div>
                 </div>
               </Link>
             </motion.div>
@@ -315,18 +340,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* Footer */}
-      <motion.div
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.4 }}
-        className="mt-16 pt-8 border-t border-[var(--border)] text-center flex flex-col gap-1"
-      >
-        <span className="font-mono text-[11px] font-medium text-[var(--fg-muted)] uppercase tracking-wider">
-          AlgoLens — Interactive Algorithm Visualizer
-        </span>
-        <span className="font-mono text-[10px] text-[var(--fg-muted)] opacity-50">
-          Built with React + Vite · © {new Date().getFullYear()}
-        </span>
-      </motion.div>
+      <Footer />
     </div>
   )
 }
