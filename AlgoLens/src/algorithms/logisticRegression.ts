@@ -2,6 +2,15 @@
  * Pure algorithm logic for Logistic Regression visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const logisticRegressionComplexity: AlgorithmComplexity = {
+  best: 'O(n × epochs)',
+  average: 'O(n × epochs)',
+  worst: 'O(n × epochs)',
+  space: 'O(n)',
+}
+
 export interface LogisticRegressionStep {
   w: number
   b: number

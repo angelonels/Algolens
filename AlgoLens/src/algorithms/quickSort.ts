@@ -2,6 +2,17 @@
  * Pure algorithm logic for Quick Sort visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const quickSortComplexity: AlgorithmComplexity = {
+  best: 'O(n log n)',
+  average: 'O(n log n)',
+  worst: 'O(n²)',
+  space: 'O(log n)',
+  stable: false,
+  inPlace: true,
+}
+
 export interface QuickSortStep {
   array: number[]
   pivot: number

@@ -2,6 +2,15 @@
  * Pure algorithm logic for K-Means clustering visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const kMeansComplexity: AlgorithmComplexity = {
+  best: 'O(n × k × i)',
+  average: 'O(n × k × i)',
+  worst: 'O(n × k × i)',
+  space: 'O(n × k)',
+}
+
 export interface KMeansStep {
   points: number[][]
   centroids: number[][]

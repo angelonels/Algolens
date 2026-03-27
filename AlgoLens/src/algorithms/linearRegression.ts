@@ -2,6 +2,15 @@
  * Pure algorithm logic for Linear Regression (gradient descent) visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const linearRegressionComplexity: AlgorithmComplexity = {
+  best: 'O(n × epochs)',
+  average: 'O(n × epochs)',
+  worst: 'O(n × epochs)',
+  space: 'O(n)',
+}
+
 export interface LinearRegressionStep {
   m: number
   b: number

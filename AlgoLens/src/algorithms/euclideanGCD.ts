@@ -2,6 +2,15 @@
  * Pure algorithm logic for Euclidean GCD visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const euclideanGCDComplexity: AlgorithmComplexity = {
+  best: 'O(1)',
+  average: 'O(log(min(a, b)))',
+  worst: 'O(log(min(a, b)))',
+  space: 'O(1)',
+}
+
 export interface GCDStep {
   x: number
   y: number

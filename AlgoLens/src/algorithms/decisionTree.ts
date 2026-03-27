@@ -2,6 +2,15 @@
  * Pure algorithm logic for Decision Tree visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const decisionTreeComplexity: AlgorithmComplexity = {
+  best: 'O(n × m × log n)',
+  average: 'O(n × m × log n)',
+  worst: 'O(n² × m)',
+  space: 'O(n)',
+}
+
 export interface TreeNode {
   id: number
   depth: number

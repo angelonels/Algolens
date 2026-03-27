@@ -2,6 +2,15 @@
  * Pure algorithm logic for Dijkstra's shortest path visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const dijkstraComplexity: AlgorithmComplexity = {
+  best: 'O((V + E) log V)',
+  average: 'O((V + E) log V)',
+  worst: 'O((V + E) log V)',
+  space: 'O(V)',
+}
+
 export interface DijkstraNode {
   id: string
   x: number

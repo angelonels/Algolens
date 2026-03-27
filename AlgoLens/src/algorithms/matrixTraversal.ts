@@ -2,6 +2,15 @@
  * Pure algorithm logic for Spiral Matrix Traversal visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const matrixTraversalComplexity: AlgorithmComplexity = {
+  best: 'O(m × n)',
+  average: 'O(m × n)',
+  worst: 'O(m × n)',
+  space: 'O(m × n)',
+}
+
 export interface MatrixStep {
   row: number
   col: number

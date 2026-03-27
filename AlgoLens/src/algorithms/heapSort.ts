@@ -2,6 +2,17 @@
  * Pure algorithm logic for Heap Sort visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const heapSortComplexity: AlgorithmComplexity = {
+  best: 'O(n log n)',
+  average: 'O(n log n)',
+  worst: 'O(n log n)',
+  space: 'O(1)',
+  stable: false,
+  inPlace: true,
+}
+
 export interface HeapSortStep {
   array: number[]
   compare: number[]

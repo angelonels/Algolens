@@ -2,6 +2,15 @@
  * Pure algorithm logic for Binary Search visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const binarySearchComplexity: AlgorithmComplexity = {
+  best: 'O(1)',
+  average: 'O(log n)',
+  worst: 'O(log n)',
+  space: 'O(1)',
+}
+
 export interface BinarySearchStep {
   low: number
   mid: number

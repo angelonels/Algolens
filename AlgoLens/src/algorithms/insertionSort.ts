@@ -2,6 +2,17 @@
  * Pure algorithm logic for Insertion Sort visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const insertionSortComplexity: AlgorithmComplexity = {
+  best: 'O(n)',
+  average: 'O(n²)',
+  worst: 'O(n²)',
+  space: 'O(1)',
+  stable: true,
+  inPlace: true,
+}
+
 export interface InsertionSortStep {
   snapshot: number[]
   keyIndex: number

@@ -2,6 +2,15 @@
  * Pure algorithm logic for Edit Distance visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const editDistanceComplexity: AlgorithmComplexity = {
+  best: 'O(m × n)',
+  average: 'O(m × n)',
+  worst: 'O(m × n)',
+  space: 'O(m × n)',
+}
+
 export interface EditDistanceStep {
   dp: number[][]
   i: number

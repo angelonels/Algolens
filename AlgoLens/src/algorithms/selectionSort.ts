@@ -2,6 +2,17 @@
  * Pure algorithm logic for Selection Sort visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const selectionSortComplexity: AlgorithmComplexity = {
+  best: 'O(n²)',
+  average: 'O(n²)',
+  worst: 'O(n²)',
+  space: 'O(1)',
+  stable: false,
+  inPlace: true,
+}
+
 export interface SelectionSortStep {
   array: number[]
   current: number

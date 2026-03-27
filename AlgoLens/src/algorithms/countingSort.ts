@@ -2,6 +2,17 @@
  * Pure algorithm logic for Counting Sort visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const countingSortComplexity: AlgorithmComplexity = {
+  best: 'O(n + k)',
+  average: 'O(n + k)',
+  worst: 'O(n + k)',
+  space: 'O(n + k)',
+  stable: true,
+  inPlace: false,
+}
+
 export interface CountingSortStep {
   inputArray: number[]
   countArray: number[]

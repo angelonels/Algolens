@@ -2,6 +2,15 @@
  * Pure algorithm logic for DFS grid search visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const dfsComplexity: AlgorithmComplexity = {
+  best: 'O(V + E)',
+  average: 'O(V + E)',
+  worst: 'O(V + E)',
+  space: 'O(V)',
+}
+
 const key = (r: number, c: number) => `${r}-${c}`
 
 export interface DFSStep {

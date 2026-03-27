@@ -3,6 +3,17 @@
  * No React, no DOM, no side effects — only step computation.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const bubbleSortComplexity: AlgorithmComplexity = {
+  best: 'O(n)',
+  average: 'O(n²)',
+  worst: 'O(n²)',
+  space: 'O(1)',
+  stable: true,
+  inPlace: true,
+}
+
 export interface BubbleSortStep {
   array: number[]
   compare: number[]

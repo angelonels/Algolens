@@ -2,6 +2,17 @@
  * Pure algorithm logic for Radix Sort visualization.
  */
 
+import { AlgorithmComplexity } from './types'
+
+export const radixSortComplexity: AlgorithmComplexity = {
+  best: 'O(d × n)',
+  average: 'O(d × n)',
+  worst: 'O(d × n)',
+  space: 'O(n + k)',
+  stable: true,
+  inPlace: false,
+}
+
 export interface RadixSortStep {
   array: number[]
   buckets: number[][]
