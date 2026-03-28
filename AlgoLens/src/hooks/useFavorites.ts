@@ -1,36 +1,30 @@
-import { useState, useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useLocalStorage } from './useLocalStorage'
 
-const STORAGE_KEY = 'algolens-favorites'
-
-function loadFavorites(): Set<string> {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) return new Set(JSON.parse(stored) as string[])
-  } catch { /* ignore */ }
-  return new Set()
-}
-
-function saveFavorites(favorites: Set<string>) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...favorites]))
-}
-
+/**
+ * Manage a set of favorited algorithm paths, persisted via localStorage.
+ *
+ * Refactored to delegate persistence to the generic `useLocalStorage` hook
+ * so this hook only contains favorites-specific logic.
+ */
 export function useFavorites() {
-  const [favorites, setFavorites] = useState<Set<string>>(() => loadFavorites())
+  const [list, setList] = useLocalStorage<string[]>('algolens-favorites', [])
+
+  const favSet = useMemo(() => new Set(list), [list])
 
   const toggleFavorite = useCallback((path: string) => {
-    setFavorites(prev => {
-      const next = new Set(prev)
-      if (next.has(path)) {
-        next.delete(path)
+    setList(prev => {
+      const set = new Set(prev)
+      if (set.has(path)) {
+        set.delete(path)
       } else {
-        next.add(path)
+        set.add(path)
       }
-      saveFavorites(next)
-      return next
+      return [...set]
     })
-  }, [])
+  }, [setList])
 
-  const isFavorite = useCallback((path: string) => favorites.has(path), [favorites])
+  const isFavorite = useCallback((path: string) => favSet.has(path), [favSet])
 
-  return { favorites, toggleFavorite, isFavorite, count: favorites.size }
+  return { favorites: favSet, toggleFavorite, isFavorite, count: favSet.size }
 }
