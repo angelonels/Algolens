@@ -19,6 +19,10 @@ export interface PlaybackState<T> {
   currentStepData: T | null
   /** True when the final step has been reached and playback has stopped */
   isFinalStep: boolean
+  /** Progress through the steps as a percentage (0–100) */
+  progress: number
+  /** True when steps exist but playback hasn't started auto-playing */
+  canStepManually: boolean
 }
 
 export interface PlaybackActions<T> {
@@ -30,6 +34,12 @@ export interface PlaybackActions<T> {
   togglePause: () => void
   /** Set playback speed */
   setSpeed: (speed: SpeedKey) => void
+  /** Advance one step forward (pauses auto-play if running) */
+  stepForward: () => void
+  /** Go back one step (pauses auto-play if running) */
+  stepBackward: () => void
+  /** Jump to a specific step index (pauses auto-play if running) */
+  goToStep: (index: number) => void
 }
 
 export function useAlgorithmPlayback<T>(): [PlaybackState<T>, PlaybackActions<T>] {
@@ -71,8 +81,31 @@ export function useAlgorithmPlayback<T>(): [PlaybackState<T>, PlaybackActions<T>
     setSpeed(newSpeed)
   }, [])
 
+  /** Advance one step; pauses auto-play so the user stays in control. */
+  const stepForward = useCallback(() => {
+    if (steps.length === 0) return
+    setIsPaused(true)
+    setCurrentStep(prev => Math.min(prev + 1, steps.length - 1))
+  }, [steps.length])
+
+  /** Go back one step; pauses auto-play so the user stays in control. */
+  const stepBackward = useCallback(() => {
+    if (steps.length === 0) return
+    setIsPaused(true)
+    setCurrentStep(prev => Math.max(prev - 1, 0))
+  }, [steps.length])
+
+  /** Jump to an arbitrary step index; clamps to valid range. */
+  const goToStep = useCallback((index: number) => {
+    if (steps.length === 0) return
+    setIsPaused(true)
+    setCurrentStep(Math.max(0, Math.min(index, steps.length - 1)))
+  }, [steps.length])
+
   const currentStepData = currentStep >= 0 && currentStep < steps.length ? steps[currentStep] : null
   const isFinalStep = steps.length > 0 && currentStep === steps.length - 1 && !isRunning
+  const progress = steps.length > 1 ? (currentStep / (steps.length - 1)) * 100 : 0
+  const canStepManually = steps.length > 0 && currentStep >= 0
 
   const state: PlaybackState<T> = {
     steps,
@@ -82,6 +115,8 @@ export function useAlgorithmPlayback<T>(): [PlaybackState<T>, PlaybackActions<T>
     speed,
     currentStepData,
     isFinalStep,
+    progress,
+    canStepManually,
   }
 
   const actions: PlaybackActions<T> = {
@@ -89,6 +124,9 @@ export function useAlgorithmPlayback<T>(): [PlaybackState<T>, PlaybackActions<T>
     reset,
     togglePause,
     setSpeed: setPlaybackSpeed,
+    stepForward,
+    stepBackward,
+    goToStep,
   }
 
   return [state, actions]
