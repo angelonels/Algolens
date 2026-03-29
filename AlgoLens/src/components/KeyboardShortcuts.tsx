@@ -10,7 +10,7 @@ interface Shortcut {
     label: string
 }
 
-const SHORTCUTS: Shortcut[] = [
+const NAV_SHORTCUTS: Shortcut[] = [
     { keys: ['←'], label: 'Previous algorithm' },
     { keys: ['→'], label: 'Next algorithm' },
     { keys: ['R'], label: 'Random algorithm' },
@@ -18,6 +18,14 @@ const SHORTCUTS: Shortcut[] = [
     { keys: ['D'], label: 'Toggle dark mode' },
     { keys: ['⌘', 'K'], label: 'Focus search' },
     { keys: ['?'], label: 'Toggle this panel' },
+]
+
+const PLAYBACK_SHORTCUTS: Shortcut[] = [
+    { keys: ['Space'], label: 'Pause / Resume' },
+    { keys: ['→'], label: 'Step forward' },
+    { keys: ['←'], label: 'Step backward' },
+    { keys: ['Home'], label: 'Jump to first step' },
+    { keys: ['End'], label: 'Jump to last step' },
 ]
 
 export default function KeyboardShortcuts() {
@@ -143,19 +151,41 @@ export default function KeyboardShortcuts() {
                                     className="font-mono text-lg text-[var(--fg-muted)] cursor-pointer hover:text-[var(--accent)] transition-colors bg-transparent border-none"
                                 >✕</button>
                             </div>
-                            <div className="flex flex-col gap-2.5">
-                                {SHORTCUTS.map(s => (
-                                    <div key={s.label} className="flex justify-between items-center">
-                                        <span className="text-[13px] text-[var(--fg-muted)]">{s.label}</span>
-                                        <div className="flex gap-1">
-                                            {s.keys.map(k => (
-                                                <kbd key={k} className="font-mono text-[11px] font-bold px-2 py-0.5 border border-[var(--border)] bg-[var(--bg-alt)] text-[var(--fg)]">
-                                                    {k}
-                                                </kbd>
-                                            ))}
-                                        </div>
+                            <div className="flex flex-col gap-4">
+                                <div>
+                                    <h4 className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--fg-muted)] mb-2">Navigation</h4>
+                                    <div className="flex flex-col gap-2">
+                                        {NAV_SHORTCUTS.map((s: Shortcut) => (
+                                            <div key={s.label} className="flex justify-between items-center">
+                                                <span className="text-[13px] text-[var(--fg-muted)]">{s.label}</span>
+                                                <div className="flex gap-1">
+                                                    {s.keys.map((k: string) => (
+                                                        <kbd key={k} className="font-mono text-[11px] font-bold px-2 py-0.5 border border-[var(--border)] bg-[var(--bg-alt)] text-[var(--fg)]">
+                                                            {k}
+                                                        </kbd>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
+                                <div className="border-t border-[var(--border)] pt-3">
+                                    <h4 className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--fg-muted)] mb-2">Playback</h4>
+                                    <div className="flex flex-col gap-2">
+                                        {PLAYBACK_SHORTCUTS.map((s: Shortcut) => (
+                                            <div key={s.label} className="flex justify-between items-center">
+                                                <span className="text-[13px] text-[var(--fg-muted)]">{s.label}</span>
+                                                <div className="flex gap-1">
+                                                    {s.keys.map((k: string) => (
+                                                        <kbd key={k} className="font-mono text-[11px] font-bold px-2 py-0.5 border border-[var(--border)] bg-[var(--bg-alt)] text-[var(--fg)]">
+                                                            {k}
+                                                        </kbd>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         </motion.div>
                     </>
