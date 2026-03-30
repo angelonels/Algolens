@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, type ReactNode } from 'react'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 type Theme = 'light' | 'dark'
 
@@ -11,22 +12,26 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
-function getInitialTheme(): Theme {
-    const stored = localStorage.getItem('algolens-theme')
-    if (stored === 'dark' || stored === 'light') return stored
+function getSystemTheme(): Theme {
     if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) return 'dark'
     return 'light'
 }
 
+/**
+ * Theme provider refactored to delegate persistence to the generic
+ * `useLocalStorage` hook, eliminating duplicated localStorage boilerplate.
+ *
+ * Falls back to the system's color-scheme preference when no stored
+ * value exists.
+ */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-    const [theme, setTheme] = useState<Theme>(getInitialTheme)
+    const [theme, setTheme] = useLocalStorage<Theme>('algolens-theme', getSystemTheme())
 
     useEffect(() => {
         document.documentElement.dataset.theme = theme
-        localStorage.setItem('algolens-theme', theme)
     }, [theme])
 
-    const toggleTheme = () => setTheme(t => (t === 'light' ? 'dark' : 'light'))
+    const toggleTheme = () => setTheme((t: Theme) => (t === 'light' ? 'dark' : 'light'))
 
     return (
         <ThemeContext.Provider value={{ theme, isDark: theme === 'dark', setTheme, toggleTheme }}>
