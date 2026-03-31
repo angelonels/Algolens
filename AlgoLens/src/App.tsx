@@ -9,6 +9,7 @@ import KeyboardShortcuts from './components/KeyboardShortcuts'
 import ScrollToTop from './components/ScrollToTop'
 import Home from './components/Home'
 import NotFound from './components/NotFound'
+import { LoadingSkeleton } from './components/ui/LoadingSkeleton'
 import { lazy } from 'react'
 
 const ComplexityTable = lazy(() => import('./components/ComplexityTable'))
@@ -37,14 +38,14 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageWrap><Home /></PageWrap>} />
-        <Route path="/complexity" element={<PageWrap><Suspense fallback={null}><ComplexityTable /></Suspense></PageWrap>} />
+        <Route path="/complexity" element={<PageWrap><Suspense fallback={<LoadingSkeleton />}><ComplexityTable /></Suspense></PageWrap>} />
         {ALGORITHMS.map(({ path, component: Component }) => (
           <Route
             key={path}
             path={path}
             element={
               <PageWrap>
-                <Suspense fallback={null}>
+                <Suspense fallback={<LoadingSkeleton />}>
                   <Component />
                 </Suspense>
               </PageWrap>
