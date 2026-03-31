@@ -3,7 +3,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { STAGGER, EASE_OUT, STAGGER_TEXT, createTiltHandlers } from '../utils/animationConfig'
-import { ALGORITHMS, TAG_COLORS, CATEGORIES } from '../data/algorithmRegistry'
+import { ALGORITHMS, TAG_COLORS, CATEGORIES, DIFFICULTY_COLORS } from '../data/algorithmRegistry'
 import { useFavorites } from '../hooks/useFavorites'
 import Footer from './Footer'
 
@@ -280,9 +280,21 @@ export default function Home() {
                   onMouseLeave={handleCardLeave}
                 >
                   <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-widest" style={{ color: TAG_COLORS[algo.tag] ?? 'var(--accent)' }}>
-                      {algo.tag}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-widest" style={{ color: TAG_COLORS[algo.tag] ?? 'var(--accent)' }}>
+                        {algo.tag}
+                      </span>
+                      <span
+                        className="font-mono text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-sm"
+                        style={{
+                          color: DIFFICULTY_COLORS[algo.difficulty],
+                          border: `1px solid ${DIFFICULTY_COLORS[algo.difficulty]}30`,
+                          background: `${DIFFICULTY_COLORS[algo.difficulty]}10`,
+                        }}
+                      >
+                        {algo.difficulty}
+                      </span>
+                    </div>
                     <span className="font-mono text-base font-bold text-[var(--fg)]">{algo.name}</span>
                     <span className="text-[13px] text-[var(--fg-muted)] leading-snug mt-0.5">{algo.desc}</span>
                   </div>
