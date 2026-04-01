@@ -61,6 +61,8 @@ export function CodeBlock({ code, codes }: CodeBlockProps) {
             </div>
             <motion.button
                 onClick={handleCopy}
+                aria-label="Copy code to clipboard"
+                title="Copy code to clipboard"
                 whileHover={{ y: -2, scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`absolute top-3 right-3 px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider cursor-pointer transition-all rounded-sm ${copied
