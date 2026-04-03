@@ -30,14 +30,17 @@ export function computeBubbleSortSteps(init: number[]): BubbleSortStep[] {
   const n = arr.length
 
   for (let i = 0; i < n; i++) {
+    let swappedThisPass = false
     for (let j = 0; j < n - i - 1; j++) {
       const isSwap = arr[j] > arr[j + 1]
       s.push({ array: [...arr], compare: [j, j + 1], swap: false, swapping: isSwap, sortedCount: i, pass: i + 1, message: `Comparing ${arr[j]} and ${arr[j + 1]}${isSwap ? ' → swap' : ' → no swap'}` })
       if (isSwap) {
         [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
+        swappedThisPass = true
         s.push({ array: [...arr], compare: [j, j + 1], swap: true, swapping: false, sortedCount: i, pass: i + 1, message: `Swapped ${arr[j + 1]} ↔ ${arr[j]}` })
       }
     }
+    if (!swappedThisPass) break
   }
   s.push({ array: [...arr], compare: [], swap: false, swapping: false, sortedCount: n, pass: n, message: 'Array is sorted' })
   return s
