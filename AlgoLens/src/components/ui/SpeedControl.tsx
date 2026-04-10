@@ -4,11 +4,26 @@ interface SpeedControlProps {
     speed: SpeedKey
     onSpeedChange: (speed: SpeedKey) => void
     disabled?: boolean
+    isPaused?: boolean
+    onTogglePause?: () => void
 }
 
-export function SpeedControl({ speed, onSpeedChange, disabled }: SpeedControlProps) {
+export function SpeedControl({ speed, onSpeedChange, disabled, isPaused, onTogglePause }: SpeedControlProps) {
     return (
         <div className="flex items-center gap-2.5">
+            {onTogglePause && (
+                <button
+                    onClick={onTogglePause}
+                    className="p-1 px-2 border border-[var(--border)] hover:bg-[var(--surface-hover)] rounded transition-colors text-[var(--fg)]"
+                    title={isPaused ? "Resume" : "Pause"}
+                >
+                    {isPaused ? (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    ) : (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                    )}
+                </button>
+            )}
             <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[var(--fg-muted)]">
                 Speed
             </span>
