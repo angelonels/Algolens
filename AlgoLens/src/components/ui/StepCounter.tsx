@@ -4,10 +4,12 @@ import { EASE_OUT } from '../../utils/animationConfig'
 interface StepCounterProps {
     current: number
     total: number
+    maxTheoretical?: number
 }
 
-export function StepCounter({ current, total }: StepCounterProps) {
-    const progress = total > 0 ? (current / total) * 100 : 0
+export function StepCounter({ current, total, maxTheoretical }: StepCounterProps) {
+    const denominator = maxTheoretical ?? total
+    const progress = denominator > 0 ? (current / denominator) * 100 : 0
 
     return (
         <div className="flex flex-col items-center gap-1.5 min-w-[160px]">
