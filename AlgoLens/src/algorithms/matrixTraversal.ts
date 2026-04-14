@@ -19,6 +19,11 @@ export interface MatrixStep {
 }
 
 export function computeSpiralSteps(N: number): MatrixStep[] {
+  if (!Number.isInteger(N) || N <= 0 || N > 100) {
+    console.warn(`MatrixTraversal: N must be an integer between 1 and 100 (got ${N}). Returning empty steps to prevent overflow.`);
+    return [];
+  }
+
   const res: MatrixStep[] = []
   const dirs = ['→ Right', '↓ Down', '← Left', '↑ Up']
   let top = 0, bottom = N - 1, left = 0, right = N - 1
