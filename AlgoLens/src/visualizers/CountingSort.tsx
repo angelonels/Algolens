@@ -114,7 +114,11 @@ export default function CountingSortVisualizer() {
                                             key={`cnt-${i}`} layout
                                             animate={{
                                                 height: Math.max(28, (v / maxCountVal) * 60 + 28),
-                                                backgroundColor: i === step.highlightCount ? 'var(--color-active)' : 'var(--el-default)',
+                                                backgroundColor: i === step.highlightCount 
+                                                    ? 'var(--color-active)' 
+                                                    : v > 0 
+                                                        ? `rgba(167, 139, 250, ${0.4 + (v / maxCountVal) * 0.6})` 
+                                                        : 'var(--el-default)',
                                                 scale: i === step.highlightCount ? 1.06 : 1,
                                             }}
                                             transition={SPRING.bouncy}
