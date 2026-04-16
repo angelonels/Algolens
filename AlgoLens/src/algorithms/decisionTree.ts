@@ -90,16 +90,24 @@ function gini(groups: DataPoint[][], classes: number[]): number {
   return score
 }
 
+/**
+ * Evaluates all possible splits across all features to find the one that yields
+ * the lowest Gini impurity. This is the core logic behind the greedy CART algorithm.
+ */
 function findBestSplit(data: DataPoint[], classes: number[]) {
   let best: { gini: number; feature: string | null; featureIdx?: number; value: number | null; left?: DataPoint[]; right?: DataPoint[] } = { gini: 1, feature: null, value: null }
   const features: ('x' | 'y')[] = ['x', 'y']
 
   features.forEach((feat, fi) => {
+    // Sort unique values of the feature to find all possible split thresholds
     const vals = [...new Set(data.map(p => p[feat]))].sort((a, b) => a - b)
     for (let i = 0; i < vals.length - 1; i++) {
+      // Use the midpoint between adjacent feature values as the binary split threshold
       const threshold = (vals[i] + vals[i + 1]) / 2
       const left = data.filter(p => p[feat] < threshold)
       const right = data.filter(p => p[feat] >= threshold)
+      
+      // Calculate the weighted Gini impurity for this specific split
       const g = gini([left, right], classes)
       if (g < best.gini) {
         best = { gini: g, feature: feat, featureIdx: fi, value: threshold, left, right }
