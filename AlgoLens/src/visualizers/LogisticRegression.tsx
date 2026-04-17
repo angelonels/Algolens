@@ -172,8 +172,8 @@ function ParamSlider({ label, value, min, max, step, onChange, unit = '', disabl
 }
 
 // ═══ Animated SVG Data Point ═══
-function DataPoint({ cx, cy, label, isCorrect, isActive, delay = 0 }: {
-    cx: number; cy: number; label: number; isCorrect: boolean; isActive: boolean; delay?: number
+function DataPoint({ cx, cy, label, isCorrect, isActive, delay = 0, isConverged = false }: {
+    cx: number; cy: number; label: number; isCorrect: boolean; isActive: boolean; delay?: number; isConverged?: boolean
 }) {
     const baseColor = CLASS_COLORS[label]
     const glowColor = CLASS_GLOW[label]
@@ -196,7 +196,9 @@ function DataPoint({ cx, cy, label, isCorrect, isActive, delay = 0 }: {
                         scale: isActive ? (isCorrect ? 1.6 : [1.4, 1.8, 1.4]) : 0.5,
                         stroke: isActive ? (isCorrect ? correctGlow : wrongColor) : 'transparent',
                     }}
-                    transition={isActive && !isCorrect
+                    transition={isConverged
+                        ? { scale: { type: 'spring', bounce: 0.7, stiffness: 200, delay: delay * 0.03 }, stroke: { delay: delay * 0.03 } }
+                        : isActive && !isCorrect
                         ? { scale: { duration: 0.8, repeat: Infinity, ease: 'easeInOut' }, opacity: { duration: 0.3 } }
                         : { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
                     }
@@ -242,7 +244,9 @@ function DataPoint({ cx, cy, label, isCorrect, isActive, delay = 0 }: {
                     r: isActive ? (isCorrect ? 14 : [11, 16, 11]) : 6,
                     stroke: isActive ? (isCorrect ? correctGlow : wrongColor) : 'transparent',
                 }}
-                transition={isActive && !isCorrect
+                transition={isConverged
+                    ? { r: { type: 'spring', bounce: 0.7, stiffness: 200, delay: delay * 0.03 }, stroke: { delay: delay * 0.03 } }
+                    : isActive && !isCorrect
                     ? { r: { duration: 0.8, repeat: Infinity, ease: 'easeInOut' }, opacity: { duration: 0.3 } }
                     : { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
                 }
@@ -732,6 +736,7 @@ export default function LogisticRegressionVisualizer() {
                                             isCorrect={predicted === p.label}
                                             isActive={currentStep >= 0}
                                             delay={i}
+                                            isConverged={step.phase === 'converged'}
                                         />
                                     )
                                 })}
