@@ -71,6 +71,13 @@ export const ALGORITHMS: AlgorithmEntry[] = [
 
 /** All algorithm route paths, in order */
 export const ALGO_ROUTES: string[] = ALGORITHMS.map(a => a.path)
+export const ALGORITHM_BY_PATH: Map<string, AlgorithmEntry> = new Map(
+  ALGORITHMS.map((algorithm) => [algorithm.path, algorithm]),
+)
+
+export function getAlgorithmByPath(path: string): AlgorithmEntry | undefined {
+  return ALGORITHM_BY_PATH.get(path)
+}
 
 /** Unique category tags derived from the registry */
 export const CATEGORIES: string[] = ['All', ...Array.from(new Set(ALGORITHMS.map(a => a.tag)))]

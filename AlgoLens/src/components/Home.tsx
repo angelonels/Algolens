@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { STAGGER, EASE_OUT, STAGGER_TEXT, createTiltHandlers } from '../utils/animationConfig'
 import { ALGORITHMS, TAG_COLORS, CATEGORIES, DIFFICULTY_COLORS } from '../data/algorithmRegistry'
 import { useFavorites } from '../hooks/useFavorites'
+import { useRecentAlgorithms } from '../hooks/useRecentAlgorithms'
 import Footer from './Footer'
 
 const algorithms = ALGORITHMS
@@ -40,6 +41,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)
   const { toggleFavorite, isFavorite, count: favCount } = useFavorites()
+  const { recentAlgorithms, clearRecentAlgorithms } = useRecentAlgorithms()
 
   // Cmd/Ctrl + K to focus search
   useEffect(() => {
@@ -157,6 +159,64 @@ export default function Home() {
         transition={{ delay: 0.3, duration: 0.5, ease: EASE_OUT }}
         className="border-t border-[var(--border)] mb-8 origin-left"
       />
+
+      {/* Continue Learning */}
+      <AnimatePresence>
+        {recentAlgorithms.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.35, ease: EASE_OUT }}
+            className="mb-8 border-2 border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5"
+          >
+            <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+              <div>
+                <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-[var(--fg-muted)]">
+                  Continue Learning
+                </div>
+                <div className="font-mono text-sm font-semibold text-[var(--fg)] mt-1">
+                  Jump back into recently viewed algorithms
+                </div>
+              </div>
+              <button
+                onClick={clearRecentAlgorithms}
+                className="font-mono text-[10px] font-semibold uppercase tracking-widest px-3 py-1.5 border border-[var(--border)] text-[var(--fg-muted)] cursor-pointer transition-all hover:text-[var(--fg)] hover:border-[var(--border-strong)]"
+              >
+                Clear History
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {recentAlgorithms.slice(0, 6).map((algo) => (
+                <Link key={algo.path} to={algo.path} className="no-underline text-inherit">
+                  <motion.div
+                    whileHover={{ x: -2, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="border border-[var(--border)] bg-[var(--bg)] p-3 h-full transition-all"
+                    style={{ boxShadow: '0 0 0 0 var(--border-strong)' }}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-widest" style={{ color: TAG_COLORS[algo.tag] ?? 'var(--accent)' }}>
+                        {algo.tag}
+                      </span>
+                      <span className="font-mono text-[10px] text-[var(--fg-muted)]">
+                        {algo.complexity.average}
+                      </span>
+                    </div>
+                    <div className="font-mono text-[13px] font-semibold text-[var(--fg)] mt-1">
+                      {algo.name}
+                    </div>
+                    <div className="text-[12px] text-[var(--fg-muted)] mt-1 leading-snug">
+                      {algo.useCase}
+                    </div>
+                  </motion.div>
+                </Link>
+              ))}
+            </div>
+          </motion.section>
+        )}
+      </AnimatePresence>
 
       {/* Filter Bar */}
       <motion.div
