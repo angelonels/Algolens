@@ -1,5 +1,9 @@
 # AlgoLens 🔍
 
+[![CI Status](https://github.com/angelonels/Algolens/actions/workflows/ci.yml/badge.svg)](https://github.com/angelonels/Algolens/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
+
 **See how algorithms actually work — step by step, right in your browser.**
 
 Ever read about sorting or search algorithms and thought *"but what is it actually doing?"* AlgoLens lets you watch them run in real time with slick animations, so you can finally build that intuition.
@@ -109,20 +113,17 @@ AlgoLens/
 
 ## 🚀 Getting Started
 
-**Prerequisites:** You need [Node.js](https://nodejs.org) (v18 or later) installed.
+**Prerequisites:** You need [Node.js](https://nodejs.org) (v20 or later) installed.
 
 ```bash
 # 1. Clone the repo
 git clone https://github.com/angelonels/Algolens.git
 cd Algolens
 
-# 2. Move into the app folder
-cd AlgoLens
-
-# 3. Install dependencies
+# 2. Install dependencies
 npm install
 
-# 4. Start the dev server
+# 3. Start the dev server
 npm run dev
 ```
 
@@ -132,15 +133,12 @@ Then open **http://localhost:5173** in your browser. That's it! 🎉
 
 ## 🤝 Contributing
 
-Found a bug? Want to add a new algorithm? Pull requests are welcome!
+Found a bug? Want to add a new algorithm? Pull requests are welcome! Please check our **[Contributing Guidelines](CONTRIBUTING.md)** and read our **[Code of Conduct](CODE_OF_CONDUCT.md)** first.
 
-1. Fork the repo
-2. Create a branch (`git checkout -b my-new-algorithm`)
-3. Commit your changes
-4. Push and open a PR
+For reporting security vulnerabilities, please refer to our **[Security Policy](SECURITY.md)**.
 
 ---
 
 ## 📄 License
 
-This project is open source. Feel free to use it, learn from it, and build on it.
+This project is open source and licensed under the **[MIT License](LICENSE)**. Feel free to use it, learn from it, and build on it.
