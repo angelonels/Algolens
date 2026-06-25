@@ -323,11 +323,23 @@ export default function Home() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search algorithms…"
-              className="font-mono text-xs font-medium py-2 pl-9 pr-4 border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] w-[240px] outline-none transition-all focus:border-[var(--border-strong)] focus:shadow-[3px_3px_0px_var(--accent)] focus:-translate-x-0.5 focus:-translate-y-0.5"
+              className="font-mono text-xs font-medium py-2 pl-9 pr-8 border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] w-[240px] outline-none transition-all focus:border-[var(--border-strong)] focus:shadow-[3px_3px_0px_var(--accent)] focus:-translate-x-0.5 focus:-translate-y-0.5"
             />
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[var(--fg-muted)] pointer-events-none">
               ⌕
             </span>
+            {searchQuery && (
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  searchRef.current?.focus();
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-[var(--fg-muted)] hover:text-[var(--fg)] cursor-pointer font-sans bg-transparent border-none p-0 flex items-center justify-center w-4 h-4"
+                title="Clear search"
+              >
+                ✕
+              </button>
+            )}
           </div>
           <kbd className="hidden sm:inline-flex items-center gap-0.5 font-mono text-[10px] text-[var(--fg-muted)] border border-[var(--border)] px-1.5 py-1 rounded opacity-60">
             ⌘K
